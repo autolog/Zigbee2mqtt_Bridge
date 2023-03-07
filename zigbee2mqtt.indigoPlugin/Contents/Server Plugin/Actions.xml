@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<Actions>
+
+<!--    <Action id="setWhiteLevelTemperature" deviceFilter="self.dimmer,self.zigbeeGroupDimmer" uiPath="DeviceActions">-->
+    <Action id="setWhiteLevelTemperature" uiPath="DeviceActions">
+        <Name>Set White Level / Temperature</Name>
+        <CallbackMethod>set_white_level_temperature</CallbackMethod>
+        <ConfigUI>
+            <Field id="dimmer_device_id" type="menu"  default="-SELECT-" alwaysUseInDialogHeightCalc="true">
+                <Label>Device:</Label>
+                <List class="self" method="list_action_dimmer_devices" dynamicReload="true"/>
+                <CallbackMethod>list_action_dimmer_device_selected</CallbackMethod>
+            </Field>
+            <Field id="setWhiteLevel" type="checkbox" defaultValue="True" alwaysUseInDialogHeightCalc="true">
+                <Label>White Level:</Label>
+                <Description>Check to set White Level</Description>
+            </Field>
+            <Field id="whiteLevel" type="textfield" defaultValue="100"
+                visibleBindingId="setWhiteLevel" visibleBindingValue="true" alwaysUseInDialogHeightCalc="true">
+                <Label>Percentage Value:</Label>
+            </Field>
+            <Field id="setWhiteTemperature" type="checkbox" defaultValue="True" alwaysUseInDialogHeightCalc="true">
+                <Label>White Temperature:</Label>
+                <Description>Check to set White Temperature</Description>
+            </Field>
+            <Field id="whiteTemperature" type="textfield" defaultValue="3500" alwaysUseInDialogHeightCalc="true"
+                visibleBindingId="setWhiteTemperature" visibleBindingValue="true">
+                <Label>Kelvin Value:</Label>
+                <Description>Kelvin</Description>
+            </Field>
+        </ConfigUI>
+    </Action>
+</Actions>

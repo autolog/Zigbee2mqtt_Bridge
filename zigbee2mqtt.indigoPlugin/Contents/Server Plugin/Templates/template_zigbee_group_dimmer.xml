@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Template>
+    <SupportURL>https://forums.indigodomo.com/viewforum.php?f=353</SupportURL>
+<!--    <Field id="refreshCallbackMethod" type="textfield" hidden="true" defaultValue="refresh_ui_callback_group_device"/>-->
+
+    <Field id="uspColor" type="checkbox" defaultValue="false">
+        <Label>Color:</Label>
+        <Description>Dimmer supports color</Description>
+    </Field>
+    <Field id="space-uspColor" type="label"><Label/></Field>
+
+    <Field id="uspColorTemperature" type="checkbox" defaultValue="false">
+        <Label>Color Temperature:</Label>
+        <Description>Dimmer supports  color temperature</Description>
+    </Field>
+    <Field id="space-uspColorTemperature" type="label"><Label/></Field>
+
+    <Field id="SupportsColor" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="SupportsRGB" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="SupportsWhite" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="SupportsWhiteTemperature" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="SupportsTwoWhiteLevels" type="checkbox" defaultValue="false" hidden="true" />
+</Template>

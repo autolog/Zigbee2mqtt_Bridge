@@ -1,0 +1,1134 @@
+<ConfigUI>
+    <Field id="header-1" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green">
+        <Label>SECTION</Label>
+    </Field>
+
+    <Field id="section" type="menu" defaultValue="4" alwaysUseInDialogHeightCalc="true">
+       <Label>Section:</Label>
+       <List>
+          <Option value="MQTT">MQTT</Option>
+          <Option value="ZIGBEE">Zigbee Devices</Option>
+       </List>
+    </Field>
+    <Field id="help-1AA" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="true">
+        <Label>^ Select MQTT to specify the connection details for the MQTT Broker published to by Zigbee2MQTT.</Label>
+    </Field>
+    <Field id="help-1AAA" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="true">
+        <Label>Select ZIGBEE to setup the Indigo devices that map to the Zigbee devices published by Zigbee2MQTT.</Label>
+    </Field>
+
+    <Field id="space-1" type="label" alwaysUseInDialogHeightCalc="true"><Label /></Field>
+    <Field id="separator-1" type="separator" alwaysUseInDialogHeightCalc="true" />
+
+
+	<Field id="header-1BB" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT BROKER CONNECTION DETAILS</Label>
+    </Field>
+    <Field id="space-1BB" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label /></Field>
+    <Field id="mqttClientPrefix" type="textfield" defaultValue="" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT CLIENT PREFIX:</Label>
+    </Field>
+    <Field id="help-1BB" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>^ User definable prefix on the MQTT Broker being connected to. The plugin appends '-Dnnnnnn' (where  nnnnnn is the device Id of this device) in order to make the name unique.</Label>
+    </Field>
+    <Field id="mqttProtocol" type="menu" defaultValue="4" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+       <Label>MQTT Protocol:</Label>
+       <List>
+          <Option value="4">MQTTv311</Option>
+          <Option value="3">MQTTv31</Option>
+       </List>
+    </Field>
+    <Field id="help-1B" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>^ Select required MQTT Protocol. MQTTv311 is the default and this works with the Indigo MQTT Broker plugin.</Label>
+    </Field>
+
+    <Field id="space-2" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label /></Field>
+    <Field id="mqtt_broker_ip" type="textfield" defaultValue="" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT Broker IP Address:</Label>
+    </Field>
+    <Field id="help-2" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>^ Must be the MQTT Broker IP Address used by Zigbee2MQTT</Label>
+    </Field>
+    <Field id="space-3" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label /></Field>
+    <Field id="mqtt_broker_port" type="textfield" defaultValue="1883" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT Broker Port Address:</Label>
+    </Field>
+
+
+    <Field id="space-4" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label /></Field>
+    <Field id="mqtt_username" type="textfield" defaultValue="" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT Username:</Label>
+    </Field>
+    <Field id="help-4" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>^ Must be the username required to access the MQTT Broker. Leave empty if not used.</Label>
+    </Field>
+
+    <Field id="space-5" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label /></Field>
+    <Field id="mqtt_password" type="textfield" secure="false" defaultValue="" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT Password:</Label>
+    </Field>
+    <Field id="mqtt_password_encryption_key" type="textfield" hidden="true" defaultValue="" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT Password Encryption Key:</Label>
+    </Field>
+    <Field id="mqtt_password_is_encoded" type="checkbox" hidden="true" defaultValue="false" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT Password Is Encoded:</Label>
+    </Field>
+    <Field id="help-5" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>^ Password required to access the MQTT Broker. Leave empty if not used.</Label>
+    </Field>
+
+
+    <Field id="space-8" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label /></Field>
+	<Field id="header-3" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>MQTT ZIGBEE2MQTT SUBSCRIPTION:</Label>
+    </Field>
+    <Field id="space-9" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label /></Field>
+
+    <Field id="zigbee2mqtt_root_topic" type="textfield" defaultValue="zigbee2mqtt" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
+        <Label>Zigbee2mqtt Root Topic:</Label>
+    </Field>
+    <Field id="space-10" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label /></Field>
+
+    <Field id="separator-T2" type="separator" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT" />
+
+
+
+
+	<Field id="header-Z1" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>ZIGBEE DEVICES</Label>
+    </Field>
+    <Field id="space-Z1" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE"><Label /></Field>
+
+    <Field id="zigbee_device" type="menu" default="-SELECT-" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>Zigbee Device:</Label>
+        <List class="self" method="list_zigbee_coordinator_devices" dynamicReload="true" />
+        <CallbackMethod>list_zigbee_coordinator_device_selected</CallbackMethod>
+    </Field>
+
+    <Field id="help-Z1" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>^ Select the Zigbee device to show its details and properties.</Label>
+    </Field>
+    <Field id="zigbee_device_filter" type="menu" default="0" dynamicReload="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>Filter Selection:</Label>
+       <List>
+          <Option value="ALL">All</Option>
+          <Option value="ALLOCATED">Allocated to an Indigo Device</Option>
+          <Option value="AVAILABLE">Available for Allocation</Option>
+       </List>
+        <CallbackMethod>list_zigbee_coordinator_device_selected</CallbackMethod>
+    </Field>
+    <Field id="help-Z1342" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>^ Select the required filter.</Label>
+    </Field>
+     <Field id="space-ZZ1" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE"><Label /></Field>
+
+	<Field id="header-ZZ1" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>Device Details:</Label>
+    </Field>
+
+    <Field id="zigbee_vendor" type="textfield" defaultValue="" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>Vendor:</Label>
+    </Field>
+    <Field id="zigbee_model" type="textfield" defaultValue="" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>Model:</Label>
+    </Field>
+    <Field id="space-ZZ1343" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE"><Label /></Field>
+
+
+	<Field id="header-ZZ19" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="ZIGBEE">
+        <Label>Device Properties:</Label>
+    </Field>
+
+
+    <Field id="properties_0x60a423fffe423677_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x60a423fffe423677_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x60a423fffe423677_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe423677_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x60a423fffe423677_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe423677_tamper_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>tamper</Label>
+        </Field>
+        <Field id="property_0x60a423fffe423677_tamper" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device is tampered</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe423677_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x60a423fffe423677_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe423677_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x60a423fffe423677_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe423677_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x54ef4410005b3c43_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x54ef4410005b3c43_occupancy_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>occupancy</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_occupancy" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device detected occupancy</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_illuminance_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>illuminance</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_illuminance" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>Measured illuminance in lux</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_illuminance_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>illuminance</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_illuminance" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>Measured illuminance in lux</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_motion_sensitivity_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>motion_sensitivity</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_motion_sensitivity" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>. Press pairing button right before changing this otherwise it will fail.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_detection_interval_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>detection_interval</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_detection_interval" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>Time interval for detecting actions. Press pairing button right before changing this otherwise it will fail.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_trigger_indicator_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>trigger_indicator</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_trigger_indicator" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>When this option is enabled then blue LED will blink once when motion is detected. Press pairing button right before changing this otherwise it will fail.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_device_temperature_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>device_temperature</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_device_temperature" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>Temperature of the device</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>Voltage of the battery in millivolts</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410005b3c43_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x54ef4410005b3c43_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410005b3c43_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0xbc33acfffefbbea3_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0xbc33acfffefbbea3_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0xbc33acfffefbbea3_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0xbc33acfffefbbea3_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0xbc33acfffefbbea3_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0xbc33acfffefbbea3_tamper_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>tamper</Label>
+        </Field>
+        <Field id="property_0xbc33acfffefbbea3_tamper" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device is tampered</Label>
+        </Field>
+
+        <Field id="properties_0xbc33acfffefbbea3_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0xbc33acfffefbbea3_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0xbc33acfffefbbea3_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0xbc33acfffefbbea3_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xbc33acfffefbbea3_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x00158d00047b5bd8_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x00158d00047b5bd8_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x00158d00047b5bd8_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x00158d00047b5bd8_occupancy_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>occupancy</Label>
+        </Field>
+        <Field id="property_0x00158d00047b5bd8_occupancy" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device detected occupancy</Label>
+        </Field>
+
+        <Field id="properties_0x00158d00047b5bd8_device_temperature_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>device_temperature</Label>
+        </Field>
+        <Field id="property_0x00158d00047b5bd8_device_temperature" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>Temperature of the device</Label>
+        </Field>
+
+        <Field id="properties_0x00158d00047b5bd8_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x00158d00047b5bd8_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>Voltage of the battery in millivolts</Label>
+        </Field>
+
+        <Field id="properties_0x00158d00047b5bd8_illuminance_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>illuminance</Label>
+        </Field>
+        <Field id="property_0x00158d00047b5bd8_illuminance" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>Measured illuminance in lux</Label>
+        </Field>
+
+        <Field id="properties_0x00158d00047b5bd8_illuminance_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>illuminance</Label>
+        </Field>
+        <Field id="property_0x00158d00047b5bd8_illuminance" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>Measured illuminance in lux</Label>
+        </Field>
+
+        <Field id="properties_0x00158d00047b5bd8_power_outage_count_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>power_outage_count</Label>
+        </Field>
+        <Field id="property_0x00158d00047b5bd8_power_outage_count" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>Number of power outages</Label>
+        </Field>
+
+        <Field id="properties_0x00158d00047b5bd8_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x00158d00047b5bd8_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d00047b5bd8_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x5c0272fffedaaa9b_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x5c0272fffedaaa9b_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffedaaa9b_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x5c0272fffedaaa9b_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffedaaa9b_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x5c0272fffedaaa9b_action_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffedaaa9b_hidden" visibleBindingValue="true">
+            <Label>action</Label>
+        </Field>
+        <Field id="property_0x5c0272fffedaaa9b_action" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffedaaa9b_hidden" visibleBindingValue="true">
+            <Label>Triggered action (e.g. a button click)</Label>
+        </Field>
+
+        <Field id="properties_0x5c0272fffedaaa9b_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffedaaa9b_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x5c0272fffedaaa9b_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffedaaa9b_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x54ef4410004784d5_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x54ef4410004784d5_presence_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>presence</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_presence" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device detected presence</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_device_temperature_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>device_temperature</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_device_temperature" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Temperature of the device</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_power_outage_count_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>power_outage_count</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_power_outage_count" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Number of power outages (since last pairing)</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_presence_event_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>presence_event</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_presence_event" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Presence events: &quot;enter&quot;, &quot;leave&quot;, &quot;left_enter&quot;, &quot;right_leave&quot;, &quot;right_enter&quot;, &quot;left_leave&quot;, &quot;approach&quot;, &quot;away&quot;</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_monitoring_mode_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>monitoring_mode</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_monitoring_mode" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Monitoring mode with or without considering right and left sides</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_approach_distance_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>approach_distance</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_approach_distance" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>The distance at which the sensor detects approaching</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_motion_sensitivity_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>motion_sensitivity</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_motion_sensitivity" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Different sensitivities means different static human body recognition rate and response speed of occupied</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_reset_nopresence_status_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>reset_nopresence_status</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_reset_nopresence_status" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Reset the status of no presence</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_action_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>action</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_action" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Most recent region event. Event template is &quot;region_&lt;REGION_ID&gt;_&lt;EVENT_TYPE&gt;&quot;, where &lt;REGION_ID&gt; is region number (1-10), &lt;EVENT_TYPE&gt; is one of &quot;enter&quot;, &quot;leave&quot;, &quot;occupied&quot;, &quot;unoccupied&quot;. &quot;enter&quot; / &quot;leave&quot; events are usually triggered first, followed by &quot;occupied&quot; / &quot;unoccupied&quot; after a couple of seconds.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_region_id_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>region_id</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_region_id" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>No description available from Zigbee2mqtt.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_zones_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>zones</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_zones" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>No description available from Zigbee2mqtt.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_region_id_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>region_id</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_region_id" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>No description available from Zigbee2mqtt.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef4410004784d5_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x54ef4410004784d5_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef4410004784d5_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x1c34f1fffeb76367_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x1c34f1fffeb76367_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x1c34f1fffeb76367_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x1c34f1fffeb76367_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x1c34f1fffeb76367_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x1c34f1fffeb77014_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x1c34f1fffeb77014_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x1c34f1fffeb77014_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x1c34f1fffeb77014_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x1c34f1fffeb77014_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x60a423fffe3d4017_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x60a423fffe3d4017_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d4017_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3d4017_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d4017_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3d4017_tamper_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>tamper</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d4017_tamper" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device is tampered</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3d4017_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d4017_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3d4017_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d4017_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d4017_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x60a423fffe3d3c7e_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x60a423fffe3d3c7e_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d3c7e_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3d3c7e_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d3c7e_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3d3c7e_tamper_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>tamper</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d3c7e_tamper" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device is tampered</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3d3c7e_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d3c7e_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3d3c7e_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3d3c7e_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3d3c7e_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x5c0272fffec068f1_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x5c0272fffec068f1_occupancy_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>occupancy</Label>
+        </Field>
+        <Field id="property_0x5c0272fffec068f1_occupancy" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device detected occupancy</Label>
+        </Field>
+
+        <Field id="properties_0x5c0272fffec068f1_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x5c0272fffec068f1_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x5c0272fffec068f1_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x5c0272fffec068f1_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+        <Field id="properties_0x5c0272fffec068f1_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x5c0272fffec068f1_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x5c0272fffec068f1_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x5c0272fffec068f1_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x5c0272fffec068f1_hidden" visibleBindingValue="true">
+            <Label>Voltage of the battery in millivolts</Label>
+        </Field>
+
+    <Field id="properties_0x54ef441000586c90_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x54ef441000586c90_presence_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>presence</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_presence" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device detected presence</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_device_temperature_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>device_temperature</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_device_temperature" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Temperature of the device</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_power_outage_count_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>power_outage_count</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_power_outage_count" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Number of power outages (since last pairing)</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_presence_event_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>presence_event</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_presence_event" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Presence events: &quot;enter&quot;, &quot;leave&quot;, &quot;left_enter&quot;, &quot;right_leave&quot;, &quot;right_enter&quot;, &quot;left_leave&quot;, &quot;approach&quot;, &quot;away&quot;</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_monitoring_mode_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>monitoring_mode</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_monitoring_mode" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Monitoring mode with or without considering right and left sides</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_approach_distance_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>approach_distance</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_approach_distance" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>The distance at which the sensor detects approaching</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_motion_sensitivity_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>motion_sensitivity</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_motion_sensitivity" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Different sensitivities means different static human body recognition rate and response speed of occupied</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_reset_nopresence_status_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>reset_nopresence_status</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_reset_nopresence_status" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Reset the status of no presence</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_action_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>action</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_action" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Most recent region event. Event template is &quot;region_&lt;REGION_ID&gt;_&lt;EVENT_TYPE&gt;&quot;, where &lt;REGION_ID&gt; is region number (1-10), &lt;EVENT_TYPE&gt; is one of &quot;enter&quot;, &quot;leave&quot;, &quot;occupied&quot;, &quot;unoccupied&quot;. &quot;enter&quot; / &quot;leave&quot; events are usually triggered first, followed by &quot;occupied&quot; / &quot;unoccupied&quot; after a couple of seconds.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_region_id_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>region_id</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_region_id" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>No description available from Zigbee2mqtt.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_zones_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>zones</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_zones" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>No description available from Zigbee2mqtt.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_region_id_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>region_id</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_region_id" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>No description available from Zigbee2mqtt.</Label>
+        </Field>
+
+        <Field id="properties_0x54ef441000586c90_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x54ef441000586c90_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x54ef441000586c90_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x00158d000465423c_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x00158d000465423c_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d000465423c_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x00158d000465423c_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d000465423c_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x00158d000465423c_action_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d000465423c_hidden" visibleBindingValue="true">
+            <Label>action</Label>
+        </Field>
+        <Field id="property_0x00158d000465423c_action" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d000465423c_hidden" visibleBindingValue="true">
+            <Label>Triggered action (e.g. a button click)</Label>
+        </Field>
+
+        <Field id="properties_0x00158d000465423c_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d000465423c_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x00158d000465423c_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d000465423c_hidden" visibleBindingValue="true">
+            <Label>Voltage of the battery in millivolts</Label>
+        </Field>
+
+        <Field id="properties_0x00158d000465423c_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d000465423c_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x00158d000465423c_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d000465423c_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x60a423fffe3c7e34_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x60a423fffe3c7e34_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7e34_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c7e34_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7e34_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c7e34_tamper_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>tamper</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7e34_tamper" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device is tampered</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c7e34_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7e34_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c7e34_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7e34_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7e34_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x60a423fffe3c7363_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x60a423fffe3c7363_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7363_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c7363_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7363_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c7363_tamper_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>tamper</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7363_tamper" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device is tampered</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c7363_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7363_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c7363_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c7363_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c7363_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0xb4e3f9fffe3e0ef6_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0xb4e3f9fffe3e0ef6_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xb4e3f9fffe3e0ef6_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0xb4e3f9fffe3e0ef6_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xb4e3f9fffe3e0ef6_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x847127fffe04c097_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x847127fffe04c097_occupancy_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>occupancy</Label>
+        </Field>
+        <Field id="property_0x847127fffe04c097_occupancy" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device detected occupancy</Label>
+        </Field>
+
+        <Field id="properties_0x847127fffe04c097_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x847127fffe04c097_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x847127fffe04c097_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x847127fffe04c097_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+        <Field id="properties_0x847127fffe04c097_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x847127fffe04c097_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x847127fffe04c097_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x847127fffe04c097_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe04c097_hidden" visibleBindingValue="true">
+            <Label>Voltage of the battery in millivolts</Label>
+        </Field>
+
+    <Field id="properties_0xb4e3f9fffe3e0f16_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0xb4e3f9fffe3e0f16_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xb4e3f9fffe3e0f16_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0xb4e3f9fffe3e0f16_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0xb4e3f9fffe3e0f16_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x60a423fffe44494b_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x60a423fffe44494b_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x60a423fffe44494b_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe44494b_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x60a423fffe44494b_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe44494b_tamper_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>tamper</Label>
+        </Field>
+        <Field id="property_0x60a423fffe44494b_tamper" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device is tampered</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe44494b_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x60a423fffe44494b_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe44494b_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x60a423fffe44494b_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe44494b_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x60a423fffe3c8f76_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x60a423fffe3c8f76_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c8f76_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c8f76_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c8f76_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c8f76_tamper_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>tamper</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c8f76_tamper" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device is tampered</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c8f76_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c8f76_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x60a423fffe3c8f76_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x60a423fffe3c8f76_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x60a423fffe3c8f76_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x00158d0001dcea12_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x00158d0001dcea12_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x00158d0001dcea12_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001dcea12_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x00158d0001dcea12_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001dcea12_device_temperature_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>device_temperature</Label>
+        </Field>
+        <Field id="property_0x00158d0001dcea12_device_temperature" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>Temperature of the device</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001dcea12_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x00158d0001dcea12_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>Voltage of the battery in millivolts</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001dcea12_power_outage_count_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>power_outage_count</Label>
+        </Field>
+        <Field id="property_0x00158d0001dcea12_power_outage_count" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>Number of power outages</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001dcea12_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x00158d0001dcea12_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001dcea12_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x00158d0001e4cc90_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x00158d0001e4cc90_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x00158d0001e4cc90_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001e4cc90_contact_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>contact</Label>
+        </Field>
+        <Field id="property_0x00158d0001e4cc90_contact" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>Indicates if the contact is closed (= true) or open (= false)</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001e4cc90_device_temperature_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>device_temperature</Label>
+        </Field>
+        <Field id="property_0x00158d0001e4cc90_device_temperature" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>Temperature of the device</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001e4cc90_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x00158d0001e4cc90_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>Voltage of the battery in millivolts</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001e4cc90_power_outage_count_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>power_outage_count</Label>
+        </Field>
+        <Field id="property_0x00158d0001e4cc90_power_outage_count" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>Number of power outages</Label>
+        </Field>
+
+        <Field id="properties_0x00158d0001e4cc90_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x00158d0001e4cc90_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x00158d0001e4cc90_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x540f57fffe8ebece_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x540f57fffe8ebece_state_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>state</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_state" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>On/off state of the switch</Label>
+        </Field>
+
+        <Field id="properties_0x540f57fffe8ebece_power_outage_memory_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>power_outage_memory</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_power_outage_memory" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>Recover state after power outage</Label>
+        </Field>
+
+        <Field id="properties_0x540f57fffe8ebece_indicator_mode_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>indicator_mode</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_indicator_mode" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>LED indicator mode</Label>
+        </Field>
+
+        <Field id="properties_0x540f57fffe8ebece_power_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>power</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_power" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>Instantaneous measured power</Label>
+        </Field>
+
+        <Field id="properties_0x540f57fffe8ebece_current_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>current</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_current" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>Instantaneous measured electrical current</Label>
+        </Field>
+
+        <Field id="properties_0x540f57fffe8ebece_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>Measured electrical potential value</Label>
+        </Field>
+
+        <Field id="properties_0x540f57fffe8ebece_energy_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>energy</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_energy" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>Sum of consumed energy</Label>
+        </Field>
+
+        <Field id="properties_0x540f57fffe8ebece_child_lock_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>child_lock</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_child_lock" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>Enables/disables physical input on the device</Label>
+        </Field>
+
+        <Field id="properties_0x540f57fffe8ebece_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x540f57fffe8ebece_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x540f57fffe8ebece_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+    <Field id="properties_0x847127fffe0b63da_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
+
+
+        <Field id="properties_0x847127fffe0b63da_occupancy_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>occupancy</Label>
+        </Field>
+        <Field id="property_0x847127fffe0b63da_occupancy" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>Indicates whether the device detected occupancy</Label>
+        </Field>
+
+        <Field id="properties_0x847127fffe0b63da_battery_low_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>battery_low</Label>
+        </Field>
+        <Field id="property_0x847127fffe0b63da_battery_low" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>Indicates if the battery of this device is almost empty</Label>
+        </Field>
+
+        <Field id="properties_0x847127fffe0b63da_linkquality_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>linkquality</Label>
+        </Field>
+        <Field id="property_0x847127fffe0b63da_linkquality" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>Link quality (signal strength)</Label>
+        </Field>
+
+        <Field id="properties_0x847127fffe0b63da_battery_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>battery</Label>
+        </Field>
+        <Field id="property_0x847127fffe0b63da_battery" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>Remaining battery in %, can take up to 24 hours before reported.</Label>
+        </Field>
+
+        <Field id="properties_0x847127fffe0b63da_voltage_header" type="label" defaultValue="" fontColor="orange" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>voltage</Label>
+        </Field>
+        <Field id="property_0x847127fffe0b63da_voltage" type="label"  defaultValue="" alignWithControl="true" alwaysUseInDialogHeightCalc="false" visibleBindingId="properties_0x847127fffe0b63da_hidden" visibleBindingValue="true">
+            <Label>Voltage of the battery in millivolts</Label>
+        </Field>
+
+    <Field id="space-T7799" type="label" alwaysUseInDialogHeightCalc="true"><Label /></Field>
+
+</ConfigUI>

@@ -1,0 +1,1208 @@
+<?xml version="1.0"?>
+
+<Template>
+    <Field id="separator-ZD1" type="separator" alwaysUseInDialogHeightCalc="true"/>
+    <Field id="header-ZD2" type="label" alwaysUseInDialogHeightCalc="true" fontColor="green">
+        <Label>PROPERTIES</Label>
+    </Field>
+
+<!-- Zigbee Properties   -->
+    <Field id="zigbeePropertiesInitialised" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyBrightness" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyAcceleration" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyBattery" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyAction" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyColor" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyColorName" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyColorTemperature" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyContact" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyEnergy" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyHumidity" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyHvacMode" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyHvacState" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyIlluminance" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyLinkQuality" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyOccupancy" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyOnOff" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyPosition" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyPower" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyPresence" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyPresenceEvent" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyPressure" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyRadar" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertySetpoint" type="checkbox" defaultValue="false" hidden="true" />
+
+    <Field id="zigbeePropertyState" type="checkbox" defaultValue="false" hidden="true" />
+
+    <Field id="zigbeePropertyStateL1" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyStateL2" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyStateL3" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyStateL4" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyStateL5" type="checkbox" defaultValue="false" hidden="true" />
+
+    <Field id="zigbeePropertyTamper" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyTemperature" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyValve" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyVibration" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyVoltage" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyRefresh" type="checkbox" defaultValue="false" hidden="true" />
+
+<!-- Indigo Properties   -->
+    <Field id="primaryIndigoDevice" type="textfield" defaultValue="" hidden="true"/>
+
+    <Field id="NumHumidityInputs" type="textfield" defaultValue="1" hidden="true"/>
+    <Field id="NumTemperatureInputs" type="textfield" defaultValue="1" hidden="true"/>
+    <Field id="ShowCoolHeatEquipmentStateUI" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsBatteryLevel" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="SupportsColor" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsCoolSetpoint" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsEnergyMeter" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsEnergyMeterCurPower" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsHeatSetpoint" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsHvacFanMode" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsHvacOperationMode" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsOnState" type="checkbox" defaultValue="true" hidden="true" />
+    <Field id="SupportsRGB" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsSensorValue" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="SupportsStatusRequest" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="SupportsTwoWhiteLevels" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsWhite" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="SupportsWhiteTemperature" type="checkbox" defaultValue="false" hidden="true"/>
+    <Field id="supportsTemperatureReporting" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="supportsValve" type="checkbox" defaultValue="false" hidden="true"/>
+
+<!-- "usp" [User Selectable Properties] - Visibility set dependent on Zigbee Properties enabled  -->
+
+    <!-- Acceleration -->
+    <Field id="space-header-uspAcceleration" type="label"
+           visibleBindingId="zigbeePropertyAcceleration" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspAcceleration" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyAcceleration" visibleBindingValue="true">
+        <Label>Acceleration</Label>
+    </Field>
+    <Field id="uspAcceleration" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyAcceleration" visibleBindingValue="true">
+        <Label>Tamper:</Label>
+        <Description>Associated with Zigbee 'acceleration' Property</Description>
+    </Field>
+    <Field id="uspAccelerationIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspAccelerationIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspAcceleration" visibleBindingValue="true" enabledBindingId="uspAccelerationIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="accelerationSensor" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspAcceleration" type="label"
+           visibleBindingId="zigbeePropertyAcceleration" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspAcceleration" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyAcceleration" visibleBindingValue="true"/>
+
+    <!-- Action -->
+    <Field id="space-header-uspAction" type="label"
+           visibleBindingId="zigbeePropertyAction" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspAction" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyAction" visibleBindingValue="true">
+        <Label>Action</Label>
+    </Field>
+    <Field id="uspActionEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspAction" type="checkbox" defaultValue="false" enabledBindingId="uspActionEnabled"
+            visibleBindingId="zigbeePropertyAction" visibleBindingValue="true">
+        <Label>Scene [Button]:</Label>
+        <Description>Associated with Zigbee 'action' Property</Description>
+    </Field>
+    <Field id="uspActionIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspActionIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspAction" visibleBindingValue="true" enabledBindingId="uspActionIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="button" method="list_device_state_menu_options"/>
+     </Field>
+    <Field type="menu" id="uspNumberOfButtons" defaultValue="1"
+            visibleBindingId="uspAction" visibleBindingValue="true">
+        <Label>Number of Buttons:</Label>
+        <List>
+            <Option value="1">One Button</Option>
+            <Option value="2">Two Buttons</Option>
+            <Option value="3">Three Buttons</Option>
+            <Option value="4">Four Buttons</Option>
+            <Option value="5">Five Buttons</Option>
+            <Option value="6">Six Buttons</Option>
+            <Option value="7">Seven Buttons</Option>
+            <Option value="8">Eight Buttons</Option>
+            <Option value="9">Nine Buttons</Option>
+            <Option value="10">10 Buttons</Option>
+            <Option value="11">11 Buttons</Option>
+            <Option value="12">12 Buttons</Option>
+            <Option value="13">13 Buttons</Option>
+            <Option value="14">14 Buttons</Option>
+            <Option value="15">15 Buttons</Option>
+            <Option value="16">16 Buttons</Option>
+            <Option value="17">17 Buttons</Option>
+            <Option value="18">18 Buttons</Option>
+            <Option value="19">19 Buttons</Option>
+            <Option value="20">20 Buttons</Option>
+            <Option value="21">21 Buttons</Option>
+            <Option value="22">22 Buttons</Option>
+            <Option value="23">23 Buttons</Option>
+            <Option value="24">24 Buttons</Option>
+            <Option value="25">25 Buttons</Option>
+            <Option value="26">26 Buttons</Option>
+            <Option value="27">27 Buttons</Option>
+            <Option value="28">28 Buttons</Option>
+            <Option value="29">29 Buttons</Option>
+            <Option value="30">30 Buttons</Option>
+
+        </List>
+    </Field>
+    <Field id="space-uspAction" type="label"
+           visibleBindingId="zigbeePropertyAction" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspAction" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyAction" visibleBindingValue="true"/>
+
+    <!-- Brightness -->
+    <Field id="space-header-uspBrightness" type="label"
+           visibleBindingId="zigbeePropertyBrightness" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspBrightness" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyBrightness" visibleBindingValue="true">
+        <Label>Dimmer</Label>
+    </Field>
+    <Field id="uspBrightness" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyBrightness" visibleBindingValue="true">
+        <Label>Dimmer:</Label>
+        <Description>Associated with Zigbee 'brightness' Property</Description>
+    </Field>
+    <Field id="uspBrightnessIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspBrightnessIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspBrightness" visibleBindingValue="true" enabledBindingId="uspBrightnessIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="brightness" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspBrightness" type="label"
+           visibleBindingId="zigbeePropertyBrightness" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspBrightness" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyBrightness" visibleBindingValue="true"/>
+
+    <!-- Color -->
+    <Field id="space-header-uspColorRGB" type="label"
+           visibleBindingId="zigbeePropertyColor" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspColorRGB" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyColor" visibleBindingValue="true">
+        <Label>Dimmer</Label>
+    </Field>
+    <Field id="uspColorRGB" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyColor" visibleBindingValue="true">
+        <Label>Color RGB:</Label>
+        <Description>Associated with Zigbee 'color' Property</Description>
+    </Field>
+    <Field id="uspColorIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspColorIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspColorRGB" visibleBindingValue="true" enabledBindingId="uspColorIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="color" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspColor" type="label"
+           visibleBindingId="zigbeePropertyColor" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspColor" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyColor" visibleBindingValue="true"/>
+
+
+    <!-- Color Temperature -->
+    <Field id="space-header-uspColorTemperature" type="label"
+           visibleBindingId="zigbeePropertyColorTemperature" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspColorTemperature" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyColorTemperature" visibleBindingValue="true">
+        <Label>Dimmer</Label>
+    </Field>
+    <Field id="uspColorTemperature" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyColorTemperature" visibleBindingValue="true">
+        <Label>Color Temperature:</Label>
+        <Description>Associated with Zigbee 'color-temperature' Property</Description>
+    </Field>
+    <Field id="uspKelvinMinimum" type="textfield" defaultValue="2500"
+           visibleBindingId="uspColorTemperature" visibleBindingValue="true">
+        <Label>Kelvin Minimum:</Label>
+    </Field>
+    <Field id="uspKelvinMaximum" type="textfield" defaultValue="9000"
+           visibleBindingId="uspColorTemperature" visibleBindingValue="true">
+        <Label>Kelvin Maximum:</Label>
+    </Field>
+
+    <Field id="uspColorTemperatureIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspColorTemperatureIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspColorTemperature" visibleBindingValue="true" enabledBindingId="uspColorTemperatureIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="colorTemperature" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspColorTemperature" type="label"
+           visibleBindingId="zigbeePropertyColorTemperature" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspColorTemperature" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyColorTemperature" visibleBindingValue="true"/>
+
+    <!-- Contact -->
+    <Field id="space-header-uspContact" type="label"
+           visibleBindingId="zigbeePropertyContact" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspContact" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyContact" visibleBindingValue="true">
+        <Label>Contact</Label>
+    </Field>
+    <Field id="uspContact" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyContact" visibleBindingValue="true">
+        <Label>Contact:</Label>
+        <Description>Associated with Zigbee 'contact' Property</Description>
+    </Field>
+    <Field id="uspContactIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspContactIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspContact" visibleBindingValue="true" enabledBindingId="uspContactIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="contact" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspContact" type="label"
+           visibleBindingId="zigbeePropertyContact" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspContact" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyContact" visibleBindingValue="true"/>
+
+    <!-- Energy -->
+    <Field id="space-header-uspEnergy" type="label"
+           visibleBindingId="zigbeePropertyEnergy" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspEnergy" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyEnergy" visibleBindingValue="true">
+        <Label>Energy</Label>
+    </Field>
+    <Field id="uspEnergy" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyEnergy" visibleBindingValue="true">
+        <Label>Accumulated Energy Total:</Label>
+    </Field>
+    <Field id="uspEnergyIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspEnergyIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspEnergy" visibleBindingValue="true" enabledBindingId="uspEnergyIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="energy" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="uspEnergyUnits" type="textfield" defaultValue="Watts"
+            visibleBindingId="uspEnergy" visibleBindingValue="true">
+        <Label>Energy Units:</Label>
+    </Field>
+    <Field id="uspEnergyDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspEnergy" visibleBindingValue="true">
+        <Label>Energy Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspEnergy" type="label"
+           visibleBindingId="zigbeePropertyEnergy" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspEnergy" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyEnergy" visibleBindingValue="true"/>
+
+    <!-- Humidity -->
+    <Field id="space-header-uspHumidity" type="label"
+           visibleBindingId="zigbeePropertyHumidity" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspHumidity" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyHumidity" visibleBindingValue="true">
+        <Label>Humidity</Label>
+    </Field>
+    <Field id="uspHumidity" type="checkbox" defaultValue="false"
+           visibleBindingId="zigbeePropertyHumidity" visibleBindingValue="true">
+        <Label>Humidity:</Label>
+        <Description>Associated with Zigbee 'humidity' Property</Description>
+    </Field>
+    <Field id="uspHumidityIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspHumidityIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspHumidity" visibleBindingValue="true" enabledBindingId="uspHumidityIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="humiditySensor" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="uspHumidityDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspHumidity" visibleBindingValue="true">
+        <Label>Humidity Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspHumidity" type="label"
+           visibleBindingId="zigbeePropertyHumidity" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspHumidity" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyHumidity" visibleBindingValue="true"/>
+
+   <!-- Illuminance -->
+    <Field id="space-header-uspIlluminance" type="label"
+           visibleBindingId="zigbeePropertyIlluminance" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspIlluminance" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyIlluminance" visibleBindingValue="true">
+        <Label>Illuminance</Label>
+    </Field>
+    <Field id="uspIlluminance" type="checkbox" defaultValue="false"
+           visibleBindingId="zigbeePropertyIlluminance" visibleBindingValue="true">
+        <Label>Illuminance:</Label>
+        <Description>Associated with Zigbee 'illuminance' Property</Description>
+    </Field>
+    <Field id="uspIlluminanceIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspIlluminanceIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspIlluminance" visibleBindingValue="true" enabledBindingId="uspIlluminanceIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="illuminanceSensor" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="uspIlluminanceUnits" type="textfield" defaultValue="Lux"
+           visibleBindingId="uspIlluminance" visibleBindingValue="true">
+        <Label>Illuminance Units:</Label>
+    </Field>
+    <Field id="uspIlluminanceDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspIlluminance" visibleBindingValue="true">
+        <Label>Illuminance Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspIlluminance" type="label"
+           visibleBindingId="zigbeePropertyIlluminance" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspIlluminance" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyIlluminance" visibleBindingValue="true"/>
+
+    <!-- Link Quality -->
+    <Field id="space-header-uspLinkQuality" type="label"
+           visibleBindingId="zigbeePropertyLinkQuality" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspLinkQuality" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyLinkQuality" visibleBindingValue="true">
+        <Label>Link Quality</Label>
+    </Field>
+    <Field id="uspLinkQuality" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyLinkQuality" visibleBindingValue="true">
+        <Label>Link Quality:</Label>
+        <Description>Associated with Zigbee 'linkquality' Property</Description>
+    </Field>
+    <Field id="uspLinkQualityIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspLinkQualityIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspLinkQuality" visibleBindingValue="true" enabledBindingId="uspLinkQualityIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="link-quality" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspLinkQuality" type="label"
+           visibleBindingId="zigbeePropertyLinkQuality" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspLinkQuality" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyLinkQuality" visibleBindingValue="true"/>
+
+    <!-- Occupancy -->
+    <Field id="space-header-uspOccupancy" type="label"
+           visibleBindingId="zigbeePropertyOccupancy" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspOccupancy" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyOccupancy" visibleBindingValue="true">
+        <Label>Motion</Label>
+    </Field>
+    <Field id="uspOccupancy" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyOccupancy" visibleBindingValue="true">
+        <Label>Motion:</Label>
+        <Description>Associated with Zigbee 'occupancy' Property</Description>
+    </Field>
+    <Field id="uspOccupancyIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspOccupancyIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspOccupancy" visibleBindingValue="true" enabledBindingId="uspOccupancyIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="motionSensor" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspOccupancy" type="label"
+           visibleBindingId="zigbeePropertyOccupancy" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspOccupancy" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyOccupancy" visibleBindingValue="true"/>
+
+    <!-- On/Off -->
+    <Field id="space-header-uspOnOff" type="label"
+           visibleBindingId="zigbeePropertyOnOff" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspOnOff" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyOnOff" visibleBindingValue="true">
+        <Label>On/Off</Label>
+    </Field>
+    <Field id="uspOnOff" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyOnOff" visibleBindingValue="true">
+        <Label>On / Off:</Label>
+        <Description>Associated with Zigbee 'state' Property</Description>
+    </Field>
+    <Field id="uspOnOffIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspOnOffIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspOnOff" visibleBindingValue="true" enabledBindingId="uspOnOffIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="onoff" method="list_device_state_menu_options"/>
+     </Field>
+
+    <Field id="space-uspOnOff" type="label"
+           visibleBindingId="zigbeePropertyOnOff" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspOnOff" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyOnOff" visibleBindingValue="true"/>
+
+    <!-- Position -->
+    <Field id="space-header-uspPosition" type="label"
+           visibleBindingId="zigbeePropertyPosition" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPosition" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPosition" visibleBindingValue="true">
+        <Label>Position</Label>
+    </Field>
+    <Field id="uspPosition" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyPosition" visibleBindingValue="true">
+        <Label>Position:</Label>
+        <Description>Associated with Zigbee 'position' Property</Description>
+    </Field>
+
+    <Field id="uspPositionIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspPositionIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspPosition" visibleBindingValue="true" enabledBindingId="uspPositionIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="blind" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspPosition" type="label"
+           visibleBindingId="zigbeePropertyPosition" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPosition" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPosition" visibleBindingValue="true"/>
+
+    <!-- Power -->
+    <Field id="space-header-uspPower" type="label"
+           visibleBindingId="zigbeePropertyPower" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPower" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPower" visibleBindingValue="true">
+        <Label>Power</Label>
+    </Field>
+    <Field id="uspPower" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyPower" visibleBindingValue="true">
+        <Label>Power:</Label>
+        <Description>Associated with Zigbee 'power' Property</Description>
+    </Field>
+    <Field id="uspPowerIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspPowerIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspPower" visibleBindingValue="true" enabledBindingId="uspPowerIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="power" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="uspPowerMinimumReportingLevel" type="textfield" defaultValue="0"
+            visibleBindingId="uspPower" visibleBindingValue="true">
+        <Label>Minimum Reporting Power Level:</Label>
+    </Field>
+    <Field id="uspPowerReportingHysteresis" type="textfield" defaultValue="0"
+            visibleBindingId="uspPower" visibleBindingValue="true">
+        <Label>Reporting Power Hysteresis:</Label>
+    </Field>
+    <Field id="uspPowerUnits" type="textfield" defaultValue="Watts"
+            visibleBindingId="uspPower" visibleBindingValue="true">
+        <Label>Power Units:</Label>
+    </Field>
+    <Field id="uspPowerDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspPower" visibleBindingValue="true">
+        <Label>Power Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspPower" type="label"
+           visibleBindingId="zigbeePropertyPower" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPower" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPower" visibleBindingValue="true"/>
+
+    <!-- Presence -->
+    <Field id="space-header-uspPresence" type="label"
+           visibleBindingId="zigbeePropertyPresence" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPresence" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPresence" visibleBindingValue="true">
+        <Label>Presence</Label>
+    </Field>
+    <Field id="uspPresence" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyPresence" visibleBindingValue="true">
+        <Label>Presence:</Label>
+        <Description>Associated with Zigbee 'presence' Property</Description>
+    </Field>
+    <Field id="uspPresenceIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspPresenceIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspPresence" visibleBindingValue="true" enabledBindingId="uspPresenceIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="presenceSensor" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspPresence" type="label"
+           visibleBindingId="zigbeePropertyPresence" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPresence" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPresence" visibleBindingValue="true"/>
+
+    <!-- Presence Event-->
+    <Field id="space-header-uspPresenceEvent" type="label"
+           visibleBindingId="zigbeePropertyPresenceEvent" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPresenceEvent" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPresenceEvent" visibleBindingValue="true">
+        <Label>Presence Event</Label>
+    </Field>
+    <Field id="uspPresenceEvent" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyPresenceEvent" visibleBindingValue="true">
+        <Label>Presence Event:</Label>
+        <Description>Associated with Zigbee 'presence_event' Property</Description>
+    </Field>
+    <Field id="uspPresenceEventIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspPresenceEventIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspPresenceEvent" visibleBindingValue="true" enabledBindingId="uspPresenceEventIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="presenceSensor" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspPresenceEvent" type="label"
+           visibleBindingId="zigbeePropertyPresenceEvent" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPresenceEvent" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPresenceEvent" visibleBindingValue="true"/>
+
+    <!-- Pressure -->
+    <Field id="space-header-uspPressure" type="label"
+           visibleBindingId="zigbeePropertyPressure" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPressure" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPressure" visibleBindingValue="true">
+        <Label>Pressure</Label>
+    </Field>
+    <Field id="uspPressure" type="checkbox" defaultValue="false"
+           visibleBindingId="zigbeePropertyPressure" visibleBindingValue="true">
+        <Label>Pressure:</Label>
+        <Description>Associated with Zigbee 'pressure' Property</Description>
+    </Field>
+    <Field id="uspPressureIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspPressureIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspPressure" visibleBindingValue="true" enabledBindingId="uspPresenceIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="pressure" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="uspPressureUnits" type="textfield" defaultValue="mBar"
+           visibleBindingId="uspPressure" visibleBindingValue="true">
+        <Label>Pressure Units:</Label>
+    </Field>
+    <Field id="uspPressureDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspPressure" visibleBindingValue="true">
+        <Label>Pressure Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspPressure" type="label"
+           visibleBindingId="zigbeePropertyPressure" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPressure" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPressure" visibleBindingValue="true"/>
+
+    <!-- Radar [aka Presence for Aqara FP1 -->
+    <Field id="space-header-uspRadar" type="label"
+           visibleBindingId="zigbeePropertyRadar" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspRadar" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyRadar" visibleBindingValue="true">
+        <Label>Radar</Label>
+    </Field>
+    <Field id="uspRadar" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyRadar" visibleBindingValue="true">
+        <Label>Radar:</Label>
+        <Description>Associated with Zigbee 'radar' Property</Description>
+    </Field>
+    <Field id="uspRadarIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspRadarIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspRadar" visibleBindingValue="true" enabledBindingId="uspRadarIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="radarSensor" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspRadar" type="label"
+           visibleBindingId="zigbeePropertyRadar" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspRadar" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyRadar" visibleBindingValue="true"/>
+
+    <!-- State -->
+    
+    <Field id="space-header-uspState" type="label"
+           visibleBindingId="zigbeePropertyState" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspState" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyState" visibleBindingValue="true">
+        <Label>State</Label>
+    </Field>
+    <Field id="uspState" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyState" visibleBindingValue="true">
+        <Label>State:</Label>
+        <Description>Associated with Zigbee 'state' Property</Description>
+    </Field>
+
+    <Field id="uspStateIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspStateIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspState" visibleBindingValue="true" enabledBindingId="uspStateIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="dimmer" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspState" type="label"
+           visibleBindingId="zigbeePropertyState" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspState" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyState" visibleBindingValue="true"/>
+
+
+
+    <!-- State_l1 -->
+    <Field id="space-header-uspStateL1" type="label"
+           visibleBindingId="zigbeePropertyStateL1" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspStateL1" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyStateL1" visibleBindingValue="true">
+        <Label>State_L1</Label>
+    </Field>
+    <Field id="uspStateL1" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyStateL1" visibleBindingValue="true">
+        <Label>State_L1:</Label>
+        <Description>Associated with Zigbee 'state_l1' Property</Description>
+    </Field>
+
+
+    <Field id="uspStateL1IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspStateL1Indigo" type="menu" defaultValue="0"
+            visibleBindingId="uspStateL1" visibleBindingValue="true" enabledBindingId="uspStateL1IndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="stateL1" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspStateL1" type="label"
+           visibleBindingId="zigbeePropertyStateL1" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspStateL1" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyStateL1" visibleBindingValue="true"/>
+
+    <!-- State_l2 -->
+    <Field id="space-header-uspStateL2" type="label"
+           visibleBindingId="zigbeePropertyStateL2" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspStateL2" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyStateL2" visibleBindingValue="true">
+        <Label>State_L2</Label>
+    </Field>
+    <Field id="uspStateL2" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyStateL2" visibleBindingValue="true">
+        <Label>State_L2:</Label>
+        <Description>Associated with Zigbee 'state_l2' Property</Description>
+    </Field>
+
+    <Field id="uspStateL2IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspStateL2Indigo" type="menu" defaultValue="0"
+            visibleBindingId="uspStateL2" visibleBindingValue="true" enabledBindingId="uspStateL2IndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="stateL2-5" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspStateL2" type="label"
+           visibleBindingId="zigbeePropertyStateL2" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspStateL2" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyStateL2" visibleBindingValue="true"/>
+
+    <!-- State_l3 -->
+    <Field id="space-header-uspStateL3" type="label"
+           visibleBindingId="zigbeePropertyStateL3" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspStateL3" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyStateL3" visibleBindingValue="true">
+        <Label>State_L3</Label>
+    </Field>
+    <Field id="uspStateL3" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyStateL3" visibleBindingValue="true">
+        <Label>State_L3:</Label>
+        <Description>Associated with Zigbee 'state_l3' Property</Description>
+    </Field>
+
+    <Field id="uspStateL3IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspStateL3Indigo" type="menu" defaultValue="0"
+            visibleBindingId="uspStateL3" visibleBindingValue="true" enabledBindingId="uspStateL3IndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="stateL2-5" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspStateL3" type="label"
+           visibleBindingId="zigbeePropertyStateL3" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspStateL3" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyStateL3" visibleBindingValue="true"/>
+
+    <!-- State_l4 -->
+    <Field id="space-header-uspStateL4" type="label"
+           visibleBindingId="zigbeePropertyStateL4" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspStateL4" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyStateL4" visibleBindingValue="true">
+        <Label>State_L4</Label>
+    </Field>
+    <Field id="uspStateL4" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyStateL4" visibleBindingValue="true">
+        <Label>State_L4:</Label>
+        <Description>Associated with Zigbee 'state_l4' Property</Description>
+    </Field>
+
+    <Field id="uspStateL4IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspStateL4Indigo" type="menu" defaultValue="0"
+            visibleBindingId="uspStateL4" visibleBindingValue="true" enabledBindingId="uspStateL4IndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="stateL2-5" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspStateL4" type="label"
+           visibleBindingId="zigbeePropertyStateL4" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspStateL4" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyStateL4" visibleBindingValue="true"/>
+
+    <!-- State_l5 -->
+    <Field id="space-header-uspStateL5" type="label"
+           visibleBindingId="zigbeePropertyStateL5" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspStateL5" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyStateL5" visibleBindingValue="true">
+        <Label>State_L5</Label>
+    </Field>
+    <Field id="uspStateL5" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyStateL5" visibleBindingValue="true">
+        <Label>State_L5:</Label>
+        <Description>Associated with Zigbee 'state_l5' Property</Description>
+    </Field>
+
+    <Field id="uspStateL5IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspStateL5Indigo" type="menu" defaultValue="0"
+            visibleBindingId="uspStateL5" visibleBindingValue="true" enabledBindingId="uspStateL5IndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="stateL2-5" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspStateL5" type="label"
+           visibleBindingId="zigbeePropertyStateL5" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspStateL5" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyStateL5" visibleBindingValue="true"/>
+
+
+
+
+
+
+    <!-- Tamper -->
+    <Field id="space-header-uspTamper" type="label"
+           visibleBindingId="zigbeePropertyTamper" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspTamper" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyTamper" visibleBindingValue="true">
+        <Label>Tamper</Label>
+    </Field>
+    <Field id="uspTamper" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyTamper" visibleBindingValue="true">
+        <Label>Tamper:</Label>
+        <Description>Associated with Zigbee 'tamper' Property</Description>
+    </Field>
+    <Field id="uspTamperIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspTamperIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspTamper" visibleBindingValue="true" enabledBindingId="uspTamperIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="tamperSensor" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspTamper" type="label"
+           visibleBindingId="zigbeePropertyTamper" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspTamper" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyTamper" visibleBindingValue="true"/>
+
+
+
+
+
+    <!-- Temperature -->
+    <Field id="space-header-uspTemperature" type="label"
+           visibleBindingId="zigbeePropertyTemperature" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspTemperature" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyTemperature" visibleBindingValue="true">
+        <Label>Temperature</Label>
+    </Field>
+    <Field id="uspTemperature" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyTemperature" visibleBindingValue="true">
+        <Label>Temperature:</Label>
+        <Description>Associated with Zigbee 'temperature' Property</Description>
+    </Field>
+    <Field id="uspTemperatureEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspTemperatureIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspTemperature" visibleBindingValue="true" enabledBindingId="uspTemperatureEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="temperatureSensor" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="uspTemperatureUnitsConversion" type="menu" defaultValue="C"
+           visibleBindingId="uspTemperature" visibleBindingValue="true">
+        <Label>Temperature Units:</Label>
+        <List>
+            <Option value="C">Centigrade [ºC]</Option>
+            <Option value="F">Fahrenheit [ºF]</Option>
+            <Option value="C>F">Convert ºC > ºF</Option>
+            <Option value="F>C">Convert ºF > ºC</Option>
+        </List>
+    </Field>
+    <Field id="uspTemperatureDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspTemperature" visibleBindingValue="true">
+        <Label>Temperature Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspTemperature" type="label"
+           visibleBindingId="zigbeePropertyTemperature" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspTemperature" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyTemperature" visibleBindingValue="true"/>
+
+    <!-- HVAC Mode -->
+    <Field id="uspHvacMode" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyHvacMode" visibleBindingValue="true">
+        <Label>HVAC Mode:</Label>
+        <Description>Associated with Zigbee 'mode' Property</Description>
+    </Field>
+    <Field id="uspHvacState" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyHvacState" visibleBindingValue="true">
+        <Label>HVAC State:</Label>
+        <Description>Associated with Zigbee 'state' Property</Description>
+    </Field>
+    <Field id="space-uspHvacMode" type="label"
+           visibleBindingId="zigbeePropertyHvacMode" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspHvacMode" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyHvacMode" visibleBindingValue="true"/>
+
+    <!-- Setpoint -->
+    <Field id="space-header-uspSetpoint" type="label"
+           visibleBindingId="zigbeePropertySetpoint" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspSetpoint" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertySetpoint" visibleBindingValue="true">
+        <Label>Setpoint</Label>
+    </Field>
+    <Field id="uspSetpoint" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertySetpoint" visibleBindingValue="true">
+        <Label>Setpoint:</Label>
+        <Description>Associated with Zigbee 'setpoint' Property</Description>
+    </Field>
+    <Field id="uspSetpointIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspSetpointIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspSetpoint" visibleBindingValue="true" enabledBindingId="uspSetpointIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="setpoint" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="uspSetpointUnitsConversion" type="menu" defaultValue="C"
+           visibleBindingId="uspSetpoint" visibleBindingValue="true">
+        <Label>Setpoint Units:</Label>
+        <List>
+            <Option value="C">Centigrade [ºC]</Option>
+            <Option value="F">Fahrenheit [ºF]</Option>
+            <Option value="C>F">Convert ºC > ºF</Option>
+            <Option value="F>C">Convert ºF > ºC</Option>
+        </List>
+    </Field>
+    <Field id="uspSetpointDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspSetpoint" visibleBindingValue="true">
+        <Label>Setpoint Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspSetpoint" type="label"
+           visibleBindingId="zigbeePropertySetpoint" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspSetpoint" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertySetpoint" visibleBindingValue="true"/>
+
+    <!-- Valve -->
+    <Field id="space-header-uspValve" type="label"
+           visibleBindingId="zigbeePropertyValve" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspValve" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyValve" visibleBindingValue="true">
+        <Label>Valve</Label>
+    </Field>
+    <Field id="uspValve" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyValve" visibleBindingValue="true">
+        <Label>Valve:</Label>
+        <Description>Associated with Zigbee 'valve [Dim]' Property</Description>
+    </Field>
+    <Field id="uspValveIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspValveIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspValve" visibleBindingValue="true" enabledBindingId="uspValveIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="valve" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspValve" type="label"
+           visibleBindingId="zigbeePropertyValve" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspValve" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyValve" visibleBindingValue="true"/>
+
+    <!-- Vibration -->
+    <Field id="space-header-uspVibration" type="label"
+           visibleBindingId="zigbeePropertyVibration" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspVibration" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyVibration" visibleBindingValue="true">
+        <Label>Vibration</Label>
+    </Field>
+    <Field id="uspVibration" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyVibration" visibleBindingValue="true">
+        <Label>Vibration:</Label>
+        <Description>Associated with Zigbee 'vibration' Property</Description>
+    </Field>
+
+    <Field id="uspVibrationIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspVibrationIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspVibration" visibleBindingValue="true" enabledBindingId="uspVibrationIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="vibrationSensor" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspVibration" type="label"
+           visibleBindingId="zigbeePropertyVibration" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspVibration" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyVibration" visibleBindingValue="true"/>
+
+    <!-- Voltage -->
+    <Field id="space-header-uspVoltage" type="label"
+           visibleBindingId="zigbeePropertyVoltage" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspVoltage" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyVoltage" visibleBindingValue="true">
+        <Label>Voltage</Label>
+    </Field>
+    <Field id="uspVoltage" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyVoltage" visibleBindingValue="true">
+        <Label>Voltage:</Label>
+        <Description>Associated with Zigbee 'voltage' Property</Description>
+    </Field>
+    <Field id="uspVoltageIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspVoltageIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspVoltage" visibleBindingValue="true" enabledBindingId="uspVoltageIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="voltage" method="list_device_state_menu_options"/>
+    </Field>
+<!--    <Field id="uspVoltageIndigoSecondaryId" type="textfield" defaultValue="0"  hidden="false">-->
+<!--        <Label>Voltage device Secondary Id:</Label>-->
+<!--    </Field>-->
+
+    <Field id="uspVoltageDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspVoltage" visibleBindingValue="true">
+        <Label>Voltage Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspVoltage" type="label"
+           visibleBindingId="zigbeePropertyVoltage" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspVoltage" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyVoltage" visibleBindingValue="true"/>
+
+<!-- User Selectable Broadcast Logging - Visibility that is set is dependant on whether User Selectable Properties enabled  -->
+
+<!--    <Field id="separator-3" type="separator" alwaysUseInDialogHeightCalc="true"/>-->
+    <Field id="header-logging" type="label" alwaysUseInDialogHeightCalc="true" fontColor="green">
+        <Label>LOGGING</Label>
+    </Field>
+
+    <!-- Acceleration -->
+    <Field id="hideAccelerationBroadcast" type="checkbox" defaultValue="false"
+           visibleBindingId="uspAcceleration" visibleBindingValue="true">
+        <Description>Hide acceleration message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideAccelerationBroadcast" type="label"
+           visibleBindingId="uspAcceleration" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Action -->
+    <Field id="hideActionBroadcast" type="checkbox" defaultValue="false"
+           visibleBindingId="uspAction" visibleBindingValue="true">
+        <Description>Hide button presses message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideActionBroadcast" type="label"
+           visibleBindingId="uspAction" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Contact -->
+    <Field id="hideContactBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspContact" visibleBindingValue="true">
+        <Description>Hide contact sensor message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideContactBroadcast" type="label"
+           visibleBindingId="uspContact" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Dimmer -->
+    <Field id="hideDimmerBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspBrightness" visibleBindingValue="true">
+        <Description>Hide dimmer message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideDimmerBroadcast" type="label"
+           visibleBindingId="uspBrightness" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Energy -->
+    <Field id="hideEnergyBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspEnergy" visibleBindingValue="true">
+        <Description>Hide energy accumualted message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideEnergyBroadcast" type="label"
+           visibleBindingId="uspEnergy" visibleBindingValue="true"><Label/></Field>
+
+    <!-- HVAC Mode -->
+     <Field id="hideHvacModeBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspHvacMode" visibleBindingValue="true">
+        <Description>Hide hvac mode message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideHvacModeBroadcast" type="label"
+           visibleBindingId="uspHvacMode" visibleBindingValue="true"><Label/></Field>
+
+    <!-- HVAC State -->
+     <Field id="hideHvacStateBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspHvacState" visibleBindingValue="true">
+        <Description>Hide hvac state message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideHvacStateBroadcast" type="label"
+           visibleBindingId="uspHvacState" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Humidity -->
+    <Field id="hideHumidityBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspHumidity" visibleBindingValue="true">
+        <Description>Hide humidity message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideHumidityBroadcast" type="label"
+           visibleBindingId="uspHumidity" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Illuminance -->
+    <Field id="hideIlluminanceBroadcast" type="checkbox" defaultValue="false"
+           visibleBindingId="uspIlluminance" visibleBindingValue="true">
+        <Description>Hide illuminance message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideIlluminanceBroadcast" type="label"
+           visibleBindingId="uspIlluminance" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Motion -->
+    <Field id="hideMotionBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspOccupancy" visibleBindingValue="true">
+        <Description>Hide motion sensor message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideMotionBroadcast" type="label"
+           visibleBindingId="uspOccupancy" visibleBindingValue="true"><Label/></Field>
+
+    <!-- On / Off -->
+    <Field id="hideOnOffBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspOnOff" visibleBindingValue="true">
+        <Description>Hide On / Off message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideOnOffBroadcast" type="label"
+           visibleBindingId="uspOnOff" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Position -->
+    <Field id="hidePositionBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspPosition" visibleBindingValue="true">
+        <Description>Hide position usage message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hidePositionBroadcast" type="label"
+           visibleBindingId="uspPosition" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Power -->
+    <Field id="hidePowerBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspPower" visibleBindingValue="true">
+        <Description>Hide power usage message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hidePowerBroadcast" type="label"
+           visibleBindingId="uspPower" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Presence -->
+    <Field id="hidePresenceBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspPresence" visibleBindingValue="true">
+        <Description>Hide presence message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hidePresenceBroadcast" type="label"
+           visibleBindingId="uspPresence" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Pressure -->
+    <Field id="hidePressureBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspPressure" visibleBindingValue="true">
+        <Description>Hide pressure message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hidePressureBroadcast" type="label"
+           visibleBindingId="uspPressure" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Setpoint -->
+    <Field id="hideSetpointBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspSetpoint" visibleBindingValue="true">
+        <Description>Hide setpoint message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideSetpointBroadcast" type="label"
+           visibleBindingId="uspSetpoint" visibleBindingValue="true"><Label/></Field>
+
+    <!--  State -->
+    <Field id="hideStateBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspState" visibleBindingValue="true">
+        <Description>Hide state message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateBroadcast" type="label"
+           visibleBindingId="uspState" visibleBindingValue="true"><Label/></Field>
+
+    <!--  State L1-->
+    <Field id="hideStateL1Broadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspStateL1" visibleBindingValue="true">
+        <Description>Hide state_l1 message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateL1Broadcast" type="label"
+           visibleBindingId="uspStateL1" visibleBindingValue="true"><Label/></Field>
+
+    <!--  State L2-->
+    <Field id="hideStateL2Broadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspStateL2" visibleBindingValue="true">
+        <Description>Hide state_l2 message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateL2Broadcast" type="label"
+           visibleBindingId="uspStateL2" visibleBindingValue="true"><Label/></Field>
+
+    <!--  State L3-->
+    <Field id="hideStateL3Broadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspStateL3" visibleBindingValue="true">
+        <Description>Hide state_l3 message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateL3Broadcast" type="label"
+           visibleBindingId="uspStateL3" visibleBindingValue="true"><Label/></Field>
+
+    <!--  State L4-->
+    <Field id="hideStateL4Broadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspStateL4" visibleBindingValue="true">
+        <Description>Hide state_l4 message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateL4Broadcast" type="label"
+           visibleBindingId="uspStateL4" visibleBindingValue="true"><Label/></Field>
+
+    <!--  State L1-->
+    <Field id="hideStateL5Broadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspStateL5" visibleBindingValue="true">
+        <Description>Hide state_l5 message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateL5Broadcast" type="label"
+           visibleBindingId="uspStateL5" visibleBindingValue="true"><Label/></Field>
+
+
+
+
+
+    <!-- Tamper -->
+    <Field id="hideTamperBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspTamper" visibleBindingValue="true">
+        <Description>Hide tamper sensor message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideTamperBroadcast" type="label"
+           visibleBindingId="uspTamper" visibleBindingValue="true"><Label/></Field>
+
+
+
+    <!-- Temperature -->
+    <Field id="hideTemperatureBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspTemperature" visibleBindingValue="true">
+        <Description>Hide temperature message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideTemperatureBroadcast" type="label"
+           visibleBindingId="uspTemperature" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Valve -->
+    <Field id="hideValveBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspValve" visibleBindingValue="true">
+        <Description>Hide thermostat valve message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideValveBroadcast" type="label"
+           visibleBindingId="uspValve" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Vibration -->
+    <Field id="hideVibrationBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspVibration" visibleBindingValue="true">
+        <Description>Hide vibration usage message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideVibrationBroadcast" type="label"
+           visibleBindingId="uspVibration" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Voltage -->
+    <Field id="hideVoltageBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspVoltage" visibleBindingValue="true">
+        <Description>Hide voltage message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideVoltageBroadcast" type="label"
+           visibleBindingId="uspVoltage" visibleBindingValue="true"><Label/></Field>
+
+</Template>

@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<Devices>
+    <!-- Zigbee Coordinator -->
+    <Device id="zigbeeCoordinator"  type="custom">
+        <Name>Zigbee Coordinator</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee_coordinator.xml" />
+		</ConfigUI>
+        <States>
+            <State id="status">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Status changed</TriggerLabel>
+                <ControlPageLabel>Status</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>status</UiDisplayStateId>
+	</Device>
+
+    <!-- Zigbee Group Dimmer -->
+    <Device id="zigbeeGroupDimmer" type="dimmer">
+        <Name>Zigbee Group Dimmer</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee_group.xml" />
+            <Template file="Templates/template_zigbee_group_dimmer.xml" />
+		</ConfigUI>
+        <States>
+            <State id="colorMode">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Color Mode changed</TriggerLabel>
+                <ControlPageLabel>Color Mode</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>status</UiDisplayStateId>
+	</Device>
+
+    <!-- Zigbee Group Relay -->
+    <Device id="zigbeeGroupRelay" type="relay">
+        <Name>Zigbee Group Relay</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee_group.xml" />
+            <Template file="Templates/template_zigbee_group_relay.xml" />
+		</ConfigUI>
+        <States>
+            <State id="status">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Status changed</TriggerLabel>
+                <ControlPageLabel>Status</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>status</UiDisplayStateId>
+	</Device>
+
+
+
+    <!-- Contact Sensor -->
+    <Device id="contactSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.DoorWindow">
+        <Name>Contact Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Dimmer -->
+	<Device id="dimmer" type="dimmer">
+        <Name>Dimmer (Light)</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Blind aka Roller Shutter -->
+	<Device id="blind" type="dimmer" subType="indigo.kDimmerDeviceSubType.Blind">
+        <Name>Dimmer (Blind / Shade)</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Humidity Sensor -->
+    <Device id="humiditySensor" type="sensor" subType="indigo.kSensorDeviceSubType.Humidity">
+        <Name>Humidity Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Illuminance Sensor -->
+    <Device id="illuminanceSensor" type="sensor" subType="indigo.kSensorDeviceSubType.Illuminance">
+        <Name>Illuminance Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Motion Sensor -->
+    <Device id="motionSensor" type="sensor" subType="indigo.kSensorDeviceSubType.Motion">
+        <Name>Motion Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Outlet (Socket) -->
+    <Device id="multiOutlet"  type="relay" subType="indigo.kRelayDeviceSubType.Outlet">
+        <Name>Multi-Outlet (Socket)</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Multi-Sensor -->
+    <Device id="multiSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.Motion">
+        <Name>Multi-Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Outlet (Socket) -->
+    <Device id="outlet"  type="relay" subType="indigo.kRelayDeviceSubType.Outlet">
+        <Name>Outlet (Socket)</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Presence-Sensor -->
+    <Device id="presenceSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.Presence">
+        <Name>Presence-Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Radar-Sensor -->
+    <Device id="radarSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.Presence">
+        <Name>Radar-Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Scene / Button -->
+    <Device id="button"  type="custom">
+        <Name>Scene (Button)</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>lastButtonPressed</UiDisplayStateId>
+    </Device>
+
+    <!-- Temperature Sensor -->
+	<Device id="temperatureSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.Temperature">
+        <Name>Temperature Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+<!--    &lt;!&ndash; Thermostat &ndash;&gt;-->
+<!--	<Device id="thermostat" type="thermostat">-->
+<!--        <Name>Thermostat</Name>-->
+<!--        <ConfigUI>-->
+<!--            <Template file="Templates/template_zigbee.xml" />-->
+<!--            <Template file="Templates/template_zigbee_device_properties.xml" />-->
+<!--		</ConfigUI>-->
+<!--	</Device>-->
+
+    <!-- Vibration-Sensor -->
+    <Device id="vibrationSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.Vibration">
+        <Name>Vibration Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Secondary Devices in a Device Group Follow Below -->
+
+    <!-- Acceleration Sensor [Secondary] -->
+    <Device id="accelerationSensorSecondary" type="sensor" subType="indigo.kSensorDeviceSubType.Tamper" allowUserCreation="false">
+        <Name>Acceleration Sensor [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>acceleration</UiDisplayStateId>
+	</Device>
+
+    <!-- Humidity Sensor [Secondary] -->
+    <Device id="humiditySensorSecondary" type="sensor" subType="indigo.kSensorDeviceSubType.Humidity" allowUserCreation="false">
+        <Name>Humidity Sensor [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>humidity</UiDisplayStateId>
+	</Device>
+
+    <!-- Illuminance Sensor [Secondary] -->
+    <Device id="illuminanceSensorSecondary" type="sensor" subType="indigo.kSensorDeviceSubType.Illuminance" allowUserCreation="false">
+        <Name>Illuminance Sensor [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>illuminance</UiDisplayStateId>
+	</Device>
+
+    <!-- Motion Sensor [Secondary] -->
+    <Device id="motionSensorSecondary" type="sensor" subType="indigo.kSensorDeviceSubType.Motion" allowUserCreation="false">
+        <Name>Motion Sensor [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>motion</UiDisplayStateId>
+	</Device>
+
+    <!-- Multi Outlet L2 [Secondary] -->
+    <Device id="multiOutletSecondary2" type="relay" subType="indigo.kRelayDeviceSubType.Outlet" allowUserCreation="false">
+        <Name>Multi-Outlet L2 [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
+	</Device>
+
+     <!-- Multi Outlet L3 [Secondary] -->
+    <Device id="multiOutletSecondary3" type="relay" subType="indigo.kRelayDeviceSubType.Outlet" allowUserCreation="false">
+        <Name>Multi-Outlet L3 [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
+	</Device>
+
+    <!-- Multi Outlet L4 [Secondary] -->
+    <Device id="multiOutletSecondary4" type="relay" subType="indigo.kRelayDeviceSubType.Outlet" allowUserCreation="false">
+        <Name>Multi-Outlet L4 [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
+	</Device>
+
+    <!-- Multi Outlet L5 [Secondary] -->
+    <Device id="multiOutletSecondary5" type="relay" subType="indigo.kRelayDeviceSubType.Outlet" allowUserCreation="false">
+        <Name>Multi-Outlet L5 [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
+	</Device>
+
+   <!-- Presence Sensor [Secondary] -->
+    <Device id="presenceSensorSecondary" type="sensor" subType="indigo.kSensorDeviceSubType.Presence" allowUserCreation="false">
+        <Name>Presence Sensor [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Pressure Sensor [Secondary] -->
+    <Device id="pressureSensorSecondary" type="sensor" subType="indigo.kSensorDeviceSubType.Pressure" allowUserCreation="false">
+        <Name>Pressure Sensor [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Temperature Sensor [Secondary] -->
+    <Device id="temperatureSensorSecondary" type="sensor" allowUserCreation="false">
+        <Name>Temperature Sensor [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+	</Device>
+
+<!--    &lt;!&ndash; Valve [Secondary] &ndash;&gt;-->
+<!--    <Device id="valveSecondary" type="dimmer" subType="indigo.kDimmerDeviceSubType.Valve" allowUserCreation="false">-->
+<!--        <Name>Thermostat Valve [Secondary]</Name>-->
+<!--        <ConfigUI>-->
+<!--            <Template file="Templates/template_sub_model.xml" />-->
+<!--		</ConfigUI>-->
+<!--	</Device>-->
+
+    <!-- Voltage [Secondary] -->
+    <Device id="voltageSensorSecondary" type="sensor" subType="indigo.kSensorDeviceSubType.Voltage" allowUserCreation="false">
+        <Name>Voltage [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+	</Device>
+
+</Devices>
