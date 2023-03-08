@@ -6,6 +6,10 @@
 
 
 # noinspection PyUnresolvedReferences
+# ============================== Requirements Check ===========================
+
+# import requirements
+
 # ============================== Native Imports ===============================
 import base64
 
@@ -15,7 +19,7 @@ try:
     from cryptography.hazmat.primitives import hashes  # noqa
     from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC  # noqa
 except ImportError:
-    raise ImportError("'cryptography' library missing.\n\n========> Run 'pip3 install cryptography' in Terminal window, then reload plugin. <========\n")
+    pass
 
 from datetime import datetime
 import json
@@ -38,6 +42,7 @@ except ImportError:
 
 from constants import *
 from coordinatorHandler import ThreadCoordinatorHandler
+import requirements
 from zigbeeHandler import ThreadZigbeeHandler
 
 # ================================== Header ===================================
@@ -88,7 +93,7 @@ class Plugin(indigo.PluginBase):
     def __init__(self, plugin_id, plugin_display_name, plugin_version, plugin_prefs):
         super(Plugin, self).__init__(plugin_id, plugin_display_name, plugin_version, plugin_prefs)
 
-        logging.addLevelName(LOG_LEVEL_TOPIC, "topic")
+        # logging.addLevelName(LOG_LEVEL_TOPIC, "topic")
 
         # def topic(self, message, *args, **kws):  # noqa [Shadowing names from outer scope = self]
         #     # if self.isEnabledFor(LOG_LEVEL_TOPIC):
@@ -96,6 +101,8 @@ class Plugin(indigo.PluginBase):
         #     self.log(LOG_LEVEL_TOPIC, message, *args, **kws)
         #
         # logging.Logger.topic = topic
+
+        self.do_not_start_devices = False
 
         # Initialise dictionary to store plugin Globals
         self.globals = dict()
@@ -753,6 +760,9 @@ class Plugin(indigo.PluginBase):
 
     def device_start_comm(self, dev):
         try:
+            if self.do_not_start_devices:  # This is set on if Package requirements listed in requirements.txt are not met
+                return
+
             self.logger.info(f"Starting '{dev.name}'")
             dev.stateListOrDisplayStateIdChanged()  # Ensure that latest devices.xml is being used
 
@@ -1605,6 +1615,13 @@ class Plugin(indigo.PluginBase):
 
     def startup(self):
         try:
+            try:
+                requirements.requirements_check(self.globals[PLUGIN_INFO][PLUGIN_ID])
+            except ImportError as exception_error:
+                self.logger.error(f"PLUGIN STOPPED: {exception_error}")
+                self.do_not_start_devices = True
+                self.stopPlugin()
+
             indigo.devices.subscribeToChanges()
 
             for dev in indigo.devices.iter("self"):

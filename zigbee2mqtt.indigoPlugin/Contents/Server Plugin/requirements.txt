@@ -1,2 +1,2 @@
-cryptography==38.0.1
+cryptography==39.0.2
 paho-mqtt==1.6.1

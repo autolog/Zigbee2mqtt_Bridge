@@ -50,8 +50,6 @@
         <UiDisplayStateId>status</UiDisplayStateId>
 	</Device>
 
-
-
     <!-- Contact Sensor -->
     <Device id="contactSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.DoorWindow">
         <Name>Contact Sensor</Name>

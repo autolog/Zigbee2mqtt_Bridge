@@ -3,7 +3,7 @@
 <Template>
     <SupportURL>https://forums.indigodomo.com/viewforum.php?f=353</SupportURL>
 
-    <!-- Display Option -->
+<!-- Display Option -->
 	<Field id="header-1" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green">
         <Label>SECTION</Label>
     </Field>
@@ -12,7 +12,7 @@
         <Label>Section:</Label>
         <List>
             <Option value="MQTT">MQTT</Option>
-            <Option value="ZIGBEE">Zigbee Devices</Option>
+            <Option value="ZIGBEE">Zigbee Devices Information</Option>
             <Option value="FILTER">Filter Zigbee Device Logging</Option>
         </List>
         <CallbackMethod>menu_zigbee_coordinator_option_selected</CallbackMethod>
@@ -30,7 +30,7 @@
     <Field id="space-1" type="label" alwaysUseInDialogHeightCalc="true"><Label/></Field>
     <Field id="separator-1" type="separator" alwaysUseInDialogHeightCalc="true"/>
 
-    <!-- MQTT Client Configuration   -->
+<!-- MQTT Client Configuration   -->
 	<Field id="header-1BB" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="MQTT">
         <Label>MQTT BROKER CONNECTION DETAILS</Label>
     </Field>
@@ -63,11 +63,6 @@
     <Field id="mqtt_broker_port" type="textfield"  defaultValue="1883" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
         <Label>MQTT Broker Port Address:</Label>
     </Field>
-<!--
-    <Field id="help-3" type="label" alignWithControl="true" alwaysUseInDialogHeightCalc="true">
-        <Label>^ Must be the MQTT Broker Port Address as recorded in the THE HE MQTT Broker Settings.</Label>
-    </Field>
--->
 
     <Field id="space-4" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label/></Field>
     <Field id="mqtt_username" type="textfield"  defaultValue="" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT">
@@ -91,9 +86,9 @@
         <Label>^ Password required to access the MQTT Broker. Leave empty if not used.</Label>
     </Field>
 
-
     <Field id="space-8" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label/></Field>
-	<Field id="header-3" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="MQTT">
+    <Field id="separator-T2342" type="separator" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"/>
+    <Field id="header-3" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="MQTT">
         <Label>MQTT ZIGBEE2MQTT SUBSCRIPTION:</Label>
     </Field>
     <Field id="space-9" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"><Label/></Field>
@@ -105,15 +100,7 @@
 
     <Field id="separator-T2" type="separator" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="MQTT"/>
 
- <!--   // list of bridge devices
-    // address
-    // type
-    // allocated to indigo device
-    // indigo device type
-    // check box create device
--->
 
-        <!-- MQTT Client Configuration   -->
 	<Field id="header-Z1" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="ZIGBEE">
         <Label>ZIGBEE DEVICES</Label>
     </Field>
@@ -156,25 +143,13 @@
     <Field id="zigbee_hw" type="textfield"  defaultValue="" alwaysUseInDialogHeightCalc="true" visibleBindingId="section" visibleBindingValue="ZIGBEE">
         <Label>Hardware:</Label>
     </Field>
-<!--    <Field id="zigbee_description_user" type="textfield"  defaultValue="" alwaysUseInDialogHeightCalc="true">-->
-<!--        <Label>Description:</Label>-->
-<!--    </Field>-->
-<!--    <Field id="indigo_derived_device_name" type="textfield"  defaultValue="" alwaysUseInDialogHeightCalc="true">-->
-<!--        <Label>Derived Device Name:</Label>-->
-<!--    </Field>-->
-
-
     <Field id="space-ZZ1343" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE"><Label/></Field>
     <Field id="separator-T2292" type="separator" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
 
 	<Field id="header-ZZ19" type="label" alwaysUseInDialogHeightCalc="false" fontColor="green" visibleBindingId="section" visibleBindingValue="ZIGBEE">
         <Label>Device Properties:</Label>
     </Field>
-<!--    <Field id="space-ZZ199" type="label" alwaysUseInDialogHeightCalc="false" visibleBindingId="section" visibleBindingValue="ZIGBEE"><Label/></Field>-->
     <Field>$PROPERTY$</Field>
-    <Field id="space-T7799" type="label" alwaysUseInDialogHeightCalc="true"><Label/></Field>
-
-
 
 	<Field id="header-zz3" type="label" alwaysUseInDialogHeightCalc="true" fontColor="green" visibleBindingId="section" visibleBindingValue="FILTER">
         <Label>ZIGBEE DEVICE MQTT FILTERING</Label>
