@@ -867,6 +867,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 humidity_value, ui_humidity_value = self.processDecimalPlaces(humidity, decimal_places, "%", INDIGO_ONE_SPACE_BEFORE_UNITS)  # noqa: reference before assignment
                 if state_to_update in zd_dev_to_process.states:
                     if zd_dev_to_process.states[state_to_update] != humidity:  # noqa: Reference bdeore assignment
+                        if state_to_update == "sensorValue":
+                            zd_dev_to_process.updateStateImageOnServer(indigo.kStateImageSel.HumiditySensor)
                         self.key_value_lists[zd_dev_to_process.id].append({'key': state_to_update, 'value': humidity_value, 'uiValue': ui_humidity_value})
                         if not bool(zd_dev.pluginProps.get("hideHumidityBroadcast", False)):
                             self.zigbeeLogger.info(f"received \"{zd_dev_to_process.name}\" humidity level {ui_humidity_value}")
@@ -929,6 +931,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 illuminance_value, ui_illuminance_value = self.processDecimalPlaces(illuminance, decimal_places, illuminance_units_ui, INDIGO_ONE_SPACE_BEFORE_UNITS)  # noqa: reference before assignment
                 if state_to_update in zd_dev_to_process.states:
                     if zd_dev_to_process.states[state_to_update] != illuminance:  # noqa: Reference bdeore assignment
+                        if state_to_update == "sensorValue":
+                            zd_dev_to_process.updateStateImageOnServer(indigo.kStateImageSel.LightSensor)
                         self.key_value_lists[zd_dev_to_process.id].append({'key': state_to_update, 'value': illuminance_value, 'uiValue': ui_illuminance_value})
                         if not bool(zd_dev.pluginProps.get("hideIlluminanceBroadcast", False)):
                             self.zigbeeLogger.info(f"received \"{zd_dev_to_process.name}\" illuminance {ui_illuminance_value}")
@@ -1256,10 +1260,8 @@ class ThreadZigbeeHandler(threading.Thread):
         try:
             if not zd_dev.pluginProps.get("uspTemperature", False):
                 return
-            if not "temperature" in json_payload or not "device_temperature" in json_payload:
+            if not "temperature" in json_payload and not "device_temperature" in json_payload:
                 return
-
-            name = zd_dev.name
 
             uspTemperatureIndigo = zd_dev.pluginProps.get("uspTemperatureIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE)
             zd_dev_to_process = zd_dev
@@ -1312,6 +1314,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 if state_to_update in zd_dev_to_process.states:
                     if zd_dev_to_process.states[state_to_update] != temperature_value:
                         self.key_value_lists[zd_dev_to_process.id].append({'key': state_to_update, 'value': temperature_value, 'uiValue': ui_temperature_value})
+                        if state_to_update == "sensorValue":
+                            zd_dev_to_process.updateStateImageOnServer(indigo.kStateImageSel.TemperatureSensor)
                         if not bool(zd_dev.pluginProps.get("hideTemperatureBroadcast", False)):
                             self.zigbeeLogger.info(f"received \"{zd_dev.name}\" temperature {ui_temperature_value}")
                     else:
