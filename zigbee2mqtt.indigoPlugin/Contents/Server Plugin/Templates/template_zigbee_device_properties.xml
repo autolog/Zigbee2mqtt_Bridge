@@ -26,6 +26,8 @@
     <Field id="zigbeePropertyOnOff" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPosition" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPower" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyPowerLeft" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyPowerRight" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPresence" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPresenceEvent" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPressure" type="checkbox" defaultValue="false" hidden="true" />
@@ -39,6 +41,8 @@
     <Field id="zigbeePropertyStateL3" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyStateL4" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyStateL5" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyStateLeft" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyStateRight" type="checkbox" defaultValue="false" hidden="true" />
 
     <Field id="zigbeePropertyTamper" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyTemperature" type="checkbox" defaultValue="false" hidden="true" />
@@ -504,6 +508,97 @@
     <Field id="separator-uspPower" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyPower" visibleBindingValue="true"/>
 
+    <!-- Power Left-->
+    <Field id="space-header-uspPowerLeft" type="label"
+           visibleBindingId="zigbeePropertyPowerLeft" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPowerLeft" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPowerLeft" visibleBindingValue="true">
+        <Label>Power Left</Label>
+    </Field>
+    <Field id="uspPowerLeft" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyPowerLeft" visibleBindingValue="true">
+        <Label>Power Left:</Label>
+        <Description>Associated with Zigbee 'power_left' Property</Description>
+    </Field>
+    <Field id="uspPowerLeftIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspPowerLeftIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspPowerLeft" visibleBindingValue="true" enabledBindingId="uspPowerLeftIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="powerLeft" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="uspPowerLeftMinimumReportingLevel" type="textfield" defaultValue="0"
+            visibleBindingId="uspPowerLeft" visibleBindingValue="true">
+        <Label>Minimum Reporting Power Left Level:</Label>
+    </Field>
+    <Field id="uspPowerLeftReportingHysteresis" type="textfield" defaultValue="0"
+            visibleBindingId="uspPowerLeft" visibleBindingValue="true">
+        <Label>Reporting Power Left Hysteresis:</Label>
+    </Field>
+    <Field id="uspPowerLeftUnits" type="textfield" defaultValue="Watts"
+            visibleBindingId="uspPowerLeft" visibleBindingValue="true">
+        <Label>Power Left Units:</Label>
+    </Field>
+    <Field id="uspPowerLeftDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspPowerLeft" visibleBindingValue="true">
+        <Label>Power Left Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspPowerLeft" type="label"
+           visibleBindingId="zigbeePropertyPowerLeft" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPowerLeft" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPowerLeft" visibleBindingValue="true"/>
+
+    <!-- Power Right-->
+    <Field id="space-header-uspPowerRight" type="label"
+           visibleBindingId="zigbeePropertyPowerRight" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPowerRight" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPowerRight" visibleBindingValue="true">
+        <Label>Power Right</Label>
+    </Field>
+    <Field id="uspPowerRight" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyPowerRight" visibleBindingValue="true">
+        <Label>Power Right:</Label>
+        <Description>Associated with Zigbee 'power_right' Property</Description>
+    </Field>
+    <Field id="uspPowerRightIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspPowerRightIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspPowerRight" visibleBindingValue="true" enabledBindingId="uspPowerRightIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="powerRight" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="uspPowerRightMinimumReportingLevel" type="textfield" defaultValue="0"
+            visibleBindingId="uspPowerRight" visibleBindingValue="true">
+        <Label>Minimum Reporting Power Right Level:</Label>
+    </Field>
+    <Field id="uspPowerRightReportingHysteresis" type="textfield" defaultValue="0"
+            visibleBindingId="uspPowerRight" visibleBindingValue="true">
+        <Label>Reporting Power Right Hysteresis:</Label>
+    </Field>
+    <Field id="uspPowerRightUnits" type="textfield" defaultValue="Watts"
+            visibleBindingId="uspPowerRight" visibleBindingValue="true">
+        <Label>Power Right Units:</Label>
+    </Field>
+    <Field id="uspPowerRightDecimalPlaces" type="menu" defaultValue="0"
+           visibleBindingId="uspPowerRight" visibleBindingValue="true">
+        <Label>Power Right Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="space-uspPowerRight" type="label"
+           visibleBindingId="zigbeePropertyPowerRight" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPowerRight" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPowerRight" visibleBindingValue="true"/>
+
+
     <!-- Presence -->
     <Field id="space-header-uspPresence" type="label"
            visibleBindingId="zigbeePropertyPresence" visibleBindingValue="true"><Label/></Field>
@@ -757,6 +852,54 @@
            visibleBindingId="zigbeePropertyStateL5" visibleBindingValue="true"><Label/></Field>
     <Field id="separator-uspStateL5" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyStateL5" visibleBindingValue="true"/>
+
+    <!-- State_left -->
+    <Field id="space-header-uspStateLeft" type="label"
+           visibleBindingId="zigbeePropertyStateLeft" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspStateLeft" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyStateLeft" visibleBindingValue="true">
+        <Label>State_Left</Label>
+    </Field>
+    <Field id="uspStateLeft" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyStateLeft" visibleBindingValue="true">
+        <Label>State_Left:</Label>
+        <Description>Associated with Zigbee 'state_left' Property</Description>
+    </Field>
+
+    <Field id="uspStateLeftIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspStateLeftIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspStateLeft" visibleBindingValue="true" enabledBindingId="uspStateLeftIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="stateLeft" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspStateLeft" type="label"
+           visibleBindingId="zigbeePropertyStateLeft" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspStateLeft" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyStateLeft" visibleBindingValue="true"/>
+
+    <!-- State_right -->
+    <Field id="space-header-uspStateRight" type="label"
+           visibleBindingId="zigbeePropertyStateRight" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspStateRight" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyStateRight" visibleBindingValue="true">
+        <Label>State_Right</Label>
+    </Field>
+    <Field id="uspStateRight" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyStateRight" visibleBindingValue="true">
+        <Label>State_Right:</Label>
+        <Description>Associated with Zigbee 'state_right' Property</Description>
+    </Field>
+
+    <Field id="uspStateRightIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="uspStateRightIndigo" type="menu" defaultValue="0"
+            visibleBindingId="uspStateRight" visibleBindingValue="true" enabledBindingId="uspStateRightIndigoEnabled">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="stateRight" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspStateRight" type="label"
+           visibleBindingId="zigbeePropertyStateRight" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspStateRight" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyStateRight" visibleBindingValue="true"/>
 
 
 
@@ -1151,7 +1294,7 @@
     <Field id="space-hideStateL4Broadcast" type="label"
            visibleBindingId="uspStateL4" visibleBindingValue="true"><Label/></Field>
 
-    <!--  State L1-->
+    <!--  State L5-->
     <Field id="hideStateL5Broadcast" type="checkbox" defaultValue="false"
         visibleBindingId="uspStateL5" visibleBindingValue="true">
         <Description>Hide state_l5 message broadcasts in Event Log</Description>
@@ -1159,9 +1302,21 @@
     <Field id="space-hideStateL5Broadcast" type="label"
            visibleBindingId="uspStateL5" visibleBindingValue="true"><Label/></Field>
 
+    <!--  State Left-->
+    <Field id="hideStateLeftBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspStateLeft" visibleBindingValue="true">
+        <Description>Hide state_left message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateLeftBroadcast" type="label"
+           visibleBindingId="uspStateLeft" visibleBindingValue="true"><Label/></Field>
 
-
-
+    <!--  State Right-->
+    <Field id="hideStateRightBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspStateRight" visibleBindingValue="true">
+        <Description>Hide state_right message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateRightBroadcast" type="label"
+           visibleBindingId="uspStateRight" visibleBindingValue="true"><Label/></Field>
 
     <!-- Tamper -->
     <Field id="hideTamperBroadcast" type="checkbox" defaultValue="false"

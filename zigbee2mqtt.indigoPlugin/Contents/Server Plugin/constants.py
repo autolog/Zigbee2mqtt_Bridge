@@ -118,6 +118,8 @@ ZD_MQTT_FILTER_HUB = constant_id("ZD_MQTT_FILTER_HUB")
 ZD_OUTLET = constant_id("ZD_OUTLET")
 ZD_POWER_SOURCE = constant_id("ZD_POWER_SOURCE")
 ZD_PREVIOUS_POWER_LEVEL = constant_id("ZD_PREVIOUS_POWER_LEVEL")
+ZD_PREVIOUS_POWER_LEVEL_LEFT = constant_id("ZD_PREVIOUS_POWER_LEVEL_LEFT")
+ZD_PREVIOUS_POWER_LEVEL_RIGHT = constant_id("ZD_PREVIOUS_POWER_LEVEL_RIGHT")
 ZD_PROPERTIES = constant_id("ZD_PROPERTIES")
 ZD_SOFTWARE_BUILD_ID = constant_id("ZD_SOFTWARE_BUILD_ID")
 ZD_STATES = constant_id("ZD_STATES")
@@ -147,12 +149,14 @@ ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["humidity"] = ["humiditySensor", "illumi
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["illuminance"] = ["humiditySensor", "illuminanceSensor", "motionSensor", "multiSensor", "radarSensor", "temperatureSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["mode"] = ["thermostat"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["linkquality"] = ["blind", "button", "contactSensor", "dimmer", "humiditySensor", "illuminanceSensor",
-                                                           "motionSensor", "multiOutlet", "multiSensor",
+                                                           "motionSensor", "multiOutlet", "multiSensor", "multiSocket",
                                                            "presenceSensor", "outlet", "radarSensor",
                                                            "temperatureSensor", "thermostat", "vibrationSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["occupancy"] = ["humiditySensor", "illuminanceSensor", "motionSensor", "multiSensor", "temperatureSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["position"] = ["blind"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["power"] = ["outlet"]
+ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["power_left"] = ["multiSocket"]
+ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["power_right"] = ["multiSocket"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["presence"] = ["button", "contactSensor", "motionSensor", "multiSensor", "presenceSensor", "outlet", "temperatureSensor", "radarSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["presence_event"] = ["radarSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["presence-sensor"] = ["button", "contactSensor", "motionSensor", "multiSensor", "outlet", "presenceSensor", "temperatureSensor"]
@@ -163,6 +167,8 @@ ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["state_l2"] = ["multiOutlet"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["state_l3"] = ["multiOutlet"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["state_l4"] = ["multiOutlet"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["state_l5"] = ["multiOutlet"]
+ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["state_left"] = ["multiSocket"]
+ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["state_right"] = ["multiSocket"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["onoff"] = ["dimmer", "thermostat", "outlet"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["tamper"] = ["motionSensor", "multiSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["temperature"] = ["blind", "humiditySensor", "illuminanceSensor", "motionSensor", "multiSensor", "radarSensor", "temperatureSensor", "thermostat"]
@@ -181,6 +187,7 @@ ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["illuminanceSensor"] = ["il
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["motionSensor"] = ["motion"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["multiOutlet"] = ["state_l1"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["multiSensor"] = ["motion"]
+ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["multiSocket"] = ["state_left"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["outlet"] = ["onoff"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["presenceSensor"] = ["presence"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["radarSensor"] = ["radar"]
@@ -199,7 +206,7 @@ ZS = constant_id("ZS [ZIGBEE Scene]")
 INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE = "0"
 INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE = "1"
 INDIGO_SECONDARY_DEVICE = "2"
-# INDIGO_SECONDARY_DEVICE_ADDITIONAL_STATE = "3"
+INDIGO_SECONDARY_DEVICE_ADDITIONAL_STATE = "3"
 
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE = dict()
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["blind"] = ["temperatureSensorSecondary"]
@@ -214,6 +221,8 @@ INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["motionSensor"] = ["accelerationSensorSecon
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["multiOutlet"] = ["voltageSensorSecondary", "multiOutletSecondary2", "multiOutletSecondary3", "multiOutletSecondary4", "multiOutletSecondary5"]
 
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["multiSensor"] = ["accelerationSensorSecondary", "humiditySensorSecondary", "illuminanceSensorSecondary", "temperatureSensorSecondary"]
+
+INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["multiSocket"] = ["multiSocketSecondary"]
 
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["outlet"] = ["voltageSensorSecondary"]
 
@@ -253,6 +262,10 @@ INDIGO_SUB_TYPE_INFO["multiOutletSecondary5"] = ["uspStateL5Indigo", [indigo.kRe
                                                  [("SupportsOnState", True), ("AllowOnStateChange", False), ("SupportsStatusRequest", False),
                                                   ("SupportsSensorValue", False), ("AllowSensorValueChange", False)]]
 
+INDIGO_SUB_TYPE_INFO["multiSocketSecondary"] = ["uspStateRightIndigo", [indigo.kRelayDeviceSubType.Outlet, "Socket Right"],
+                                                 [("SupportsOnState", True), ("AllowOnStateChange", False), ("SupportsStatusRequest", False),
+                                                  ("SupportsSensorValue", False), ("AllowSensorValueChange", False)]]
+
 INDIGO_SUB_TYPE_INFO["pressureSensorSecondary"] = ["uspPressureIndigo", [indigo.kSensorDeviceSubType.Pressure, "Pressure"],
                                                    [("SupportsOnState", False), ("AllowOnStateChange", False), ("SupportsStatusRequest", False),
                                                     ("SupportsSensorValue", True), ("AllowSensorValueChange", False)]]
@@ -272,8 +285,10 @@ INDIGO_PRIMARY_DEVICE_INFO["dimmer"] = [indigo.kDimmerDeviceSubType.Dimmer, "Dim
 INDIGO_PRIMARY_DEVICE_INFO["humidity"] = [indigo.kSensorDeviceSubType.Humidity, "Humidity"]
 INDIGO_PRIMARY_DEVICE_INFO["illuminance"] = [indigo.kSensorDeviceSubType.Illuminance, "Illuminance"]
 INDIGO_PRIMARY_DEVICE_INFO["motionSensor"] = [indigo.kSensorDeviceSubType.Motion, "Motion"]
-INDIGO_PRIMARY_DEVICE_INFO["multiSensor"] = [indigo.kSensorDeviceSubType.Motion, "Motion"]
 INDIGO_PRIMARY_DEVICE_INFO["outlet"] = [indigo.kRelayDeviceSubType.Outlet, "Outlet"]
+INDIGO_PRIMARY_DEVICE_INFO["multiOutlet"] = [indigo.kRelayDeviceSubType.Outlet, "Multi-Outlet"]
+INDIGO_PRIMARY_DEVICE_INFO["multiSensor"] = [indigo.kSensorDeviceSubType.Motion, "Motion"]
+INDIGO_PRIMARY_DEVICE_INFO["multiSocket"] = [indigo.kRelayDeviceSubType.Outlet, "Multi-Socket"]
 INDIGO_PRIMARY_DEVICE_INFO["presenceSensor"] = [indigo.kSensorDeviceSubType.Presence, "Presence"]
 INDIGO_PRIMARY_DEVICE_INFO["radarSensor"] = [indigo.kSensorDeviceSubType.Presence, "Presence"]
 INDIGO_PRIMARY_DEVICE_INFO["temperatureSensor"] = [indigo.kSensorDeviceSubType.Temperature, "Temperature"]

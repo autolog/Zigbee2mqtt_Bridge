@@ -102,7 +102,7 @@ class Plugin(indigo.PluginBase):
         #
         # logging.Logger.topic = topic
 
-        self.do_not_start_devices = False
+        self.do_not_start_stop_devices = False
 
         # Initialise dictionary to store plugin Globals
         self.globals = dict()
@@ -241,6 +241,12 @@ class Plugin(indigo.PluginBase):
                         switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2", "3", "4" or "5"
                         topic_payload = f'{{"state_l{switch_number}": "ON"}}'
                         action_request = True
+                    case "multiSocket":
+                        topic_payload = '{"state_left": "ON"}'
+                        action_request = True
+                    case "multiSocketSecondary":
+                        topic_payload = '{"state_right": "ON"}'
+                        action_request = True
                     case "dimmer":
                         topic_payload = "ON"
                         action_request = True
@@ -268,6 +274,12 @@ class Plugin(indigo.PluginBase):
                     case "multiOutletSecondary2" | "multiOutletSecondary3" | "multiOutletSecondary4" | "multiOutletSecondary5":
                         switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2", "3", "4" or "5"
                         topic_payload = f'{{"state_l{switch_number}": "OFF"}}'
+                        action_request = True
+                    case "multiSocket":
+                        topic_payload = '{"state_left": "OFF"}'
+                        action_request = True
+                    case "multiSocketSecondary":
+                        topic_payload = '{"state_right": "OFF"}'
                         action_request = True
                     case "dimmer":
                         topic_payload = "OFF"
@@ -298,6 +310,12 @@ class Plugin(indigo.PluginBase):
                             switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2", "3", "4" or "5"
                             topic_payload = f'{{"state_l{switch_number}": "OFF"}}'
                             action_request = True
+                        case "multiSocket":
+                            topic_payload = '{"state_left": "OFF"}'
+                            action_request = True
+                        case "multiSocketSecondary":
+                            topic_payload = '{"state_right": "OFF"}'
+                            action_request = True
                         case "dimmer":
                             topic_payload = "OFF"
                             action_request = True
@@ -323,6 +341,12 @@ class Plugin(indigo.PluginBase):
                         case "multiOutletSecondary2" | "multiOutletSecondary3" | "multiOutletSecondary4" | "multiOutletSecondary5":
                             switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2", "3", "4" or "5"
                             topic_payload = f'{{"state_l{switch_number}": "ON"}}'
+                            action_request = True
+                        case "multiSocket":
+                            topic_payload = '{"state_left": "ON"}'
+                            action_request = True
+                        case "multiSocketSecondary":
+                            topic_payload = '{"state_right": "ON"}'
                             action_request = True
                         case "dimmer":
                             topic_payload = "ON"
@@ -672,6 +696,8 @@ class Plugin(indigo.PluginBase):
                     pass
                 case "multiSensor":
                     pass
+                case "multiSocket":
+                    pass
                 case "outlet":
                     pass
                 case "presenceSensor":
@@ -760,7 +786,7 @@ class Plugin(indigo.PluginBase):
 
     def device_start_comm(self, dev):
         try:
-            if self.do_not_start_devices:  # This is set on if Package requirements listed in requirements.txt are not met
+            if self.do_not_start_stop_devices:  # This is set on if Package requirements listed in requirements.txt are not met
                 return
 
             self.logger.info(f"Starting '{dev.name}'")
@@ -1025,7 +1051,8 @@ class Plugin(indigo.PluginBase):
 
     def device_stop_comm(self, dev):
         try:
-            # self.logger.info(f"Device '{dev.name}' Stopped")
+            if self.do_not_start_stop_devices:  # This is set on if Package requirements listed in requirements.txt are not met
+                return
 
             match dev.deviceTypeId:
                 case "zigbeeCoordinator":
@@ -1174,6 +1201,8 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyOnOff"] = False
                     plugin_props["zigbeePropertyPosition"] = False
                     plugin_props["zigbeePropertyPower"] = False
+                    plugin_props["zigbeePropertyPower_left"] = False
+                    plugin_props["zigbeePropertyPower_right"] = False
                     plugin_props["zigbeePropertyPresence"] = False
                     plugin_props["zigbeePropertyPressure"] = False
                     plugin_props["zigbeePropertyRadar"] = False
@@ -1185,6 +1214,8 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyStateL3"] = False
                     plugin_props["zigbeePropertyStateL4"] = False
                     plugin_props["zigbeePropertyStateL5"] = False
+                    plugin_props["zigbeePropertyStateLeft"] = False
+                    plugin_props["zigbeePropertyStateRight"] = False
                     plugin_props["zigbeePropertyTamper"] = False
                     plugin_props["zigbeePropertyTemperature"] = False
                     plugin_props["zigbeePropertyValve"] = False
@@ -1208,6 +1239,8 @@ class Plugin(indigo.PluginBase):
                     plugin_props["uspOnOff"] = False
                     plugin_props["uspPosition"] = False
                     plugin_props["uspPower"] = False
+                    plugin_props["uspPowerLeft"] = False
+                    plugin_props["uspPowerRight"] = False
                     plugin_props["uspPresence"] = False
                     plugin_props["uspPressure"] = False
                     plugin_props["uspRadar"] = False
@@ -1218,6 +1251,8 @@ class Plugin(indigo.PluginBase):
                     plugin_props["uspStateL3"] = False
                     plugin_props["uspStateL4"] = False
                     plugin_props["uspStateL5"] = False
+                    plugin_props["uspStateLeft"] = False
+                    plugin_props["uspStateRight"] = False
                     plugin_props["uspTamper"] = False
                     plugin_props["uspTemperature"] = False
                     plugin_props["uspValve"] = False
@@ -1230,6 +1265,7 @@ class Plugin(indigo.PluginBase):
 
             elif type_id in ("accelerationSensorSecondary", "humiditySensorSecondary", "illuminanceSensorSecondary", "motionSensorSecondary",
                              "multiOutletSecondary2", "multiOutletSecondary3", "multiOutletSecondary4", "multiOutletSecondary5",
+                             "multiSocketSecondary",
                              "presenceSensorSecondary", "pressureSensorSecondary",
                              "temperatureSensorSecondary", "valveSecondary"):
                 plugin_props['primaryIndigoDevice'] = False
@@ -1493,6 +1529,14 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_state = "uspOccupancyIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
+                case "multiSocket":
+                    usp_primary_device_main_ui_state = "uspStateLeftIndigo"
+                    usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
+                    values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
+                    values_dict["uspStateRightIndigo"] = INDIGO_SECONDARY_DEVICE
+                    values_dict["uspPowerLeftIndigo"] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE
+                    values_dict["uspPowerRightIndigo"] = INDIGO_SECONDARY_DEVICE_ADDITIONAL_STATE
+                    values_dict["uspLinkQualityIndigo"] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE
                 case "outlet":
                     usp_primary_device_main_ui_state = "uspOnOffIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
@@ -1521,14 +1565,18 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
 
-            for usp_field_id in ("uspAccelerationIndigo", "uspActionIndigo", "uspBrightnessIndigo", "uspColorIndigo", "uspColorTemperatureIndigo",
-                                 "uspContactIndigo", "uspEnergyIndigo", "uspHumidityIndigo", "uspIlluminanceIndigo", "uspLinkQualityIndigo", "uspOccupancyIndigo",
-                                 "uspOnOffIndigo", "uspPositionIndigo", "uspPowerIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
-                                 "uspRadarIndigo", "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspTamperIndigo",
-                                 "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo"):
-                if usp_field_id not in usp_primary_device_main_ui_states:
-                    if usp_field_id not in values_dict or values_dict[usp_field_id] not in [INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE, INDIGO_SECONDARY_DEVICE]:
-                        values_dict[usp_field_id] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE  # Default
+
+            if type_id == "multiSocket":
+                pass
+            else:
+                for usp_field_id in ("uspAccelerationIndigo", "uspActionIndigo", "uspBrightnessIndigo", "uspColorIndigo", "uspColorTemperatureIndigo",
+                                     "uspContactIndigo", "uspEnergyIndigo", "uspHumidityIndigo", "uspIlluminanceIndigo", "uspLinkQualityIndigo", "uspOccupancyIndigo",
+                                     "uspOnOffIndigo", "uspPositionIndigo", "uspPowerIndigo", "uspPowerLeftIndigo", "uspPowerRightIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
+                                     "uspRadarIndigo", "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspStateRightIndigo",
+                                     "uspTamperIndigo", "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo"):
+                    if usp_field_id not in usp_primary_device_main_ui_states:
+                        if usp_field_id not in values_dict or values_dict[usp_field_id] not in [INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE, INDIGO_SECONDARY_DEVICE]:
+                            values_dict[usp_field_id] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE  # Default
 
             # values_dict["zigbee_vendor"] = f"Random {random.randrange(100)}, USP FIELD ID: {values_dict['uspPositionIndigo']}"  # DEBUG TEST
 
@@ -1619,7 +1667,7 @@ class Plugin(indigo.PluginBase):
                 requirements.requirements_check(self.globals[PLUGIN_INFO][PLUGIN_ID])
             except ImportError as exception_error:
                 self.logger.error(f"PLUGIN STOPPED: {exception_error}")
-                self.do_not_start_devices = True
+                self.do_not_start_stop_devices = True
                 self.stopPlugin()
 
             indigo.devices.subscribeToChanges()
@@ -1937,7 +1985,7 @@ class Plugin(indigo.PluginBase):
                     # Multi-Outlet (Socket) validation and option settings
                     if not values_dict.get("uspStateL1", False):
                         error_message = "An Indigo Multi-Outlet (Socket) device requires an association to the Zigbee 'state_l1' property"
-                        error_dict['uspStateLn'] = error_message
+                        error_dict['uspStateL1'] = error_message
                         error_dict["showAlertText"] = error_message
                     else:
                         values_dict["SupportsOnState"] = True
@@ -1959,6 +2007,19 @@ class Plugin(indigo.PluginBase):
                     else:
                         values_dict["SupportsOnState"] = True
                         values_dict["allowOnStateChange"] = False
+
+                case "multiSocket":
+                    # Multi-Socket validation and option settings
+                    if not values_dict.get("uspStateLeft", False):
+                        error_message = "An Indigo Multi-Socket device requires an association to the Zigbee 'state_left' property"
+                        error_dict['uspStateLeft'] = error_message
+                        error_dict["showAlertText"] = error_message
+                    else:
+                        values_dict["SupportsOnState"] = True
+                        if bool(values_dict.get("uspPowerLeft", False)):
+                            values_dict["SupportsEnergyMeter"] = False
+                            values_dict["SupportsEnergyMeterCurPower"] = True
+                        values_dict["SupportsStatusRequest"] = True
 
                 case "outlet":
                     # Outlet (Socket) validation and option settings
@@ -2075,7 +2136,7 @@ class Plugin(indigo.PluginBase):
             # <Option value="0">Primary Device - Main UI State</Option>
             # <Option value="1">Primary Device - Additional State</Option>
             # <Option value="2">Secondary Device</Option>
-            # <Option value="3">Primary Device - Additional UI State</Option>  # TODO: Is this entry (3) used?
+            # <Option value="3">Primary Device - Additional UI State</Option>
 
             # if self.globals[DEBUG]: self.logger.error(f"list_device_state_menu_options. filter='{filter}', type_id='{type_id}'")
 
@@ -2094,6 +2155,7 @@ class Plugin(indigo.PluginBase):
                     (filter == "presenceSensor" and type_id == "presenceSensor") or
                     (filter == "radarSensor" and type_id == "radarSensor") or
                     (filter == "stateL1" and type_id == "multiOutlet") or
+                    (filter == "stateLeft" and type_id == "multiSocket") or
                     (filter == "temperatureSensor" and type_id == "temperatureSensor") or
                     (filter == "temperatureSensor" and type_id == "thermostat") or
                     (filter == "vibrationSensor" and type_id == "vibrationSensor")):
@@ -2105,10 +2167,14 @@ class Plugin(indigo.PluginBase):
                   (filter == "onoff" and type_id == "blind") or
                   (filter == "color" and type_id == "dimmer") or
                   (filter == "colorTemperature" and type_id == "dimmer") or
-                  (filter == "onoff" and type_id == "dimmer")):
+                  (filter == "onoff" and type_id == "dimmer") or
+                  (filter == "powerLeft")):
                 menu_list = [("1", "Primary Device - Additional State")]
-            elif filter == "stateL2-5":
+            elif ((filter == "stateL2-5") or
+                  (filter == "stateRight")):
                 menu_list = [("2", "Secondary Device")]
+            elif filter == "powerRight":
+                menu_list = [("3", "Secondary Device - Additional State")]
             else:
                 menu_list = [("1", "Primary Device - Additional State"), ("2", "Secondary Device")]
             return menu_list
@@ -2753,12 +2819,40 @@ class Plugin(indigo.PluginBase):
                             else:
                                 values_dict["zigbeePropertyStateL5"] = False
 
+                    case "state_left":
+                        if type_id == "multiSocket":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyStateLeft"] = True
+                            else:
+                                values_dict["zigbeePropertyStateLeft"] = False
+
+                    case "state_right":
+                        if type_id == "multiSocket":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyStateRight"] = True
+                            else:
+                                values_dict["zigbeePropertyStateRight"] = False
+
                     case "power":
                         zigbee_device_property = "power"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPower"] = True
                         else:
                             values_dict["zigbeePropertyPower"] = False
+
+                    case "power_left":
+                        zigbee_device_property = "power_left"
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                            values_dict["zigbeePropertyPowerLeft"] = True
+                        else:
+                            values_dict["zigbeePropertyPowerLeft"] = False
+
+                    case "power_right":
+                        zigbee_device_property = "power_right"
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                            values_dict["zigbeePropertyPowerRight"] = True
+                        else:
+                            values_dict["zigbeePropertyPowerRight"] = False
 
                     case "presence":
                         zigbee_device_property = "presence"
@@ -2922,11 +3016,15 @@ class Plugin(indigo.PluginBase):
                     dev.subType = indigo.kSensorDeviceSubType.Illuminance
                     dev.replaceOnServer()
 
-            elif dev.deviceTypeId == "multiOutlet" or dev.deviceTypeId == "motionOutletSecondary":
+            elif dev.deviceTypeId == "multiOutlet" or dev.deviceTypeId == "multiOutletSecondary2" or dev.deviceTypeId == "multiOutletSecondary3" or dev.deviceTypeId == "multiOutletSecondary4" or dev.deviceTypeId == "multiOutletSecondary5":
                 if dev.subType != indigo.kRelayDeviceSubType.Outlet:
                     dev.subType = indigo.kRelayDeviceSubType.Outlet
                     dev.replaceOnServer()
 
+            elif dev.deviceTypeId == "multiSocket" or dev.deviceTypeId == "multiSocketSecondary":
+                if dev.subType != indigo.kRelayDeviceSubType.Outlet:
+                    dev.subType = indigo.kRelayDeviceSubType.Outlet
+                    dev.replaceOnServer()
 
             elif dev.deviceTypeId == "motionSensor" or dev.deviceTypeId == "multiSensor" or dev.deviceTypeId == "motionSensorSecondary":
                 if dev.subType != indigo.kSensorDeviceSubType.Motion:
@@ -3078,6 +3176,8 @@ class Plugin(indigo.PluginBase):
 
                     self.process_secondary_devices_create_update_new(primary_dev, zigbee_coordinator_ieee, update_device_name, existing_secondary_devices, secondary_device_type_id)
 
+
+
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
@@ -3124,6 +3224,8 @@ class Plugin(indigo.PluginBase):
                         primary_props["secondaryDeviceMultiOutlet4"] = 0
                     case "multiOutletSecondary5":
                         primary_props["secondaryDeviceMultiOutlet5"] = 0
+                    case "multiSocketSecondary":
+                        primary_props["secondaryDeviceMultiSocket"] = 0
                     case "presenceSensorSecondary":
                         primary_props["secondaryDevicePresenceSensor"] = 0
                     case "pressureSensorSecondary":
@@ -3144,6 +3246,8 @@ class Plugin(indigo.PluginBase):
 
     def process_secondary_devices_create_update_new(self, primary_dev, zigbee_coordinator_ieee, update_device_name, existing_secondary_devices, secondary_device_type_id):
         try:
+            primary_props = primary_dev.ownerProps
+
             if secondary_device_type_id not in existing_secondary_devices:  # TODO: WARNING: ONLY HANDLES 1 occurrence of a subtype
                                                                             # TODO:   WORKED ROUND THIS FOR MULTI-OUTLET BY HAVING DIFFERENT SECONDARY DEVICE TYPES
                 # Create Secondary Device
@@ -3163,7 +3267,10 @@ class Plugin(indigo.PluginBase):
                             break
                         name_check_count += 1
 
+
+
                 required_props_list = INDIGO_SUB_TYPE_INFO[secondary_device_type_id][2]
+
                 props_dict = dict()
                 props_dict["zigbee_coordinator_ieee"] = zigbee_coordinator_ieee
                 props_dict["zigbeePropertiesInitialised"] = True
@@ -3175,8 +3282,6 @@ class Plugin(indigo.PluginBase):
 
                 for key, value in required_props_list:
                     props_dict[key] = value
-
-                primary_props = primary_dev.ownerProps
 
                 secondary_dev = indigo.device.create(protocol=indigo.kProtocol.Plugin,
                                                      address=primary_dev.address,
@@ -3209,6 +3314,8 @@ class Plugin(indigo.PluginBase):
                         primary_props["secondaryDeviceMultiOutlet4"] = secondary_dev_id
                     case "multiOutletSecondary5":
                         primary_props["secondaryDeviceMultiOutlet5"] = secondary_dev_id
+                    case "multiSocketSecondary":
+                        primary_props["secondaryDeviceMultiSocket"] = secondary_dev_id
                     case "presenceSensorSecondary":
                         primary_props["secondaryDevicePresenceSensor"] = secondary_dev_id
                     case "pressureSensorSecondary":
@@ -3225,9 +3332,9 @@ class Plugin(indigo.PluginBase):
                 self.optionally_set_indigo_2021_device_sub_type(secondary_dev)
 
             else:
-                if update_device_name:
-                    secondary_dev = indigo.devices[existing_secondary_devices[secondary_device_type_id]]
+                secondary_dev = indigo.devices[existing_secondary_devices[secondary_device_type_id]]
 
+                if update_device_name:
                     # TODO: Differentiate for Outlet devices L1 thru L5
                     if hasattr(primary_dev, "subType"):  # If subType property supported for primary device - assume supported on Secondary
                         usp_indigo_name = INDIGO_SUB_TYPE_INFO[secondary_device_type_id][1][0]
@@ -3255,7 +3362,23 @@ class Plugin(indigo.PluginBase):
                     secondary_dev.name = updated_secondary_name  # noqa
                     secondary_dev.replaceOnServer()
 
+                # Special Multi-Socket Processing Start ...
 
+                if secondary_device_type_id == "multiSocketSecondary":
+                    secondary_props = secondary_dev.ownerProps
+                    supports_energy_meter_cur_power = secondary_props.get("SupportsEnergyMeterCurPower", False)
+                    if "uspPowerRight" in primary_props and primary_props["uspPowerRight"]:
+                        if not secondary_props.get("SupportsEnergyMeterCurPower", False):
+                            supports_energy_meter_cur_power = True
+                    else:
+                        if secondary_props.get("SupportsEnergyMeterCurPower", False):
+                            supports_energy_meter_cur_power = False
+
+                    if secondary_props.get("SupportsEnergyMeterCurPower", False) != supports_energy_meter_cur_power:
+                        secondary_props["SupportsEnergyMeterCurPower"] = supports_energy_meter_cur_power
+                        secondary_dev.replacePluginPropsOnServer(secondary_props)
+
+                # ... Special Multi-Socket Processing End.
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement

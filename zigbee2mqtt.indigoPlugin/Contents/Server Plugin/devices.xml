@@ -104,9 +104,9 @@
 		</ConfigUI>
 	</Device>
 
-    <!-- Outlet (Socket) -->
+    <!-- Multi-Adapter -->
     <Device id="multiOutlet"  type="relay" subType="indigo.kRelayDeviceSubType.Outlet">
-        <Name>Multi-Outlet (Socket)</Name>
+        <Name>Multi-Adapter)</Name>
         <ConfigUI>
             <Template file="Templates/template_zigbee.xml" />
             <Template file="Templates/template_zigbee_device_properties.xml" />
@@ -122,9 +122,18 @@
 		</ConfigUI>
 	</Device>
 
-    <!-- Outlet (Socket) -->
+    <!-- Multi-Socket -->
+    <Device id="multiSocket"  type="relay" subType="indigo.kRelayDeviceSubType.Outlet">
+        <Name>Multi-Socket</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
+    <!-- Outlet (Smart Plug) -->
     <Device id="outlet"  type="relay" subType="indigo.kRelayDeviceSubType.Outlet">
-        <Name>Outlet (Socket)</Name>
+        <Name>Smart Plug</Name>
         <ConfigUI>
             <Template file="Templates/template_zigbee.xml" />
             <Template file="Templates/template_zigbee_device_properties.xml" />
@@ -254,6 +263,15 @@
     <!-- Multi Outlet L5 [Secondary] -->
     <Device id="multiOutletSecondary5" type="relay" subType="indigo.kRelayDeviceSubType.Outlet" allowUserCreation="false">
         <Name>Multi-Outlet L5 [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
+	</Device>
+
+    <!-- Multi Socket Right [Secondary] -->
+    <Device id="multiSocketSecondary" type="relay" subType="indigo.kRelayDeviceSubType.Outlet" allowUserCreation="false">
+        <Name>Multi-Socket [Secondary]</Name>
         <ConfigUI>
             <Template file="Templates/template_sub_model.xml" />
 		</ConfigUI>

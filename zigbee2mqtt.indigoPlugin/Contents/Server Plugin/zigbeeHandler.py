@@ -399,9 +399,11 @@ class ThreadZigbeeHandler(threading.Thread):
 
             if "device" not in json_payload or "ieeeAddr" not in json_payload["device"]:
                 if len(payload) > 0:
-                    self.zigbeeLogger.error(f"JSON device|ieeAddr error. Payload: {payload}")
+                    self.zigbeeLogger.error(f"MQTT topic '{topics}' is missing 'device' and|or 'ieeAddr' keys in JSON payload:\n")
+                    self.zigbeeLogger.warning(f"    {payload}\n")
+                    self.zigbeeLogger.error(f"    See Wiki Installation documentation at: https://github.com/autolog/Zigbee2mqtt_Bridge/wiki/Installation\n")
                 else:
-                    self.zigbeeLogger.error(f"JSON device|ieeAddr error. Payload is empty.")
+                    self.zigbeeLogger.error(f"MQTT topic '{topics}' is missing JSON payload. Payload is empty.")
                 return
             zigbee_device_ieee = json_payload["device"]["ieeeAddr"]
             if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
@@ -477,9 +479,7 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_voltage(zd_dev, json_payload)
 
                 case "multiOutlet":
-                    # self.process_property_energy(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
-                    # self.process_property_power(zigbee_coordinator_ieee, zd_dev, json_payload)
                     self.process_property_multi_state(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
 
@@ -491,6 +491,12 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_occupancy(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
+
+                case "multiSocket":
+                    self.process_property_link_quality(zd_dev, json_payload)
+                    self.process_property_power_left_right(zigbee_coordinator_ieee, zd_dev, json_payload)
+                    self.process_property_multi_state(zd_dev, json_payload)
+
                 case "outlet":
                     self.process_property_energy(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
@@ -988,34 +994,56 @@ class ThreadZigbeeHandler(threading.Thread):
             if "state_l1" in json_payload and zd_dev.enabled:
                 on_off_state = True if json_payload["state_l1"] == "ON" else False
                 on_off_state_ui = "on" if on_off_state else "off"
-                if (zd_dev.states["onOffState"] != on_off_state) or (zd_dev.states["onOffState.ui"] != on_off_state_ui):
+                if (zd_dev.states["onOffState"] != on_off_state) or ("onOffState.ui" in zd_dev.states and (zd_dev.states["onOffState.ui"] != on_off_state_ui)):
                     self.key_value_lists[zd_dev.id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
                     if not bool(zd_dev.pluginProps.get(f"hideStateL1Broadcast", False)):
                         self.zigbeeLogger.info(f"received \"{zd_dev.name}\" state L1 [On|off] '{on_off_state_ui}' event")
                 else:
                     if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{zd_dev.name}\" unchanged state L1 [On|off] {on_off_state_ui} event")
 
+            elif "state_left" in json_payload and zd_dev.enabled:
+                on_off_state = True if json_payload["state_left"] == "ON" else False
+                on_off_state_ui = "on" if on_off_state else "off"
+                if (zd_dev.states["onOffState"] != on_off_state) or ("onOffState.ui" in zd_dev.states and (zd_dev.states["onOffState.ui"] != on_off_state_ui)):
+                    self.key_value_lists[zd_dev.id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
+                    if not bool(zd_dev.pluginProps.get(f"hideStateLeftBroadcast", False)):
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" state Left [On|off] '{on_off_state_ui}' event")
+                else:
+                    if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{zd_dev.name}\" unchanged state Left [On|off] {on_off_state_ui} event")
+
             def process_secondary_switches(switch):
-                secondary_property_name = f"secondaryDeviceMultiOutlet{switch}"
+                if switch == "state_right":
+                    secondary_property_name = "secondaryDeviceMultiSocket"
+                else:
+                    secondary_property_name = f"secondaryDeviceMultiOutlet{switch}"
                 secondary_dev_id = zd_dev.pluginProps.get(secondary_property_name, 0)
+                # TODO: Check for zero
                 secondary_dev = indigo.devices[secondary_dev_id]
                 if not secondary_dev.enabled:
                     return
-                secondary_state_name = f"state_l{switch}"
+                if switch == "state_right":
+                    secondary_state_name = switch
+                    secondary_state_name_ui = "Right"
+                else:
+                    secondary_state_name = f"state_l{switch}"
+                    secondary_state_name_ui = f"L{switch}"
                 if secondary_state_name in json_payload:
                     on_off_state = True if json_payload[secondary_state_name] == "ON" else False
                     on_off_state_ui = "on" if on_off_state else "off"
 
-                    if (secondary_dev.states["onOffState"] != on_off_state) or (secondary_dev.states["onOffState.ui"] != on_off_state_ui):
+                    if (secondary_dev.states["onOffState"] != on_off_state) or ("onOffState.ui" in secondary_dev.states and (secondary_dev.states["onOffState.ui"] != on_off_state_ui)):
                         self.key_value_lists[secondary_dev_id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
-                        broadcast_property_name = f"hideStateL{switch}Broadcast"
+                        broadcast_property_name = f"hideState{secondary_state_name_ui}Broadcast"
                         if not bool(zd_dev.pluginProps.get(broadcast_property_name, False)):
-                            self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" state L{switch} [On|off] '{on_off_state_ui}' event")
+                            self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" state {secondary_state_name_ui} [On|off] '{on_off_state_ui}' event")
                     else:
-                        if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" unchanged state L{switch} [On|off] {on_off_state_ui} event")
+                        if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" unchanged state {secondary_state_name_ui} [On|off] {on_off_state_ui} event")
 
-            for switch in ["2", "3", "4", "5"]:
-                process_secondary_switches(switch)
+            if zd_dev.deviceTypeId == "multiSocket":
+                process_secondary_switches("state_right")
+            else:
+                for switch in ["2", "3", "4", "5"]:
+                    process_secondary_switches(switch)
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -1118,6 +1146,62 @@ class ThreadZigbeeHandler(threading.Thread):
                     if report_power_state:
                         if not bool(zd_dev.pluginProps.get("hidePowerBroadcast", False)):
                             self.zigbeeLogger.info(f"received \"{zd_dev.name}\" power update to {uiValue}")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+    def process_property_power_left_right(self, zigbee_coordinator_ieee, zd_dev, json_payload):
+        try:
+            power_process_list = list()
+
+            if "power_left" in json_payload:
+                if zd_dev.enabled:
+                    power_process_list.append(("power_left", "Left", zd_dev, ZD_PREVIOUS_POWER_LEVEL_LEFT))
+            if "power_right" in json_payload:
+                zd_dev_secondary_id = zd_dev.pluginProps.get("secondaryDeviceMultiSocket", 0)  # Returns int zero if no secondary pressure device
+                if zd_dev_secondary_id != 0:
+                    zd_dev_secondary = indigo.devices[zd_dev_secondary_id]
+                    if zd_dev_secondary.enabled:
+                        power_process_list.append(("power_right", "Right", zd_dev_secondary, ZD_PREVIOUS_POWER_LEVEL_RIGHT))
+
+            for json_payload_power_state, side, zd_dev_to_process, zd_previous_power_level_contant in power_process_list:
+                if zd_dev.pluginProps.get(f"uspPower{side}", False):
+                    usp_power_units = f"uspPower{side}Units"
+                    power_units_ui = f" {zd_dev.pluginProps.get(usp_power_units, '')}"
+                    try:
+                        power = float(json_payload[json_payload_power_state])
+                    except ValueError:
+                        return
+                    minimumPowerLevel = float(zd_dev.pluginProps.get(f"uspPower{side}MinimumReportingLevel", 0.0))
+                    reportingPowerHysteresis = float(zd_dev.pluginProps.get(f"uspPower{side}ReportingHysteresis", 6.0))
+                    if reportingPowerHysteresis > 0.0:  # noqa [Duplicated code fragment!]
+                        reportingPowerHysteresis = reportingPowerHysteresis / 2
+
+                    previousPowerLevel = float(self.globals[ZD][zigbee_coordinator_ieee][zd_dev_to_process.address].get(zd_previous_power_level_contant, float(zd_dev_to_process.states["curEnergyLevel"])))
+
+                    # Determine if power state should be reported depending on hysteresis
+                    report_power_state = False
+                    power_variance_minimum = previousPowerLevel - reportingPowerHysteresis
+                    power_variance_maximum = previousPowerLevel + reportingPowerHysteresis
+                    if power_variance_minimum < 0.0:
+                        power_variance_minimum = 0.0
+                    if power >= minimumPowerLevel:
+                        # power_variance_minimum = previousPowerLevel - powerReportingVariance
+                        # power_variance_maximum = previousPowerLevel + powerReportingVariance
+                        if power < power_variance_minimum or power > power_variance_maximum:
+                            report_power_state = True
+                    elif previousPowerLevel >= minimumPowerLevel:
+                        if power < power_variance_minimum or power > power_variance_maximum:
+                            report_power_state = True
+                    if report_power_state:
+                        self.globals[ZD][zigbee_coordinator_ieee][zd_dev.address][zd_previous_power_level_contant] = power
+
+                    decimal_places = int(zd_dev.pluginProps.get(f"uspPower{side}DecimalPlaces", 0))
+                    value, uiValue = self.processDecimalPlaces(power, decimal_places, power_units_ui, INDIGO_NO_SPACE_BEFORE_UNITS)
+                    self.key_value_lists[zd_dev_to_process.id].append({'key': 'curEnergyLevel', 'value': value, 'uiValue': uiValue})
+                    if report_power_state:
+                        if not bool(zd_dev.pluginProps.get(f"hidePower{side}Broadcast", False)):
+                            self.zigbeeLogger.info(f"received \"{zd_dev_to_process.name}\" power update to {uiValue}")
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
