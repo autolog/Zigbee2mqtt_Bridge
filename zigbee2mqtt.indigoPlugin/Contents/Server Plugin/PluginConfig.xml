@@ -8,7 +8,19 @@
         <Label>Copyright © 2023 Autolog</Label>
     </Field>
 
+	<Field id="space-0" type="label" alwaysUseInDialogHeightCalc="true"><Label/></Field>
+
+	<Field id="separator-0" type="separator" alwaysUseInDialogHeightCalc="true"/>
+	<Field id="header-0" type="label" alwaysUseInDialogHeightCalc="true" fontColor="green">
+        <Label>LOGGING SUPPRESSIONG</Label>
+    </Field>
+
 	<Field id="space-1" type="label" alwaysUseInDialogHeightCalc="true"><Label/></Field>
+
+	<Field id="suppress_ieee_missing" type="checkbox" defaultValue="false"
+           tooltip="Suppress MQTT topic is missing 'device' and|or 'ieeAddr' keys message">
+        <Label>Suppress Missing Keys Message:</Label>
+    </Field>
 
     <Field id="separator-1" type="separator" alwaysUseInDialogHeightCalc="true"/>
 	<Field id="header-1" type="label" alwaysUseInDialogHeightCalc="true" fontColor="green">

@@ -152,6 +152,8 @@ class Plugin(indigo.PluginBase):
 
         self.globals[MQTT_FILTERS] = dict()
 
+        self.globals[MQTT_SUPPRESS_IEEE_MISSING] = False
+
         # Set Plugin Config Values
         self.closed_prefs_config_ui(plugin_prefs, False)
 
@@ -364,7 +366,7 @@ class Plugin(indigo.PluginBase):
 
             # ##### SET BRIGHTNESS ######
             elif action.deviceAction == indigo.kDeviceAction.SetBrightness:
-                if dev.deviceTypeId == "dimmer":
+                if dev.deviceTypeId == "dimmer" or dev.deviceTypeId == "zigbeeGroupDimmer":
                     new_brightness = int(action.actionValue)   # action.actionValue contains brightness value (0 - 100)
                     action_ui = "set"
                     if new_brightness > 0:
@@ -396,7 +398,7 @@ class Plugin(indigo.PluginBase):
             elif action.deviceAction == indigo.kDeviceAction.BrightenBy:
                 # if not dev.onState:
                 #     pass  # TODO: possibly turn on if currently off?
-                if dev.deviceTypeId == "dimmer":
+                if dev.deviceTypeId == "dimmer" or dev.deviceTypeId == "zigbeeGroupDimmer":
                     if dev.brightness < 100:
                         brighten_by = int(action.actionValue)  # action.actionValue contains brightness increase value
                         new_brightness = dev.brightness + brighten_by
@@ -428,7 +430,7 @@ class Plugin(indigo.PluginBase):
 
             # ##### DIM BY ######
             elif action.deviceAction == indigo.kDeviceAction.DimBy:
-                if dev.deviceTypeId == "dimmer":
+                if dev.deviceTypeId == "dimmer" or dev.deviceTypeId == "zigbeeGroupDimmer":
                     if dev.onState and dev.brightness > 0:
                         dim_by = int(action.actionValue)  # action.actionValue contains brightness decrease value
                         new_brightness = dev.brightness - dim_by
@@ -657,6 +659,7 @@ class Plugin(indigo.PluginBase):
             if self.globals[ZC][dev_id][MQTT_ROOT_TOPIC] == "":
                 self.globals[ZC][dev_id][MQTT_ROOT_TOPIC] = MQTT_ROOT_TOPIC_DEFAULT  # e.g. "zigbee2mqtt"
 
+
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
@@ -755,6 +758,8 @@ class Plugin(indigo.PluginBase):
             # Now set required logging levels
             self.indigo_log_handler.setLevel(event_log_level)
             self.plugin_file_handler.setLevel(plugin_log_level)
+
+            self.globals[MQTT_SUPPRESS_IEEE_MISSING] = bool(values_dict.get("suppress_ieee_missing", False))
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement

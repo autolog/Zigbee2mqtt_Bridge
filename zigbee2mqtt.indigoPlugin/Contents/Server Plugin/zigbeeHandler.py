@@ -399,9 +399,10 @@ class ThreadZigbeeHandler(threading.Thread):
 
             if "device" not in json_payload or "ieeeAddr" not in json_payload["device"]:
                 if len(payload) > 0:
-                    self.zigbeeLogger.error(f"MQTT topic '{topics}' is missing 'device' and|or 'ieeAddr' keys in JSON payload:\n")
-                    self.zigbeeLogger.warning(f"    {payload}\n")
-                    self.zigbeeLogger.error(f"    See Wiki Installation documentation at: https://github.com/autolog/Zigbee2mqtt_Bridge/wiki/Installation\n")
+                    if not self.globals[MQTT_SUPPRESS_IEEE_MISSING]:
+                        self.zigbeeLogger.error(f"MQTT topic '{topics}' is missing 'device' and|or 'ieeAddr' keys in JSON payload:\n")
+                        self.zigbeeLogger.warning(f"    {payload}\n")
+                        self.zigbeeLogger.error(f"    See Wiki Installation documentation at: https://github.com/autolog/Zigbee2mqtt_Bridge/wiki/Installation\n")
                 else:
                     self.zigbeeLogger.error(f"MQTT topic '{topics}' is missing JSON payload. Payload is empty.")
                 return
