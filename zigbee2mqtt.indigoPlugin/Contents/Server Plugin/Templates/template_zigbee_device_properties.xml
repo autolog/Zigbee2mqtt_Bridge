@@ -10,6 +10,7 @@
     <Field id="zigbeePropertiesInitialised" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyBrightness" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyAcceleration" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyAngles" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyBattery" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyAction" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyColor" type="checkbox" defaultValue="false" hidden="true" />
@@ -32,6 +33,8 @@
     <Field id="zigbeePropertyPresenceEvent" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPressure" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyRadar" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyRemoteAudio" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyRemoteDimmer" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertySetpoint" type="checkbox" defaultValue="false" hidden="true" />
 
     <Field id="zigbeePropertyState" type="checkbox" defaultValue="false" hidden="true" />
@@ -89,9 +92,9 @@
         <Label>Tamper:</Label>
         <Description>Associated with Zigbee 'acceleration' Property</Description>
     </Field>
-    <Field id="uspAccelerationIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspAccelerationIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspAcceleration" visibleBindingValue="true" enabledBindingId="uspAccelerationIndigoEnabled">
+<!--    <Field id="uspAccelerationIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspAccelerationIndigo" type="menu" defaultValue="0" visibleBindingId="uspAcceleration" visibleBindingValue="true">
+<!--        enabledBindingId="uspAccelerationIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="accelerationSensor" method="list_device_state_menu_options"/>
     </Field>
@@ -107,15 +110,16 @@
             visibleBindingId="zigbeePropertyAction" visibleBindingValue="true">
         <Label>Action</Label>
     </Field>
-    <Field id="uspActionEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspAction" type="checkbox" defaultValue="false" enabledBindingId="uspActionEnabled"
+<!--    <Field id="uspActionEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+<!--    <Field id="uspAction" type="checkbox" defaultValue="false" enabledBindingId="uspActionEnabled"-->
+    <Field id="uspAction" type="checkbox" defaultValue="false"
             visibleBindingId="zigbeePropertyAction" visibleBindingValue="true">
         <Label>Scene [Button]:</Label>
         <Description>Associated with Zigbee 'action' Property</Description>
     </Field>
-    <Field id="uspActionIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspActionIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspAction" visibleBindingValue="true" enabledBindingId="uspActionIndigoEnabled">
+<!--    <Field id="uspActionIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspActionIndigo" type="menu" defaultValue="0" visibleBindingId="uspAction" visibleBindingValue="true">
+<!--        enabledBindingId="uspActionIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="button" method="list_device_state_menu_options"/>
      </Field>
@@ -161,6 +165,67 @@
     <Field id="separator-uspAction" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyAction" visibleBindingValue="true"/>
 
+    <!-- Action [RemoteAudio]-->
+    <Field id="space-header-uspRemoteAudio" type="label" visibleBindingId="zigbeePropertyRemoteAudio" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="header-uspRemoteAudio" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange" visibleBindingId="zigbeePropertyRemoteAudio" visibleBindingValue="true">
+        <Label>Action</Label>
+    </Field>
+    <Field id="uspRemoteAudio" type="checkbox" defaultValue="false" visibleBindingId="zigbeePropertyRemoteAudio" visibleBindingValue="true">
+        <Label>Action [Button]:</Label>
+        <Description>Associated with Zigbee 'action' Property</Description>
+    </Field>
+    <Field id="uspRemoteAudioIndigo" type="menu" defaultValue="0" visibleBindingId="uspRemoteAudio" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="remoteAudio" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspRemoteAudio" type="label" visibleBindingId="zigbeePropertyRemoteAudio" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="separator-uspRemoteAudio" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyRemoteAudio" visibleBindingValue="true"/>
+
+    <!-- Action [RemoteDimmer]-->
+    <Field id="space-header-uspRemoteDimmer" type="label" visibleBindingId="zigbeePropertyRemoteDimmer" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="header-uspRemoteDimmer" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange" visibleBindingId="zigbeePropertyRemoteDimmer" visibleBindingValue="true">
+        <Label>Action</Label>
+    </Field>
+    <Field id="uspRemoteDimmer" type="checkbox" defaultValue="false" visibleBindingId="zigbeePropertyRemoteDimmer" visibleBindingValue="true">
+        <Label>Action [Button]:</Label>
+        <Description>Associated with Zigbee 'action' Property</Description>
+    </Field>
+    <Field id="uspRemoteDimmerIndigo" type="menu" defaultValue="0" visibleBindingId="uspRemoteDimmer" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="remoteDimmer" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspRemoteDimmer" type="label" visibleBindingId="zigbeePropertyRemoteDimmer" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="separator-uspRemoteDimmer" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyRemoteDimmer" visibleBindingValue="true"/>
+
+    <!-- Angle [Vibration Sensor]-->
+    <Field id="space-header-uspAngles" type="label" visibleBindingId="zigbeePropertyAngles" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="header-uspAngles" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange" visibleBindingId="zigbeePropertyAngles" visibleBindingValue="true">
+        <Label>Angle</Label>
+    </Field>
+    <Field id="uspAngles" type="checkbox" defaultValue="false" visibleBindingId="zigbeePropertyAngles" visibleBindingValue="true">
+        <Label>Angle:</Label>
+        <Description>Associated with Zigbee 'Angle' Properties</Description>
+    </Field>
+    <Field id="uspAnglesIndigo" type="menu" defaultValue="0" visibleBindingId="uspAngles" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="angles" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspAngles" type="label" visibleBindingId="zigbeePropertyAngles" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="separator-uspAngles" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyAngles" visibleBindingValue="true"/>
+
+
     <!-- Brightness -->
     <Field id="space-header-uspBrightness" type="label"
            visibleBindingId="zigbeePropertyBrightness" visibleBindingValue="true"><Label/></Field>
@@ -173,9 +238,9 @@
         <Label>Dimmer:</Label>
         <Description>Associated with Zigbee 'brightness' Property</Description>
     </Field>
-    <Field id="uspBrightnessIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspBrightnessIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspBrightness" visibleBindingValue="true" enabledBindingId="uspBrightnessIndigoEnabled">
+<!--    <Field id="uspBrightnessIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspBrightnessIndigo" type="menu" defaultValue="0" visibleBindingId="uspBrightness" visibleBindingValue="true">
+<!--        enabledBindingId="uspBrightnessIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="brightness" method="list_device_state_menu_options"/>
     </Field>
@@ -196,9 +261,9 @@
         <Label>Color RGB:</Label>
         <Description>Associated with Zigbee 'color' Property</Description>
     </Field>
-    <Field id="uspColorIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspColorIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspColorRGB" visibleBindingValue="true" enabledBindingId="uspColorIndigoEnabled">
+<!--    <Field id="uspColorIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspColorIndigo" type="menu" defaultValue="0" visibleBindingId="uspColorRGB" visibleBindingValue="true">
+<!--        enabledBindingId="uspColorIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="color" method="list_device_state_menu_options"/>
     </Field>
@@ -229,9 +294,9 @@
         <Label>Kelvin Maximum:</Label>
     </Field>
 
-    <Field id="uspColorTemperatureIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspColorTemperatureIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspColorTemperature" visibleBindingValue="true" enabledBindingId="uspColorTemperatureIndigoEnabled">
+<!--    <Field id="uspColorTemperatureIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspColorTemperatureIndigo" type="menu" defaultValue="0" visibleBindingId="uspColorTemperature" visibleBindingValue="true">
+<!--        enabledBindingId="uspColorTemperatureIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="colorTemperature" method="list_device_state_menu_options"/>
     </Field>
@@ -252,9 +317,9 @@
         <Label>Contact:</Label>
         <Description>Associated with Zigbee 'contact' Property</Description>
     </Field>
-    <Field id="uspContactIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspContactIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspContact" visibleBindingValue="true" enabledBindingId="uspContactIndigoEnabled">
+<!--    <Field id="uspContactIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspContactIndigo" type="menu" defaultValue="0" visibleBindingId="uspContact" visibleBindingValue="true">
+<!--        enabledBindingId="uspContactIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="contact" method="list_device_state_menu_options"/>
     </Field>
@@ -274,9 +339,9 @@
             visibleBindingId="zigbeePropertyEnergy" visibleBindingValue="true">
         <Label>Accumulated Energy Total:</Label>
     </Field>
-    <Field id="uspEnergyIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspEnergyIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspEnergy" visibleBindingValue="true" enabledBindingId="uspEnergyIndigoEnabled">
+<!--    <Field id="uspEnergyIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspEnergyIndigo" type="menu" defaultValue="0" visibleBindingId="uspEnergy" visibleBindingValue="true">
+<!--        enabledBindingId="uspEnergyIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="energy" method="list_device_state_menu_options"/>
      </Field>
@@ -311,9 +376,9 @@
         <Label>Humidity:</Label>
         <Description>Associated with Zigbee 'humidity' Property</Description>
     </Field>
-    <Field id="uspHumidityIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspHumidityIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspHumidity" visibleBindingValue="true" enabledBindingId="uspHumidityIndigoEnabled">
+<!--    <Field id="uspHumidityIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspHumidityIndigo" type="menu" defaultValue="0" visibleBindingId="uspHumidity" visibleBindingValue="true">
+<!--        enabledBindingId="uspHumidityIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="humiditySensor" method="list_device_state_menu_options"/>
     </Field>
@@ -344,9 +409,9 @@
         <Label>Illuminance:</Label>
         <Description>Associated with Zigbee 'illuminance' Property</Description>
     </Field>
-    <Field id="uspIlluminanceIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspIlluminanceIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspIlluminance" visibleBindingValue="true" enabledBindingId="uspIlluminanceIndigoEnabled">
+<!--    <Field id="uspIlluminanceIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspIlluminanceIndigo" type="menu" defaultValue="0" visibleBindingId="uspIlluminance" visibleBindingValue="true">
+<!--        enabledBindingId="uspIlluminanceIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="illuminanceSensor" method="list_device_state_menu_options"/>
     </Field>
@@ -381,9 +446,9 @@
         <Label>Link Quality:</Label>
         <Description>Associated with Zigbee 'linkquality' Property</Description>
     </Field>
-    <Field id="uspLinkQualityIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspLinkQualityIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspLinkQuality" visibleBindingValue="true" enabledBindingId="uspLinkQualityIndigoEnabled">
+<!--    <Field id="uspLinkQualityIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspLinkQualityIndigo" type="menu" defaultValue="0" visibleBindingId="uspLinkQuality" visibleBindingValue="true">
+<!--        enabledBindingId="uspLinkQualityIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="link-quality" method="list_device_state_menu_options"/>
      </Field>
@@ -404,9 +469,9 @@
         <Label>Motion:</Label>
         <Description>Associated with Zigbee 'occupancy' Property</Description>
     </Field>
-    <Field id="uspOccupancyIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspOccupancyIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspOccupancy" visibleBindingValue="true" enabledBindingId="uspOccupancyIndigoEnabled">
+<!--    <Field id="uspOccupancyIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspOccupancyIndigo" type="menu" defaultValue="0" visibleBindingId="uspOccupancy" visibleBindingValue="true">
+<!--        enabledBindingId="uspOccupancyIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="motionSensor" method="list_device_state_menu_options"/>
      </Field>
@@ -427,9 +492,9 @@
         <Label>On / Off:</Label>
         <Description>Associated with Zigbee 'state' Property</Description>
     </Field>
-    <Field id="uspOnOffIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspOnOffIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspOnOff" visibleBindingValue="true" enabledBindingId="uspOnOffIndigoEnabled">
+<!--    <Field id="uspOnOffIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspOnOffIndigo" type="menu" defaultValue="0" visibleBindingId="uspOnOff" visibleBindingValue="true">
+<!--        enabledBindingId="uspOnOffIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="onoff" method="list_device_state_menu_options"/>
      </Field>
@@ -452,9 +517,9 @@
         <Description>Associated with Zigbee 'position' Property</Description>
     </Field>
 
-    <Field id="uspPositionIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspPositionIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspPosition" visibleBindingValue="true" enabledBindingId="uspPositionIndigoEnabled">
+<!--    <Field id="uspPositionIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspPositionIndigo" type="menu" defaultValue="0" visibleBindingId="uspPosition" visibleBindingValue="true">
+<!--        enabledBindingId="uspPositionIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="blind" method="list_device_state_menu_options"/>
     </Field>
@@ -476,8 +541,8 @@
         <Description>Associated with Zigbee 'power' Property</Description>
     </Field>
     <Field id="uspPowerIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspPowerIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspPower" visibleBindingValue="true" enabledBindingId="uspPowerIndigoEnabled">
+    <Field id="uspPowerIndigo" type="menu" defaultValue="0" visibleBindingId="uspPower" visibleBindingValue="true">
+<!--        enabledBindingId="uspPowerIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="power" method="list_device_state_menu_options"/>
      </Field>
@@ -520,9 +585,9 @@
         <Label>Power Left:</Label>
         <Description>Associated with Zigbee 'power_left' Property</Description>
     </Field>
-    <Field id="uspPowerLeftIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspPowerLeftIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspPowerLeft" visibleBindingValue="true" enabledBindingId="uspPowerLeftIndigoEnabled">
+<!--    <Field id="uspPowerLeftIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspPowerLeftIndigo" type="menu" defaultValue="0" visibleBindingId="uspPowerLeft" visibleBindingValue="true">
+<!--        enabledBindingId="uspPowerLeftIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="powerLeft" method="list_device_state_menu_options"/>
      </Field>
@@ -565,9 +630,9 @@
         <Label>Power Right:</Label>
         <Description>Associated with Zigbee 'power_right' Property</Description>
     </Field>
-    <Field id="uspPowerRightIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspPowerRightIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspPowerRight" visibleBindingValue="true" enabledBindingId="uspPowerRightIndigoEnabled">
+<!--    <Field id="uspPowerRightIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspPowerRightIndigo" type="menu" defaultValue="0" visibleBindingId="uspPowerRight" visibleBindingValue="true">
+<!--        enabledBindingId="uspPowerRightIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="powerRight" method="list_device_state_menu_options"/>
      </Field>
@@ -611,9 +676,9 @@
         <Label>Presence:</Label>
         <Description>Associated with Zigbee 'presence' Property</Description>
     </Field>
-    <Field id="uspPresenceIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspPresenceIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspPresence" visibleBindingValue="true" enabledBindingId="uspPresenceIndigoEnabled">
+<!--    <Field id="uspPresenceIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspPresenceIndigo" type="menu" defaultValue="0" visibleBindingId="uspPresence" visibleBindingValue="true">
+<!--        enabledBindingId="uspPresenceIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="presenceSensor" method="list_device_state_menu_options"/>
      </Field>
@@ -634,9 +699,9 @@
         <Label>Presence Event:</Label>
         <Description>Associated with Zigbee 'presence_event' Property</Description>
     </Field>
-    <Field id="uspPresenceEventIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspPresenceEventIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspPresenceEvent" visibleBindingValue="true" enabledBindingId="uspPresenceEventIndigoEnabled">
+<!--    <Field id="uspPresenceEventIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspPresenceEventIndigo" type="menu" defaultValue="0" visibleBindingId="uspPresenceEvent" visibleBindingValue="true">
+<!--        enabledBindingId="uspPresenceEventIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="presenceSensor" method="list_device_state_menu_options"/>
      </Field>
@@ -657,9 +722,9 @@
         <Label>Pressure:</Label>
         <Description>Associated with Zigbee 'pressure' Property</Description>
     </Field>
-    <Field id="uspPressureIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspPressureIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspPressure" visibleBindingValue="true" enabledBindingId="uspPresenceIndigoEnabled">
+<!--    <Field id="uspPressureIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspPressureIndigo" type="menu" defaultValue="0" visibleBindingId="uspPressure" visibleBindingValue="true">
+<!--        enabledBindingId="uspPresenceIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="pressure" method="list_device_state_menu_options"/>
      </Field>
@@ -694,9 +759,9 @@
         <Label>Radar:</Label>
         <Description>Associated with Zigbee 'radar' Property</Description>
     </Field>
-    <Field id="uspRadarIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspRadarIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspRadar" visibleBindingValue="true" enabledBindingId="uspRadarIndigoEnabled">
+<!--    <Field id="uspRadarIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspRadarIndigo" type="menu" defaultValue="0" visibleBindingId="uspRadar" visibleBindingValue="true">
+<!--        enabledBindingId="uspRadarIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="radarSensor" method="list_device_state_menu_options"/>
      </Field>
@@ -719,9 +784,9 @@
         <Description>Associated with Zigbee 'state' Property</Description>
     </Field>
 
-    <Field id="uspStateIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspStateIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspState" visibleBindingValue="true" enabledBindingId="uspStateIndigoEnabled">
+<!--    <Field id="uspStateIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateIndigo" type="menu" defaultValue="0" visibleBindingId="uspState" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="dimmer" method="list_device_state_menu_options"/>
     </Field>
@@ -746,9 +811,9 @@
     </Field>
 
 
-    <Field id="uspStateL1IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspStateL1Indigo" type="menu" defaultValue="0"
-            visibleBindingId="uspStateL1" visibleBindingValue="true" enabledBindingId="uspStateL1IndigoEnabled">
+<!--    <Field id="uspStateL1IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateL1Indigo" type="menu" defaultValue="0" visibleBindingId="uspStateL1" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateL1IndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="stateL1" method="list_device_state_menu_options"/>
     </Field>
@@ -770,9 +835,9 @@
         <Description>Associated with Zigbee 'state_l2' Property</Description>
     </Field>
 
-    <Field id="uspStateL2IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspStateL2Indigo" type="menu" defaultValue="0"
-            visibleBindingId="uspStateL2" visibleBindingValue="true" enabledBindingId="uspStateL2IndigoEnabled">
+<!--    <Field id="uspStateL2IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateL2Indigo" type="menu" defaultValue="0" visibleBindingId="uspStateL2" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateL2IndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="stateL2-5" method="list_device_state_menu_options"/>
     </Field>
@@ -794,9 +859,9 @@
         <Description>Associated with Zigbee 'state_l3' Property</Description>
     </Field>
 
-    <Field id="uspStateL3IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspStateL3Indigo" type="menu" defaultValue="0"
-            visibleBindingId="uspStateL3" visibleBindingValue="true" enabledBindingId="uspStateL3IndigoEnabled">
+<!--    <Field id="uspStateL3IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateL3Indigo" type="menu" defaultValue="0" visibleBindingId="uspStateL3" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateL3IndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="stateL2-5" method="list_device_state_menu_options"/>
     </Field>
@@ -818,9 +883,9 @@
         <Description>Associated with Zigbee 'state_l4' Property</Description>
     </Field>
 
-    <Field id="uspStateL4IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspStateL4Indigo" type="menu" defaultValue="0"
-            visibleBindingId="uspStateL4" visibleBindingValue="true" enabledBindingId="uspStateL4IndigoEnabled">
+<!--    <Field id="uspStateL4IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateL4Indigo" type="menu" defaultValue="0" visibleBindingId="uspStateL4" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateL4IndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="stateL2-5" method="list_device_state_menu_options"/>
     </Field>
@@ -842,9 +907,9 @@
         <Description>Associated with Zigbee 'state_l5' Property</Description>
     </Field>
 
-    <Field id="uspStateL5IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspStateL5Indigo" type="menu" defaultValue="0"
-            visibleBindingId="uspStateL5" visibleBindingValue="true" enabledBindingId="uspStateL5IndigoEnabled">
+<!--    <Field id="uspStateL5IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateL5Indigo" type="menu" defaultValue="0" visibleBindingId="uspStateL5" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateL5IndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="stateL2-5" method="list_device_state_menu_options"/>
     </Field>
@@ -866,9 +931,9 @@
         <Description>Associated with Zigbee 'state_left' Property</Description>
     </Field>
 
-    <Field id="uspStateLeftIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspStateLeftIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspStateLeft" visibleBindingValue="true" enabledBindingId="uspStateLeftIndigoEnabled">
+<!--    <Field id="uspStateLeftIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateLeftIndigo" type="menu" defaultValue="0" visibleBindingId="uspStateLeft" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateLeftIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="stateLeft" method="list_device_state_menu_options"/>
     </Field>
@@ -890,9 +955,9 @@
         <Description>Associated with Zigbee 'state_right' Property</Description>
     </Field>
 
-    <Field id="uspStateRightIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspStateRightIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspStateRight" visibleBindingValue="true" enabledBindingId="uspStateRightIndigoEnabled">
+<!--    <Field id="uspStateRightIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateRightIndigo" type="menu" defaultValue="0" visibleBindingId="uspStateRight" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateRightIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="stateRight" method="list_device_state_menu_options"/>
     </Field>
@@ -918,9 +983,9 @@
         <Label>Tamper:</Label>
         <Description>Associated with Zigbee 'tamper' Property</Description>
     </Field>
-    <Field id="uspTamperIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspTamperIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspTamper" visibleBindingValue="true" enabledBindingId="uspTamperIndigoEnabled">
+<!--    <Field id="uspTamperIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspTamperIndigo" type="menu" defaultValue="0" visibleBindingId="uspTamper" visibleBindingValue="true">
+<!--        enabledBindingId="uspTamperIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="tamperSensor" method="list_device_state_menu_options"/>
     </Field>
@@ -945,9 +1010,9 @@
         <Label>Temperature:</Label>
         <Description>Associated with Zigbee 'temperature' Property</Description>
     </Field>
-    <Field id="uspTemperatureEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspTemperatureIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspTemperature" visibleBindingValue="true" enabledBindingId="uspTemperatureEnabled">
+<!--    <Field id="uspTemperatureIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspTemperatureIndigo" type="menu" defaultValue="0" visibleBindingId="uspTemperature" visibleBindingValue="true">
+<!--        enabledBindingId="uspTemperatureIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="temperatureSensor" method="list_device_state_menu_options"/>
      </Field>
@@ -1004,9 +1069,9 @@
         <Label>Setpoint:</Label>
         <Description>Associated with Zigbee 'setpoint' Property</Description>
     </Field>
-    <Field id="uspSetpointIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspSetpointIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspSetpoint" visibleBindingValue="true" enabledBindingId="uspSetpointIndigoEnabled">
+<!--    <Field id="uspSetpointIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspSetpointIndigo" type="menu" defaultValue="0" visibleBindingId="uspSetpoint" visibleBindingValue="true">
+<!--        enabledBindingId="uspSetpointIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="setpoint" method="list_device_state_menu_options"/>
      </Field>
@@ -1047,9 +1112,9 @@
         <Label>Valve:</Label>
         <Description>Associated with Zigbee 'valve [Dim]' Property</Description>
     </Field>
-    <Field id="uspValveIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspValveIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspValve" visibleBindingValue="true" enabledBindingId="uspValveIndigoEnabled">
+<!--    <Field id="uspValveIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspValveIndigo" type="menu" defaultValue="0" visibleBindingId="uspValve" visibleBindingValue="true">
+<!--        enabledBindingId="uspValveIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="valve" method="list_device_state_menu_options"/>
      </Field>
@@ -1071,9 +1136,9 @@
         <Description>Associated with Zigbee 'vibration' Property</Description>
     </Field>
 
-    <Field id="uspVibrationIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspVibrationIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspVibration" visibleBindingValue="true" enabledBindingId="uspVibrationIndigoEnabled">
+<!--    <Field id="uspVibrationIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspVibrationIndigo" type="menu" defaultValue="0" visibleBindingId="uspVibration" visibleBindingValue="true">
+<!--        enabledBindingId="uspVibrationIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="vibrationSensor" method="list_device_state_menu_options"/>
     </Field>
@@ -1094,9 +1159,9 @@
         <Label>Voltage:</Label>
         <Description>Associated with Zigbee 'voltage' Property</Description>
     </Field>
-    <Field id="uspVoltageIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>
-    <Field id="uspVoltageIndigo" type="menu" defaultValue="0"
-            visibleBindingId="uspVoltage" visibleBindingValue="true" enabledBindingId="uspVoltageIndigoEnabled">
+<!--    <Field id="uspVoltageIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspVoltageIndigo" type="menu" defaultValue="0" visibleBindingId="uspVoltage" visibleBindingValue="true">
+<!--        enabledBindingId="uspVoltageIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="voltage" method="list_device_state_menu_options"/>
     </Field>
@@ -1141,6 +1206,28 @@
     </Field>
     <Field id="space-hideActionBroadcast" type="label"
            visibleBindingId="uspAction" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Angle -->
+    <Field id="hideAngleBroadcast" type="checkbox" defaultValue="false" visibleBindingId="uspAngles" visibleBindingValue="true">
+        <Description>Hide button presses message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideAngleBroadcast" type="label" visibleBindingId="uspRemoteAudio" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Remote Audio -->
+    <Field id="hideRemoteAudioBroadcast" type="checkbox" defaultValue="false"
+           visibleBindingId="uspRemoteAudio" visibleBindingValue="true">
+        <Description>Hide button presses message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideRemoteAudioBroadcast" type="label"
+           visibleBindingId="uspRemoteAudio" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Remote Dimmer -->
+    <Field id="hideRemoteDimmerBroadcast" type="checkbox" defaultValue="false"
+           visibleBindingId="uspRemoteDimmer" visibleBindingValue="true">
+        <Description>Hide button presses message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideRemoteDimmerBroadcast" type="label"
+           visibleBindingId="uspRemoteDimmer" visibleBindingValue="true"><Label/></Field>
 
     <!-- Contact -->
     <Field id="hideContactBroadcast" type="checkbox" defaultValue="false"

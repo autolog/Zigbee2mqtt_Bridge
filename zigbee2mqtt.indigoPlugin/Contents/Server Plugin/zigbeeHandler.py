@@ -511,6 +511,14 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_radar(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
+                case "remoteAudio":
+                    self.process_property_action_remote_audio(zd_dev, json_payload)
+                    self.process_property_battery(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
+                case "remoteDimmer":
+                    self.process_property_action_remote_dimmer(zd_dev, json_payload)
+                    self.process_property_battery(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
                 case "temperatureSensor":
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_humidity(zd_dev, json_payload)
@@ -521,6 +529,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 case "thermostat":
                     pass
                 case "vibrationSensor":
+                    self.process_property_action_vibration(zd_dev, json_payload)
+                    self.process_property_angles(zd_dev, json_payload)
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_vibration(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
@@ -606,6 +616,82 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
+    def process_property_action_vibration(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if "action" in json_payload:
+                if zd_dev.pluginProps.get("uspVibration", False):
+                    remote_action = json_payload["action"]
+                    # zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
+
+                    self.key_value_lists[zd_dev.id].append({'key': "action", 'value': remote_action})
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+    def process_property_action_remote_audio(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if "action" in json_payload:
+                if zd_dev.pluginProps.get("uspRemoteAudio", False):
+                    remote_action = json_payload["action"]
+                    zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
+
+                    self.key_value_lists[zd_dev.id].append({'key': "action", 'value': remote_action})
+
+                    # Kick off a one-second timer
+                    try:
+                        if zd_dev.id in self.timers:
+                            self.timers[zd_dev.id].cancel()
+                            del self.timers[zd_dev.id]
+                    except Exception:
+                        pass
+
+                    self.timers[zd_dev.id] = threading.Timer(1.0, self.process_property_action_idle_timer, [[zd_dev.id, "action"]])
+                    self.timers[zd_dev.id].start()
+
+                    zd_dev.updateStateImageOnServer(indigo.kStateImageSel.SensorOn)
+
+                    if not bool(zd_dev.pluginProps.get("hideRemoteAudioBroadcast", False)):
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" {remote_action} action")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+    def process_property_action_remote_dimmer(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if "action" in json_payload:
+                if zd_dev.pluginProps.get("uspRemoteDimmer", False):
+                    remote_action = json_payload["action"]
+                    zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
+
+                    self.key_value_lists[zd_dev.id].append({'key': "action", 'value': remote_action})
+
+                    # Kick off a one-second timer
+                    try:
+                        if zd_dev.id in self.timers:
+                            self.timers[zd_dev.id].cancel()
+                            del self.timers[zd_dev.id]
+                    except Exception:
+                        pass
+
+                    self.timers[zd_dev.id] = threading.Timer(1.0, self.process_property_action_idle_timer, [[zd_dev.id, "action"]])
+                    self.timers[zd_dev.id].start()
+
+                    zd_dev.updateStateImageOnServer(indigo.kStateImageSel.SensorOn)
+
+                    if not bool(zd_dev.pluginProps.get("hideRemoteDimmerBroadcast", False)):
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" {remote_action} action")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+
+
     def process_property_action_idle_timer(self, parameters):
         try:
             zd_dev_id = parameters[0]
@@ -627,6 +713,34 @@ class ThreadZigbeeHandler(threading.Thread):
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+    def process_property_angles(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if zd_dev.pluginProps.get("uspAngles", False):
+                angle = json_payload.get("angle", None)
+                if angle is not None:
+                    self.key_value_lists[zd_dev.id].append({'key': "angle", 'value': angle})
+                angle_x = json_payload.get("angle_x", None)
+                if angle_x is not None:
+                    self.key_value_lists[zd_dev.id].append({'key': "angle_x", 'value': angle_x})
+                angle_x_absolute = json_payload.get("angle_x_absolute", None)
+                if angle_x_absolute is not None:
+                    self.key_value_lists[zd_dev.id].append({'key': "angle_x_absolute", 'value': angle_x_absolute})
+                angle_y = json_payload.get("angle_y", None)
+                if angle_y is not None:
+                    self.key_value_lists[zd_dev.id].append({'key': "angle_y", 'value': angle_y})
+                angle_y_absolute = json_payload.get("angle_y_absolute", None)
+                if angle_y_absolute is not None:
+                    self.key_value_lists[zd_dev.id].append({'key': "angle_y_absolute", 'value': angle_y_absolute})
+                angle_z = json_payload.get("angle_z", None)
+                if angle_z is not None:
+                    self.key_value_lists[zd_dev.id].append({'key': "angle_z", 'value': angle_z})
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
 
     def process_property_battery(self, zd_dev, json_payload):
         try:

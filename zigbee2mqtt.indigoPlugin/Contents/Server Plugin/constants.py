@@ -136,9 +136,10 @@ ZIGBEE2MQTT_ROOT_TOPIC = constant_id("ZIGBEE2MQTT_ROOT_TOPIC")
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES = dict()
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["acceleration"] = ["humiditySensor", "illuminanceSensor", "motionSensor", "multiSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["battery"] = ["button", "contactSensor", "humiditySensor", "illuminanceSensor",
-                                                      "motionSensor", "multiSensor", "temperatureSensor", "thermostat",
+                                                      "motionSensor", "multiSensor", "remoteAudio", "remoteDimmer", "temperatureSensor", "thermostat",
                                                       "vibrationSensor"]
-ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["action"] = ["button"]
+ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["action"] = ["button", "remoteAudio", "remoteDimmer", "vibrationSensor"]
+ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["angles"] = ["vibrationSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["brightness"] = ["dimmer"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["color_mode"] = ["dimmer"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["color"] = ["dimmer"]
@@ -192,6 +193,8 @@ ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["multiSocket"] = ["state_le
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["outlet"] = ["onoff"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["presenceSensor"] = ["presence"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["radarSensor"] = ["radar"]
+ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["remoteAudio"] = ["action"]
+ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["remoteDimmer"] = ["action"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["temperatureSensor"] = ["temperature"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["thermostat"] = ["temperature"]
 ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES["vibrationSensor"] = ["vibration"]
@@ -292,6 +295,8 @@ INDIGO_PRIMARY_DEVICE_INFO["multiSensor"] = [indigo.kSensorDeviceSubType.Motion,
 INDIGO_PRIMARY_DEVICE_INFO["multiSocket"] = [indigo.kRelayDeviceSubType.Outlet, "Multi-Socket"]
 INDIGO_PRIMARY_DEVICE_INFO["presenceSensor"] = [indigo.kSensorDeviceSubType.Presence, "Presence"]
 INDIGO_PRIMARY_DEVICE_INFO["radarSensor"] = [indigo.kSensorDeviceSubType.Presence, "Presence"]
+INDIGO_PRIMARY_DEVICE_INFO["remoteAudio"] = [indigo.kDeviceSubType.Remote, "Remote [Audio]"]
+INDIGO_PRIMARY_DEVICE_INFO["remoteDimmer"] = [indigo.kDeviceSubType.Remote, "Remote [Dimmer]"]
 INDIGO_PRIMARY_DEVICE_INFO["temperatureSensor"] = [indigo.kSensorDeviceSubType.Temperature, "Temperature"]
 INDIGO_PRIMARY_DEVICE_INFO["thermostat"] = [indigo.kSensorDeviceSubType.Temperature, "Thermostat"]
 INDIGO_PRIMARY_DEVICE_INFO["vibrationSensor"] = [indigo.kSensorDeviceSubType.Vibration, "Vibration"]

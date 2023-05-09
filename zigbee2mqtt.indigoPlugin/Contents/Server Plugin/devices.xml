@@ -158,6 +158,26 @@
 		</ConfigUI>
 	</Device>
 
+    <!-- Remote [Audio] -->
+    <Device id="remoteAudio"  type="custom" subType="indigo.kDeviceSubType.Remote">>
+        <Name>Remote [Audio]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>lastButtonPressed</UiDisplayStateId>
+    </Device>
+
+    <!-- Remote [Dimmer] -->
+    <Device id="remoteDimmer"  type="custom" subType="indigo.kDeviceSubType.Remote">>
+        <Name>Remote [Dimmer]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>lastButtonPressed</UiDisplayStateId>
+    </Device>
+
     <!-- Scene / Button -->
     <Device id="button"  type="custom">
         <Name>Scene (Button)</Name>

@@ -707,6 +707,10 @@ class Plugin(indigo.PluginBase):
                     pass
                 case "radarSensor":
                     pass
+                case "remoteAudio":
+                    pass
+                case "remoteDimmer":
+                    pass
                 case "temperatureSensor":
                     pass
                 case "thermostat":
@@ -1192,6 +1196,7 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyBattery"] = False
                     plugin_props["zigbeePropertyBrightness"] = False
                     plugin_props["zigbeePropertyAction"] = False
+                    plugin_props["zigbeePropertyAngles"] = False
                     plugin_props["zigbeePropertyColor"] = False
                     plugin_props["zigbeePropertyColorName"] = False
                     plugin_props["zigbeePropertyColorTemperature"] = False
@@ -1231,6 +1236,7 @@ class Plugin(indigo.PluginBase):
                     plugin_props["uspBattery"] = False
                     plugin_props["uspBrightness"] = False
                     plugin_props["uspAction"] = False
+                    plugin_props["uspAngles"] = False
                     plugin_props["uspColorRGB"] = False
                     plugin_props["uspContact"] = False
                     plugin_props["uspDimmer"] = False
@@ -1348,6 +1354,51 @@ class Plugin(indigo.PluginBase):
                 on_off_state = self.getDeviceStateDictForNumberType("onOffState", "Action Changed", "Action")
                 if on_off_state not in state_list:
                     state_list.append(on_off_state)
+
+            # Action State [Remote Audio] [Ikea Symfonisk Remote] related States
+            if bool(dev_plugin_props.get("uspRemoteAudio", False)):
+                button_trigger_label = f"Action Changed"
+                button_control_page_label = f"Action"
+                action_state =  self.getDeviceStateDictForStringType("action", button_trigger_label, button_control_page_label)
+                if action_state not in state_list:
+                    state_list.append(action_state)
+
+            # Action State [Remote Audio] [Ikea Styrbar Remote] related States
+            if bool(dev_plugin_props.get("uspRemoteDimmer", False)):
+                button_trigger_label = f"Action Changed"
+                button_control_page_label = f"Action"
+                action_state = self.getDeviceStateDictForStringType("action", button_trigger_label, button_control_page_label)
+                if action_state not in state_list:
+                    state_list.append(action_state)
+
+            # Action State [Vibration]
+            if bool(dev_plugin_props.get("uspVibration", False)):
+                vibration_trigger_label = f"Action Changed"
+                vibration_control_page_label = f"Action"
+                action_state = self.getDeviceStateDictForStringType("action", vibration_trigger_label, vibration_control_page_label)
+                if action_state not in state_list:
+                    state_list.append(action_state)
+
+            # Angle States
+            if bool(dev_plugin_props.get("uspAngles", False)):
+                angle_state = self.getDeviceStateDictForStringType("angle", "Angle Changed", "Angle")
+                angle_state_x = self.getDeviceStateDictForStringType("angle_x", "Angle_X Changed", "Angle_X")
+                angle_x_absolute = self.getDeviceStateDictForStringType("angle_x_absolute", "Angle_X_Absolute Changed", "Angle_X_Absolute")
+                angle_y = self.getDeviceStateDictForStringType("angle_y", "Angle_Y Changed", "Angle_Y")
+                angle_y_absolute = self.getDeviceStateDictForStringType("angle_y_absolute", "Angle_Y_Absolute Changed", "Angle_Y_Absolute")
+                angle_z = self.getDeviceStateDictForStringType("angle_z", "Angle_Z Changed", "Angle_Z")
+                if angle_state not in state_list:
+                    state_list.append(angle_state)
+                if angle_state_x not in state_list:
+                    state_list.append(angle_state_x)
+                if angle_x_absolute not in state_list:
+                    state_list.append(angle_x_absolute)
+                if angle_y not in state_list:
+                    state_list.append(angle_y)
+                if angle_y_absolute not in state_list:
+                    state_list.append(angle_y_absolute)
+                if angle_z not in state_list:
+                    state_list.append(angle_z)
 
             # humidity State
             if (bool(dev_plugin_props.get("uspHumidity", False)) and
@@ -1554,6 +1605,14 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_state = "uspRadarIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
+                case "remoteAudio":
+                    usp_primary_device_main_ui_state = "uspRemoteAudioIndigo"
+                    usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
+                    values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
+                case "remoteDimmer":
+                    usp_primary_device_main_ui_state = "uspRemoteDimmerIndigo"
+                    usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
+                    values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
                 case "temperatureSensor":
                     usp_primary_device_main_ui_state = "uspTemperatureIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
@@ -1574,10 +1633,10 @@ class Plugin(indigo.PluginBase):
             if type_id == "multiSocket":
                 pass
             else:
-                for usp_field_id in ("uspAccelerationIndigo", "uspActionIndigo", "uspBrightnessIndigo", "uspColorIndigo", "uspColorTemperatureIndigo",
+                for usp_field_id in ("uspAccelerationIndigo", "uspActionIndigo", "uspAnglesIndigo", "uspBrightnessIndigo", "uspColorIndigo", "uspColorTemperatureIndigo",
                                      "uspContactIndigo", "uspEnergyIndigo", "uspHumidityIndigo", "uspIlluminanceIndigo", "uspLinkQualityIndigo", "uspOccupancyIndigo",
                                      "uspOnOffIndigo", "uspPositionIndigo", "uspPowerIndigo", "uspPowerLeftIndigo", "uspPowerRightIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
-                                     "uspRadarIndigo", "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspStateRightIndigo",
+                                     "uspRadarIndigo", "uspRemoteAudioIndigo", "uspRemoteADimmerIndigo", "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspStateRightIndigo",
                                      "uspTamperIndigo", "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo"):
                     if usp_field_id not in usp_primary_device_main_ui_states:
                         if usp_field_id not in values_dict or values_dict[usp_field_id] not in [INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE, INDIGO_SECONDARY_DEVICE]:
@@ -1671,7 +1730,7 @@ class Plugin(indigo.PluginBase):
             try:
                 requirements.requirements_check(self.globals[PLUGIN_INFO][PLUGIN_ID])
             except ImportError as exception_error:
-                self.logger.error(f"PLUGIN STOPPED: {exception_error}")
+                self.logger.critical(f"PLUGIN STOPPED: {exception_error}")
                 self.do_not_start_stop_devices = True
                 self.stopPlugin()
 
@@ -2063,6 +2122,20 @@ class Plugin(indigo.PluginBase):
                         values_dict["SupportsOnState"] = True
                         values_dict["allowOnStateChange"] = False
 
+                case "remoteAudio":
+                    # Scene (Action) validation and option settings
+                    if not values_dict.get("uspRemoteAudio", False):
+                        error_message = "An Indigo remote [Audio] device requires an association to the Zigbee 'action' property"
+                        error_dict['uspAction'] = error_message
+                        error_dict["showAlertText"] = error_message
+
+                case "remoteDimmer":
+                    # Scene (Action) validation and option settings
+                    if not values_dict.get("uspRemoteDimmer", False):
+                        error_message = "An Indigo remote [Audio] device requires an association to the Zigbee 'action' property"
+                        error_dict['uspAction'] = error_message
+                        error_dict["showAlertText"] = error_message
+
                 case "thermostat":
                     pass
                     # Thermostat validation and option settings
@@ -2159,6 +2232,8 @@ class Plugin(indigo.PluginBase):
                     (filter == "onoff" and type_id == "outlet") or
                     (filter == "presenceSensor" and type_id == "presenceSensor") or
                     (filter == "radarSensor" and type_id == "radarSensor") or
+                    (filter == "remoteAudio" and type_id == "remoteAudio") or
+                    (filter == "remoteDimmer" and type_id == "remoteDimmer") or
                     (filter == "stateL1" and type_id == "multiOutlet") or
                     (filter == "stateLeft" and type_id == "multiSocket") or
                     (filter == "temperatureSensor" and type_id == "temperatureSensor") or
@@ -2167,6 +2242,7 @@ class Plugin(indigo.PluginBase):
                 menu_list = [("0", "Primary Device - Main UI State")]
             elif ((filter == "link-quality") or
                   (filter == "last_seen") or
+                  (filter == "angles" and type_id == "vibrationSensor") or
                   (filter == "setpoint" and type_id == "thermostat") or
                   (filter == "onoff" and type_id == "thermostat") or
                   (filter == "onoff" and type_id == "blind") or
@@ -2700,10 +2776,32 @@ class Plugin(indigo.PluginBase):
                                 values_dict["zigbeePropertyBrightness"] = False
 
                     case "action":
-                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
-                            values_dict["zigbeePropertyAction"] = True
+                        if dev.deviceTypeId == "button":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyAction"] = True
+                            else:
+                                values_dict["zigbeePropertyAction"] = False
+                        elif dev.deviceTypeId == "remoteAudio":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyRemoteAudio"] = True
+                            else:
+                                values_dict["zigbeePropertyRemoteAudio"] = False
+                        elif dev.deviceTypeId == "remoteDimmer":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyRemoteDimmer"] = True
+                            else:
+                                values_dict["zigbeePropertyRemoteDimmer"] = False
+                        # elif dev.deviceTypeId == "vibrationSensor":
+                        #     if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                        #         values_dict["zigbeePropertyVibrationAction"] = True
+                        #     else:
+                        #         values_dict["zigbeePropertyVibrationAction"] = False
+
+                    case "angle" | "angle_x" | "angle_x_absolute" | "angle_y" | "angle_y_absolute" | "angle_z":
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["angles"]:
+                            values_dict["zigbeePropertyAngles"] = True
                         else:
-                            values_dict["zigbeePropertyAction"] = False
+                            values_dict["zigbeePropertyAngles"] = False
 
                     case "position":
                         if dev.deviceTypeId == "blind":
