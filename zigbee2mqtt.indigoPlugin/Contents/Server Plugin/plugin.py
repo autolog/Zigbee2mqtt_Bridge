@@ -672,13 +672,14 @@ class Plugin(indigo.PluginBase):
     def closed_device_config_ui_zigbee_device(self, values_dict, type_id, dev_id):
         try:
 
-            zigbee_coordinater_ieee = values_dict["zigbee_coordinator_ieee"]
-            if zigbee_coordinater_ieee != "":
+            zigbee_coordinator_ieee = values_dict["zigbee_coordinator_ieee"]
+            if zigbee_coordinator_ieee != "":
                 zigbee_device_ieee = values_dict["zigbee_device_ieee"]
                 if zigbee_device_ieee != "":
-                    if zigbee_coordinater_ieee in self.globals[ZD]:
-                        if zigbee_device_ieee in self.globals[ZD][zigbee_coordinater_ieee]:
-                            self.globals[ZD][zigbee_coordinater_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = dev_id
+                    if zigbee_coordinator_ieee in self.globals[ZD]:
+                        if zigbee_device_ieee in self.globals[ZD][zigbee_coordinator_ieee]:
+                            self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = dev_id
+                            self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] = 0
 
             match type_id:
                 case "button":
@@ -837,6 +838,10 @@ class Plugin(indigo.PluginBase):
                     self.globals[ZD][zc_dev.address] = dict()  # Zigbee Devices
                 if zc_dev.address != "" and zc_dev.address not in self.globals[ZG]:
                     self.globals[ZG][zc_dev.address] = dict()  # Zigbee Groups
+
+            for zigbee_coordinator_ieee in self.globals[ZD]:
+                for zigbee_device_ieee in self.globals[ZD][zigbee_coordinator_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] = 0
 
             # Create Queue
 
@@ -1051,6 +1056,7 @@ class Plugin(indigo.PluginBase):
                             if zigbee_coordinator_ieee in self.globals[ZD]:
                                 if zigbee_device_ieee in self.globals[ZD][zigbee_coordinator_ieee]:
                                     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
+                                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] = 0
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -1065,8 +1071,11 @@ class Plugin(indigo.PluginBase):
 
             match dev.deviceTypeId:
                 case "zigbeeCoordinator":
+                    # DEBUG self.logger.error("COORDINATOR STOPPED [1]")
                     if CH_EVENT in self.globals[ZC][dev.id]:
+                        # DEBUG self.logger.error("COORDINATOR STOPPED [2]")
                         self.globals[ZC][dev.id][CH_EVENT].set()  # Stop the MQTT Client
+                        self.globals[ZC][dev.id][CH_THREAD].join(10.0)  # Allow up to n seconds for MQTT Client thread to stop
                     return
                 case "zigbeeGroupDimmer" | "zigbeeGroupRelay":
                     return
@@ -1226,6 +1235,7 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyStateL5"] = False
                     plugin_props["zigbeePropertyStateLeft"] = False
                     plugin_props["zigbeePropertyStateRight"] = False
+                    plugin_props["zigbeePropertyStrength"] = False
                     plugin_props["zigbeePropertyTamper"] = False
                     plugin_props["zigbeePropertyTemperature"] = False
                     plugin_props["zigbeePropertyValve"] = False
@@ -1264,6 +1274,7 @@ class Plugin(indigo.PluginBase):
                     plugin_props["uspStateL5"] = False
                     plugin_props["uspStateLeft"] = False
                     plugin_props["uspStateRight"] = False
+                    plugin_props["uspStrength"] = False
                     plugin_props["uspTamper"] = False
                     plugin_props["uspTemperature"] = False
                     plugin_props["uspValve"] = False
@@ -1362,6 +1373,12 @@ class Plugin(indigo.PluginBase):
                 action_state =  self.getDeviceStateDictForStringType("action", button_trigger_label, button_control_page_label)
                 if action_state not in state_list:
                     state_list.append(action_state)
+                button_state_id = "lastButtonPressed"
+                button_trigger_label = "Last Button Pressed Changed"
+                button_control_page_label = "Last Button Pressed"
+                button_state = self.getDeviceStateDictForStringType(button_state_id, button_trigger_label, button_control_page_label)
+                if button_state not in state_list:
+                    state_list.append(button_state)
 
             # Action State [Remote Audio] [Ikea Styrbar Remote] related States
             if bool(dev_plugin_props.get("uspRemoteDimmer", False)):
@@ -1370,6 +1387,12 @@ class Plugin(indigo.PluginBase):
                 action_state = self.getDeviceStateDictForStringType("action", button_trigger_label, button_control_page_label)
                 if action_state not in state_list:
                     state_list.append(action_state)
+                button_state_id = "lastButtonPressed"
+                button_trigger_label = "Last Button Pressed Changed"
+                button_control_page_label = "Last Button Pressed"
+                button_state = self.getDeviceStateDictForStringType(button_state_id, button_trigger_label, button_control_page_label)
+                if button_state not in state_list:
+                    state_list.append(button_state)
 
             # Action State [Vibration]
             if bool(dev_plugin_props.get("uspVibration", False)):
@@ -1444,6 +1467,14 @@ class Plugin(indigo.PluginBase):
                 if state_state not in state_list:
                     state_list.append(state_state)
 
+            # Strength State [Vibration]
+            if bool(dev_plugin_props.get("uspStrength", False)):
+                strength_trigger_label = f"Strength Changed"
+                strength_control_page_label = f"Strength"
+                strength_state = self.getDeviceStateDictForStringType("strength", strength_trigger_label, strength_control_page_label)
+                if strength_state not in state_list:
+                    state_list.append(strength_state)
+
             # Temperature State
             if (bool(dev_plugin_props.get("uspTemperature", False)) and
                     dev_plugin_props.get("uspTemperatureIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE):
@@ -1506,6 +1537,8 @@ class Plugin(indigo.PluginBase):
                 voltage_state = self.getDeviceStateDictForNumberType("voltage", "Voltage Changed", "Voltage")
                 if voltage_state not in state_list:
                     state_list.append(voltage_state)
+
+
 
             return state_list
         except Exception as exception_error:
@@ -1637,7 +1670,7 @@ class Plugin(indigo.PluginBase):
                                      "uspContactIndigo", "uspEnergyIndigo", "uspHumidityIndigo", "uspIlluminanceIndigo", "uspLinkQualityIndigo", "uspOccupancyIndigo",
                                      "uspOnOffIndigo", "uspPositionIndigo", "uspPowerIndigo", "uspPowerLeftIndigo", "uspPowerRightIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
                                      "uspRadarIndigo", "uspRemoteAudioIndigo", "uspRemoteADimmerIndigo", "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspStateRightIndigo",
-                                     "uspTamperIndigo", "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo"):
+                                     "uspStrengthIndigo", "uspTamperIndigo", "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo"):
                     if usp_field_id not in usp_primary_device_main_ui_states:
                         if usp_field_id not in values_dict or values_dict[usp_field_id] not in [INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE, INDIGO_SECONDARY_DEVICE]:
                             values_dict[usp_field_id] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE  # Default
@@ -1759,6 +1792,7 @@ class Plugin(indigo.PluginBase):
                                 if dev.address not in self.globals[ZD][zigbee_coordinator_ieee]:
                                     self.globals[ZD][zigbee_coordinator_ieee][dev.address] = dict()
                                 self.globals[ZD][zigbee_coordinator_ieee][dev.address][ZD_INDIGO_DEVICE_ID] = dev.id
+                                self.globals[ZD][zigbee_coordinator_ieee][dev.address][ZD_MESSAGE_COUNT] = 0
                                 self.globals[ZD_TO_INDIGO_ID][dev.address] = dev.id  # Zigbee device to primary Indigo device
 
         except Exception as exception_error:
@@ -2236,6 +2270,7 @@ class Plugin(indigo.PluginBase):
                     (filter == "remoteDimmer" and type_id == "remoteDimmer") or
                     (filter == "stateL1" and type_id == "multiOutlet") or
                     (filter == "stateLeft" and type_id == "multiSocket") or
+                    (filter == "strength" and type_id == "strength") or
                     (filter == "temperatureSensor" and type_id == "temperatureSensor") or
                     (filter == "temperatureSensor" and type_id == "thermostat") or
                     (filter == "vibrationSensor" and type_id == "vibrationSensor")):
@@ -2975,6 +3010,12 @@ class Plugin(indigo.PluginBase):
                             values_dict["zigbeePropertyPressure"] = True
                         else:
                             values_dict["zigbeePropertyPressure"] = False
+
+                    case "strength":
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                            values_dict["zigbeePropertyStrength"] = True
+                        else:
+                            values_dict["zigbeePropertyStrength"] = False
 
                     case "tamper":
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:

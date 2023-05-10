@@ -214,8 +214,6 @@ class ThreadZigbeeHandler(threading.Thread):
                                         self.properties_set.add(additional_property)  # This Python set is used to record all properties
                                         properties_message += f", {additional_property}"
 
-
-
                         elif "property" in zigbee_device_property_dict:
                             properties.append(zigbee_device_property_dict['property'])
                             self.properties_set.add(zigbee_device_property_dict['property'])  # This Python set is used to record all properties
@@ -438,6 +436,7 @@ class ThreadZigbeeHandler(threading.Thread):
 
             self.process_topic_last_seen(zd_dev, json_payload)  # For every Indigo Zigbee device type update 'last seen'
 
+            self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] += 1
             match zd_dev.deviceTypeId:
                 case "blind":
                     self.process_property_link_quality(zd_dev, json_payload)
@@ -512,11 +511,15 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
                 case "remoteAudio":
-                    self.process_property_action_remote_audio(zd_dev, json_payload)
+                    # DEBUG self.zigbeeLogger.error(f"{zd_dev.name}: Message Count = {self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT]}")
+                    if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
+                        self.process_property_action_remote_audio(zd_dev, json_payload)
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                 case "remoteDimmer":
-                    self.process_property_action_remote_dimmer(zd_dev, json_payload)
+                    # DEBUG self.zigbeeLogger.error(f"{zd_dev.name}: Message Count = {self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT]}")
+                    if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
+                        self.process_property_action_remote_dimmer(zd_dev, json_payload)
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                 case "temperatureSensor":
@@ -529,11 +532,13 @@ class ThreadZigbeeHandler(threading.Thread):
                 case "thermostat":
                     pass
                 case "vibrationSensor":
+                    self.process_property_battery(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_action_vibration(zd_dev, json_payload)
                     self.process_property_angles(zd_dev, json_payload)
-                    self.process_property_battery(zd_dev, json_payload)
                     self.process_property_vibration(zd_dev, json_payload)
-                    self.process_property_link_quality(zd_dev, json_payload)
+                    self.process_property_strength(zd_dev, json_payload)
+                    self.process_property_voltage(zd_dev, json_payload)
 
             # Now update the Indigo Zigbee device states for all devices in the device group
             for dev_id, key_value_list in self.key_value_lists.items():
@@ -622,10 +627,13 @@ class ThreadZigbeeHandler(threading.Thread):
                 return
             if "action" in json_payload:
                 if zd_dev.pluginProps.get("uspVibration", False):
-                    remote_action = json_payload["action"]
+                    vibration_action = json_payload["action"]
                     # zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
 
-                    self.key_value_lists[zd_dev.id].append({'key': "action", 'value': remote_action})
+                    if vibration_action != zd_dev.states["action"]:
+                        self.key_value_lists[zd_dev.id].append({'key': "action", 'value': vibration_action})
+                        if not bool(zd_dev.pluginProps.get("hideVibrationBroadcast", False)):
+                            self.zigbeeLogger.info(f"received \"{zd_dev.name}\" vibration sensor '{vibration_action}' event")
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -640,6 +648,7 @@ class ThreadZigbeeHandler(threading.Thread):
                     zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
 
                     self.key_value_lists[zd_dev.id].append({'key': "action", 'value': remote_action})
+                    self.key_value_lists[zd_dev.id].append({'key': 'lastButtonPressed', 'value': remote_action, 'uiValue': remote_action})
 
                     # Kick off a one-second timer
                     try:
@@ -670,6 +679,7 @@ class ThreadZigbeeHandler(threading.Thread):
                     zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
 
                     self.key_value_lists[zd_dev.id].append({'key': "action", 'value': remote_action})
+                    self.key_value_lists[zd_dev.id].append({'key': 'lastButtonPressed', 'value': remote_action, 'uiValue': remote_action})
 
                     # Kick off a one-second timer
                     try:
@@ -685,7 +695,7 @@ class ThreadZigbeeHandler(threading.Thread):
                     zd_dev.updateStateImageOnServer(indigo.kStateImageSel.SensorOn)
 
                     if not bool(zd_dev.pluginProps.get("hideRemoteDimmerBroadcast", False)):
-                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" {remote_action} action")
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" '{remote_action}' action")
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -719,24 +729,67 @@ class ThreadZigbeeHandler(threading.Thread):
             if not zd_dev.enabled:
                 return
             if zd_dev.pluginProps.get("uspAngles", False):
+                angles_broadcast_ui = ""
                 angle = json_payload.get("angle", None)
-                if angle is not None:
+
+                try:
+                    zd_dev_state_angle = int(zd_dev.states["angle"])
+                except ValueError:
+                    zd_dev_state_angle = 0
+                if angle is not None and int(angle) != zd_dev_state_angle:
                     self.key_value_lists[zd_dev.id].append({'key': "angle", 'value': angle})
+                    angles_broadcast_ui = f"{angles_broadcast_ui} Angle: {angle},"
                 angle_x = json_payload.get("angle_x", None)
-                if angle_x is not None:
+
+                try:
+                    zd_dev_state_angle_x = int(zd_dev.states["angle_x"])
+                except ValueError:
+                    zd_dev_state_angle_x = 0
+                if angle_x is not None and int(angle_x) != zd_dev_state_angle_x:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_x", 'value': angle_x})
+                    angles_broadcast_ui = f"{angles_broadcast_ui} Angle_X: {angle_x},"
                 angle_x_absolute = json_payload.get("angle_x_absolute", None)
-                if angle_x_absolute is not None:
+
+                try:
+                    zd_dev_state_angle_x_absolute = int(zd_dev.states["angle_x_absolute"])
+                except ValueError:
+                    zd_dev_state_angle_x_absolute = 0
+                if angle_x_absolute is not None and int(angle_x_absolute) != zd_dev_state_angle_x_absolute:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_x_absolute", 'value': angle_x_absolute})
+                    angles_broadcast_ui = f"{angles_broadcast_ui} Angle_X_Absolute: {angle_x_absolute},"
                 angle_y = json_payload.get("angle_y", None)
-                if angle_y is not None:
+
+                try:
+                    zd_dev_state_angle_y = int(zd_dev.states["angle_y"])
+                except ValueError:
+                    zd_dev_state_angle_y = 0
+                if angle_y is not None and int(angle_y) != zd_dev_state_angle_y:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_y", 'value': angle_y})
+                    angles_broadcast_ui = f"{angles_broadcast_ui} Angle_Y: {angle_y},"
                 angle_y_absolute = json_payload.get("angle_y_absolute", None)
-                if angle_y_absolute is not None:
+
+                try:
+                    zd_dev_state_angle_y_absolute = int(zd_dev.states["angle_y_absolute"])
+                except ValueError:
+                    zd_dev_state_angle_y_absolute = 0
+                if angle_y_absolute is not None and int(angle_y_absolute) != zd_dev_state_angle_y_absolute:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_y_absolute", 'value': angle_y_absolute})
+                    angles_broadcast_ui = f"{angles_broadcast_ui} Angle_Y_Absolute: {angle_y_absolute},"
                 angle_z = json_payload.get("angle_z", None)
-                if angle_z is not None:
+
+                try:
+                    zd_dev_state_angle_z = int(zd_dev.states["angle_z"])
+                except ValueError:
+                    zd_dev_state_angle_z = 0
+                if angle_z is not None and int(angle_z) != zd_dev_state_angle_z:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_z", 'value': angle_z})
+                    angles_broadcast_ui = f"{angles_broadcast_ui} Angle_Z: {angle_z},"
+
+                if not bool(zd_dev.pluginProps.get("hideAnglesBroadcast", False)):
+                    if len(angles_broadcast_ui) > 0:
+                        if angles_broadcast_ui[-1] == ",":
+                            angles_broadcast_ui = angles_broadcast_ui[:-1]
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\"{angles_broadcast_ui}")
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -1441,6 +1494,25 @@ class ThreadZigbeeHandler(threading.Thread):
             # error_message = f"{exception_error}, Payload:{json_payload}"
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
+    def process_property_strength(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if "strength" in json_payload:
+                if zd_dev.pluginProps.get("uspStrength", False):
+                    strength = json_payload["strength"]
+                    # zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
+
+                    if strength != zd_dev.states["strength"]:
+                        self.key_value_lists[zd_dev.id].append({"key": "strength", "value": strength})
+                        if not bool(zd_dev.pluginProps.get("hideVibrationBroadcast", False)):
+                            self.zigbeeLogger.info(f"received \"{zd_dev.name}\" vibration sensor strength '{strength}' event")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+
+
     def process_property_tamper(self, zd_dev, json_payload):
         try:
             if not zd_dev.enabled:
@@ -1532,12 +1604,19 @@ class ThreadZigbeeHandler(threading.Thread):
                 return
             if "vibration" in json_payload:
                 if zd_dev.pluginProps.get("uspVibration", False):
+                    state_on_off_state = zd_dev.states["onOffState"]
+                    state_action = zd_dev.states["action"]
                     # on_off_state = False if json_payload["vibration"] == True else True  # TODO: Is this needed?
                     on_off_state_ui = "on" if json_payload["vibration"] == True else "off"
                     on_off_state = json_payload["vibration"]
-                    self.key_value_lists[zd_dev.id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
-                    if not bool(zd_dev.pluginProps.get("hideVibrationBroadcast", False)):
-                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" vibration sensor {on_off_state_ui} event")
+                    if (on_off_state and state_action == "idle") or ((not on_off_state) and state_action != "idle"):
+                        self.key_value_lists[zd_dev.id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
+                        if not on_off_state:  # i.e. "off"
+                            self.key_value_lists[zd_dev.id].append({"key": "action", "value": "idle"})
+                        if not bool(zd_dev.pluginProps.get("hideVibrationBroadcast", False)):
+                            self.zigbeeLogger.info(f"received \"{zd_dev.name}\" vibration sensor '{on_off_state_ui}' event")
+                    a = 1
+                    b = a + 1
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
