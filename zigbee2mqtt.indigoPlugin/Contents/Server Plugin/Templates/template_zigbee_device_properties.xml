@@ -47,6 +47,8 @@
     <Field id="zigbeePropertyStateLeft" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyStateRight" type="checkbox" defaultValue="false" hidden="true" />
 
+    <Field id="zigbeePropertyStrength" type="checkbox" defaultValue="false" hidden="true" />
+
     <Field id="zigbeePropertyTamper" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyTemperature" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyValve" type="checkbox" defaultValue="false" hidden="true" />
@@ -968,6 +970,27 @@
 
 
 
+    <!-- Strength [Vibration Sensor]-->
+    <Field id="space-header-uspStrength" type="label" visibleBindingId="zigbeePropertyStrength" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="header-uspStrength" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange" visibleBindingId="zigbeePropertyStrength" visibleBindingValue="true">
+        <Label>Strength</Label>
+    </Field>
+    <Field id="uspStrength" type="checkbox" defaultValue="false" visibleBindingId="zigbeePropertyStrength" visibleBindingValue="true">
+        <Label>Strength:</Label>
+        <Description>Associated with Zigbee 'Strength' Property</Description>
+    </Field>
+    <Field id="uspStrengthIndigo" type="menu" defaultValue="0" visibleBindingId="uspStrength" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="strength" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspStrength" type="label" visibleBindingId="zigbeePropertyStrength" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="separator-uspStrength" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyStrength" visibleBindingValue="true"/>
+
+
 
 
 
@@ -1207,16 +1230,16 @@
     <Field id="space-hideActionBroadcast" type="label"
            visibleBindingId="uspAction" visibleBindingValue="true"><Label/></Field>
 
-    <!-- Angle -->
-    <Field id="hideAngleBroadcast" type="checkbox" defaultValue="false" visibleBindingId="uspAngles" visibleBindingValue="true">
-        <Description>Hide button presses message broadcasts in Event Log</Description>
+    <!-- Angles -->
+    <Field id="hideAnglesBroadcast" type="checkbox" defaultValue="false" visibleBindingId="uspAngles" visibleBindingValue="true">
+        <Description>Hide angle message broadcasts in Event Log</Description>
     </Field>
-    <Field id="space-hideAngleBroadcast" type="label" visibleBindingId="uspRemoteAudio" visibleBindingValue="true"><Label/></Field>
+    <Field id="space-hideAnglesBroadcast" type="label" visibleBindingId="uspAngles" visibleBindingValue="true"><Label/></Field>
 
     <!-- Remote Audio -->
     <Field id="hideRemoteAudioBroadcast" type="checkbox" defaultValue="false"
            visibleBindingId="uspRemoteAudio" visibleBindingValue="true">
-        <Description>Hide button presses message broadcasts in Event Log</Description>
+        <Description>Hide button press action message broadcasts in Event Log</Description>
     </Field>
     <Field id="space-hideRemoteAudioBroadcast" type="label"
            visibleBindingId="uspRemoteAudio" visibleBindingValue="true"><Label/></Field>
@@ -1224,7 +1247,7 @@
     <!-- Remote Dimmer -->
     <Field id="hideRemoteDimmerBroadcast" type="checkbox" defaultValue="false"
            visibleBindingId="uspRemoteDimmer" visibleBindingValue="true">
-        <Description>Hide button presses message broadcasts in Event Log</Description>
+        <Description>Hide button press action message broadcasts in Event Log</Description>
     </Field>
     <Field id="space-hideRemoteDimmerBroadcast" type="label"
            visibleBindingId="uspRemoteDimmer" visibleBindingValue="true"><Label/></Field>
@@ -1405,6 +1428,13 @@
     <Field id="space-hideStateRightBroadcast" type="label"
            visibleBindingId="uspStateRight" visibleBindingValue="true"><Label/></Field>
 
+    <!-- Strength -->
+    <Field id="hideStrengthBroadcast" type="checkbox" defaultValue="false" visibleBindingId="uspStrength" visibleBindingValue="true">
+        <Description>Hide strength message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStrengthBroadcast" type="label" visibleBindingId="uspStrength" visibleBindingValue="true"><Label/></Field>
+
+
     <!-- Tamper -->
     <Field id="hideTamperBroadcast" type="checkbox" defaultValue="false"
         visibleBindingId="uspTamper" visibleBindingValue="true">
@@ -1434,7 +1464,7 @@
     <!-- Vibration -->
     <Field id="hideVibrationBroadcast" type="checkbox" defaultValue="false"
         visibleBindingId="uspVibration" visibleBindingValue="true">
-        <Description>Hide vibration usage message broadcasts in Event Log</Description>
+        <Description>Hide vibration message broadcasts in Event Log</Description>
     </Field>
     <Field id="space-hideVibrationBroadcast" type="label"
            visibleBindingId="uspVibration" visibleBindingValue="true"><Label/></Field>

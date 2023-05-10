@@ -182,6 +182,10 @@ class ThreadCoordinatorHandler(threading.Thread):
                 connection_ui = "Connected"
             self.mqttHandlerLogger.info(f"{connection_ui} to Zigbee2mqtt MQTT Broker at {self.globals[ZC][self.zc_dev_id][MQTT_IP]}:{self.globals[ZC][self.zc_dev_id][MQTT_PORT]}")
 
+            for zigbee_coordinator_ieee in self.globals[ZD]:
+                for zigbee_device_ieee in self.globals[ZD][zigbee_coordinator_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] = 0
+
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
@@ -208,7 +212,7 @@ class ThreadCoordinatorHandler(threading.Thread):
         try:
             self.mqtt_client.disconnect()
             self.mqtt_client.loop_stop()
-            self.mqttHandlerLogger.info(f"Disconnected from Zigbee2mqtt MQTT Broker at {self.globals[ZC][self.zc_dev_id][MQTT_IP]}:{self.globals[ZC][self.zc_dev_id][MQTT_PORT]}")
+            # self.mqttHandlerLogger.info(f"Disconnected from Zigbee2mqtt MQTT Broker at {self.globals[ZC][self.zc_dev_id][MQTT_IP]}:{self.globals[ZC][self.zc_dev_id][MQTT_PORT]}")
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
