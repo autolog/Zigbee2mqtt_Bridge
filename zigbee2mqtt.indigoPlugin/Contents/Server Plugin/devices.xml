@@ -188,6 +188,16 @@
         <UiDisplayStateId>lastButtonPressed</UiDisplayStateId>
     </Device>
 
+    <!-- Scene / Rotary -->
+    <Device id="sceneRotary"  type="custom">
+        <Name>Scene (Rotary)</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>action</UiDisplayStateId>
+    </Device>
+
     <!-- Temperature Sensor -->
 	<Device id="temperatureSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.Temperature">
         <Name>Temperature Sensor</Name>

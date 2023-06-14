@@ -35,6 +35,8 @@
     <Field id="zigbeePropertyRadar" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyRemoteAudio" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyRemoteDimmer" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertySceneRotary" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyRotations" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertySetpoint" type="checkbox" defaultValue="false" hidden="true" />
 
     <Field id="zigbeePropertyState" type="checkbox" defaultValue="false" hidden="true" />
@@ -206,6 +208,26 @@
         <Label/>
     </Field>
     <Field id="separator-uspRemoteDimmer" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyRemoteDimmer" visibleBindingValue="true"/>
+
+    <!-- Action [SceneRotary]-->
+    <Field id="space-header-uspSceneRotary" type="label" visibleBindingId="zigbeePropertySceneRotary" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="header-uspSceneRotary" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange" visibleBindingId="zigbeePropertySceneRotary" visibleBindingValue="true">
+        <Label>Action</Label>
+    </Field>
+    <Field id="uspSceneRotary" type="checkbox" defaultValue="false" visibleBindingId="zigbeePropertySceneRotary" visibleBindingValue="true">
+        <Label>Action [Scene Rotary]:</Label>
+        <Description>Associated with Zigbee 'action' Property</Description>
+    </Field>
+    <Field id="uspSceneRotaryIndigo" type="menu" defaultValue="0" visibleBindingId="uspSceneRotary" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="SceneRotary" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspSceneRotary" type="label" visibleBindingId="zigbeePropertySceneRotary" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="separator-uspSceneRotary" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertySceneRotary" visibleBindingValue="true"/>
 
     <!-- Angle [Vibration Sensor]-->
     <Field id="space-header-uspAngles" type="label" visibleBindingId="zigbeePropertyAngles" visibleBindingValue="true">
@@ -772,8 +794,28 @@
     <Field id="separator-uspRadar" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyRadar" visibleBindingValue="true"/>
 
+        <!-- Rotations [Scene]-->
+    <Field id="space-header-uspRotations" type="label" visibleBindingId="zigbeePropertyRotations" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="header-uspRotations" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange" visibleBindingId="zigbeePropertyRotations" visibleBindingValue="true">
+        <Label>Rotations</Label>
+    </Field>
+    <Field id="uspRotations" type="checkbox" defaultValue="false" visibleBindingId="zigbeePropertyRotations" visibleBindingValue="true">
+        <Label>Rotations:</Label>
+        <Description>Associated with Zigbee 'Rotation' Properties</Description>
+    </Field>
+    <Field id="uspRotationsIndigo" type="menu" defaultValue="0" visibleBindingId="uspRotations" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="rotations" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspRotations" type="label" visibleBindingId="zigbeePropertyRotations" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="separator-uspRotations" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyRotations" visibleBindingValue="true"/>
+
+
     <!-- State -->
-    
     <Field id="space-header-uspState" type="label"
            visibleBindingId="zigbeePropertyState" visibleBindingValue="true"><Label/></Field>
     <Field id="header-uspState" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
@@ -989,10 +1031,6 @@
         <Label/>
     </Field>
     <Field id="separator-uspStrength" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyStrength" visibleBindingValue="true"/>
-
-
-
-
 
     <!-- Tamper -->
     <Field id="space-header-uspTamper" type="label"
@@ -1252,6 +1290,14 @@
     <Field id="space-hideRemoteDimmerBroadcast" type="label"
            visibleBindingId="uspRemoteDimmer" visibleBindingValue="true"><Label/></Field>
 
+    <!-- Scene Rotary -->
+    <Field id="hideSceneRotaryBroadcast" type="checkbox" defaultValue="false"
+           visibleBindingId="uspSceneRotary" visibleBindingValue="true">
+        <Description>Hide button press action message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideSceneRotaryBroadcast" type="label"
+           visibleBindingId="uspSceneRotary" visibleBindingValue="true"><Label/></Field>
+
     <!-- Contact -->
     <Field id="hideContactBroadcast" type="checkbox" defaultValue="false"
         visibleBindingId="uspContact" visibleBindingValue="true">
@@ -1355,6 +1401,12 @@
     </Field>
     <Field id="space-hidePressureBroadcast" type="label"
            visibleBindingId="uspPressure" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Rotations -->
+    <Field id="hideRotationsBroadcast" type="checkbox" defaultValue="false" visibleBindingId="uspRotations" visibleBindingValue="true">
+        <Description>Hide angle message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideRotationsBroadcast" type="label" visibleBindingId="uspRotations" visibleBindingValue="true"><Label/></Field>
 
     <!-- Setpoint -->
     <Field id="hideSetpointBroadcast" type="checkbox" defaultValue="false"

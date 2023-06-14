@@ -238,6 +238,55 @@ class ThreadZigbeeHandler(threading.Thread):
                 else:
                     if self.globals[DEBUG]: self.zigbeeLogger.error(f"UNKNOWN DEVICE TYPE: {zigbee_device['type']}, Details ...\n{payload}")
 
+            # TESTING Aqara Rotary Knob
+            test_aqara_rotary_knob = True
+            if test_aqara_rotary_knob:
+
+                zigbee_device_ieee = "0x54ef4410007f501c"
+                if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
+
+                # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
+                if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
+
+                # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "0x54ef4410007f501c"
+
+                if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
+                    zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
+                    if zd_dev_id in indigo.devices:
+                        zd_dev = indigo.devices[zd_dev_id]
+                        if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
+                            zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "LUMI"  # zigbee_device.get('manufacturer', "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Battery"  # zigbee_device.get("power_source", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
+                # zigbee_device_definition = zigbee_device['definition']
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Aqara Rotary Knob"  # zigbee_device_definition["description"]
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Lumi"  # zigbee_device_definition["vendor"]
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "ZNXNKG02LM"  # zigbee_device_definition["model"]
+
+                aqara_rotary_knob_properties = ["battery", "linkquality",
+                                                "action", "action_rotation_angle", "action_rotation_angle_speed",
+                                                "action_rotation_percent", "action_rotation_percent_speed", "action_rotation_time"]
+                self.globals[ZD][zigbee_coordinator_ieee]["0x54ef4410007f501c"][ZD_PROPERTIES] = aqara_rotary_knob_properties  # Store properties list in Globals for this zigbee device
+                self.properties_set.add("battery")
+                self.properties_set.add("linkquality")
+                self.properties_set.add("action")
+                self.properties_set.add("action_rotation_angle")
+                self.properties_set.add("action_rotation_angle_speed")
+                self.properties_set.add("action_rotation_percent")
+                self.properties_set.add("action_rotation_percent_speed")
+                self.properties_set.add("action_rotation_time")
+
             if self.globals[DEBUG]: self.zigbeeLogger.warning(f"All Properties: {sorted(self.properties_set)}")
 
         except Exception as exception_error:
@@ -412,7 +461,7 @@ class ThreadZigbeeHandler(threading.Thread):
 
             zigbee_friendly_name = json_payload["device"]["friendlyName"]
             if topic_friendly_name != zigbee_friendly_name:
-                self.zigbeeLogger.error(f"Zigbee Device Friendly Name '{zigbee_friendly_name}' differs from topic '{zigbee_friendly_name}'")
+                self.zigbeeLogger.error(f"Zigbee Device Friendly Name '{zigbee_friendly_name}' differs from topic '{topic_friendly_name}'")
                 self.zigbeeLogger.error(f"Zigbee JSON: Topic: {topics}, payload: {payload}")
                 return
 
@@ -443,16 +492,19 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_position(zd_dev, json_payload)
                     self.process_property_state(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
+
                 case "button":
                     self.process_property_action(zd_dev, json_payload)
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
+
                 case "contactSensor":
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_contact(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
+
                 case "dimmer":
                     self.process_property_brightness(zd_dev, json_payload)
                     self.process_property_color_mode(zd_dev, json_payload)
@@ -460,15 +512,18 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_color_temp(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_state(zd_dev, json_payload)
+
                 case "humiditySensor":
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_humidity(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
+
                 case "illuminanceSensor":
                     # TODO: Work out how to handle illuminance when it is the primary device and not just an additional state
                     pass
+
                 case "motionSensor":
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_humidity(zd_dev, json_payload)
@@ -503,25 +558,30 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_power(zigbee_coordinator_ieee, zd_dev, json_payload)
                     self.process_property_state(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
+
                 case "presenceSensor":
                     pass
+
                 case "radarSensor":
                     self.process_property_illuminance(zd_dev, json_payload)
                     self.process_property_radar(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
+
                 case "remoteAudio":
                     # DEBUG self.zigbeeLogger.error(f"{zd_dev.name}: Message Count = {self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT]}")
                     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
                         self.process_property_action_remote_audio(zd_dev, json_payload)
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
+
                 case "remoteDimmer":
                     # DEBUG self.zigbeeLogger.error(f"{zd_dev.name}: Message Count = {self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT]}")
                     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
                         self.process_property_action_remote_dimmer(zd_dev, json_payload)
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
+
                 case "temperatureSensor":
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_humidity(zd_dev, json_payload)
@@ -529,8 +589,16 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_pressure(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
+
+                case "sceneRotary":
+                    self.process_property_battery(zd_dev, json_payload)
+                    if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
+                        self.process_property_action_scene_rotary(zd_dev, json_payload)
+                    self.process_property_rotations(zd_dev, json_payload)
+
                 case "thermostat":
                     pass
+
                 case "vibrationSensor":
                     self.process_property_battery(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
@@ -700,7 +768,36 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
+    def process_property_action_scene_rotary(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if "action" in json_payload:
+                if zd_dev.pluginProps.get("uspSceneRotary", False):
+                    rotary_action = json_payload["action"]
+                    zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
 
+                    self.key_value_lists[zd_dev.id].append({'key': "action", 'value': rotary_action})
+                    self.key_value_lists[zd_dev.id].append({'key': 'lastAction', 'value': rotary_action, 'uiValue': rotary_action})
+
+                    # Kick off a one-second timer
+                    try:
+                        if zd_dev.id in self.timers:
+                            self.timers[zd_dev.id].cancel()
+                            del self.timers[zd_dev.id]
+                    except Exception:
+                        pass
+
+                    self.timers[zd_dev.id] = threading.Timer(1.0, self.process_property_action_idle_timer, [[zd_dev.id, "action"]])
+                    self.timers[zd_dev.id].start()
+
+                    zd_dev.updateStateImageOnServer(indigo.kStateImageSel.SensorOn)
+
+                    if not bool(zd_dev.pluginProps.get("hideSceneRotaryBroadcast", False)):
+                            self.zigbeeLogger.info(f"received \"{zd_dev.name}\" rotary knob '{rotary_action}' event")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
 
     def process_property_action_idle_timer(self, parameters):
         try:
@@ -730,8 +827,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 return
             if zd_dev.pluginProps.get("uspAngles", False):
                 angles_broadcast_ui = ""
-                angle = json_payload.get("angle", None)
 
+                angle = json_payload.get("angle", None)
                 try:
                     zd_dev_state_angle = int(zd_dev.states["angle"])
                 except ValueError:
@@ -739,8 +836,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 if angle is not None and int(angle) != zd_dev_state_angle:
                     self.key_value_lists[zd_dev.id].append({'key': "angle", 'value': angle})
                     angles_broadcast_ui = f"{angles_broadcast_ui} Angle: {angle},"
-                angle_x = json_payload.get("angle_x", None)
 
+                angle_x = json_payload.get("angle_x", None)
                 try:
                     zd_dev_state_angle_x = int(zd_dev.states["angle_x"])
                 except ValueError:
@@ -748,8 +845,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 if angle_x is not None and int(angle_x) != zd_dev_state_angle_x:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_x", 'value': angle_x})
                     angles_broadcast_ui = f"{angles_broadcast_ui} Angle_X: {angle_x},"
-                angle_x_absolute = json_payload.get("angle_x_absolute", None)
 
+                angle_x_absolute = json_payload.get("angle_x_absolute", None)
                 try:
                     zd_dev_state_angle_x_absolute = int(zd_dev.states["angle_x_absolute"])
                 except ValueError:
@@ -757,8 +854,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 if angle_x_absolute is not None and int(angle_x_absolute) != zd_dev_state_angle_x_absolute:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_x_absolute", 'value': angle_x_absolute})
                     angles_broadcast_ui = f"{angles_broadcast_ui} Angle_X_Absolute: {angle_x_absolute},"
-                angle_y = json_payload.get("angle_y", None)
 
+                angle_y = json_payload.get("angle_y", None)
                 try:
                     zd_dev_state_angle_y = int(zd_dev.states["angle_y"])
                 except ValueError:
@@ -766,8 +863,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 if angle_y is not None and int(angle_y) != zd_dev_state_angle_y:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_y", 'value': angle_y})
                     angles_broadcast_ui = f"{angles_broadcast_ui} Angle_Y: {angle_y},"
-                angle_y_absolute = json_payload.get("angle_y_absolute", None)
 
+                angle_y_absolute = json_payload.get("angle_y_absolute", None)
                 try:
                     zd_dev_state_angle_y_absolute = int(zd_dev.states["angle_y_absolute"])
                 except ValueError:
@@ -775,8 +872,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 if angle_y_absolute is not None and int(angle_y_absolute) != zd_dev_state_angle_y_absolute:
                     self.key_value_lists[zd_dev.id].append({'key': "angle_y_absolute", 'value': angle_y_absolute})
                     angles_broadcast_ui = f"{angles_broadcast_ui} Angle_Y_Absolute: {angle_y_absolute},"
-                angle_z = json_payload.get("angle_z", None)
 
+                angle_z = json_payload.get("angle_z", None)
                 try:
                     zd_dev_state_angle_z = int(zd_dev.states["angle_z"])
                 except ValueError:
@@ -794,6 +891,91 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
+    def process_property_rotations(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if zd_dev.pluginProps.get("uspRotations", False):
+                rotations_broadcast_ui = ""
+
+                try:
+                    zd_dev_state_rotation_angle = int(zd_dev.states["rotation_angle"])
+                except ValueError:
+                    zd_dev_state_rotation_angle = 0
+                action_rotation_angle = json_payload.get("action_rotation_angle", None)
+                if action_rotation_angle is not None:
+                    try:
+                        action_rotation_angle = int(action_rotation_angle)
+                        if action_rotation_angle != zd_dev_state_rotation_angle:
+                            self.key_value_lists[zd_dev.id].append({'key': "rotation_angle", 'value': action_rotation_angle})
+                            rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Angle: {action_rotation_angle},"
+                    except ValueError as exception_error:
+                        pass
+
+                try:
+                    zd_dev_state_rotation_angle_speed = int(zd_dev.states["rotation_angle_speed"])
+                except ValueError:
+                    zd_dev_state_rotation_angle_speed = 0
+                action_rotation_angle_speed = json_payload.get("action_rotation_angle_speed", None)
+                if action_rotation_angle_speed is not None:
+                    try:
+                        action_rotation_angle_speed = int(action_rotation_angle_speed)
+                        if action_rotation_angle_speed != zd_dev_state_rotation_angle_speed:
+                            self.key_value_lists[zd_dev.id].append({'key': "rotation_angle_speed", 'value': action_rotation_angle_speed})
+                            rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Angle Speed: {action_rotation_angle_speed},"
+                    except ValueError as exception_error:
+                        pass
+
+                try:
+                    zd_dev_state_rotation_percent = int(zd_dev.states["rotation_percent"])
+                except ValueError:
+                    zd_dev_state_rotation_percent = 0
+                action_rotation_percent = json_payload.get("action_rotation_percent", None)
+                if action_rotation_percent is not None:
+                    try:
+                        action_rotation_percent = int(action_rotation_percent)
+                        if action_rotation_percent != zd_dev_state_rotation_percent:
+                            self.key_value_lists[zd_dev.id].append({'key': "rotation_percent", 'value': action_rotation_percent})
+                            rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Percent: {action_rotation_percent},"
+                    except ValueError as exception_error:
+                        pass
+
+                try:
+                    zd_dev_state_rotation_percent_speed = int(zd_dev.states["rotation_percent_speed"])
+                except ValueError:
+                    zd_dev_state_rotation_percent_speed = 0
+                action_rotation_percent_speed = json_payload.get("action_rotation_percent_speed", None)
+                if action_rotation_percent_speed is not None:
+                    try:
+                        action_rotation_percent_speed = int(action_rotation_percent_speed)
+                        if action_rotation_percent_speed != zd_dev_state_rotation_percent_speed:
+                            self.key_value_lists[zd_dev.id].append({'key': "rotation_percent_speed", 'value': action_rotation_percent_speed})
+                            rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Percent Speed: {action_rotation_percent_speed},"
+                    except ValueError as exception_error:
+                        pass
+
+                try:
+                    zd_dev_state_rotation_time = int(zd_dev.states["rotation_time"])
+                except ValueError:
+                    zd_dev_state_rotation_time = 0
+                action_rotation_time = json_payload.get("action_rotation_time", None)
+                if action_rotation_time is not None:
+                    try:
+                        action_rotation_time = int(action_rotation_time)
+                        if action_rotation_time != zd_dev_state_rotation_time:
+                            self.key_value_lists[zd_dev.id].append({'key': "rotation_time", 'value': action_rotation_time})
+                            rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Time: {action_rotation_time},"
+                    except ValueError as exception_error:
+                        pass
+
+                if not bool(zd_dev.pluginProps.get("hideRotationsBroadcast", False)):
+                    if len(rotations_broadcast_ui) > 0:
+                        if rotations_broadcast_ui[-1] == ",":  # Check for and remove trailing comma
+                            rotations_broadcast_ui = rotations_broadcast_ui[:-1]
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\"{rotations_broadcast_ui}")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
 
     def process_property_battery(self, zd_dev, json_payload):
         try:

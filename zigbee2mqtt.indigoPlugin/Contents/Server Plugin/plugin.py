@@ -1225,6 +1225,8 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyPresence"] = False
                     plugin_props["zigbeePropertyPressure"] = False
                     plugin_props["zigbeePropertyRadar"] = False
+                    plugin_props["zigbeePropertyRotations"] = False
+                    plugin_props["zigbeePropertySceneRotary"] = False
                     plugin_props["zigbeePropertySetpoint"] = False
                     plugin_props["zigbeePropertyHvacState"] = False
                     plugin_props["zigbeePropertyState"] = False
@@ -1265,6 +1267,8 @@ class Plugin(indigo.PluginBase):
                     plugin_props["uspPresence"] = False
                     plugin_props["uspPressure"] = False
                     plugin_props["uspRadar"] = False
+                    plugin_props["uspRotations"] = False
+                    plugin_props["uspSceneRotary"] = False
                     plugin_props["uspSetpoint"] = False
                     plugin_props["uspState"] = False
                     plugin_props["uspStateL1"] = False
@@ -1402,6 +1406,20 @@ class Plugin(indigo.PluginBase):
                 if action_state not in state_list:
                     state_list.append(action_state)
 
+            # Action State [Scene Rotary] [Aqara H1 Rotary Knob] related States
+            if bool(dev_plugin_props.get("uspSceneRotary", False)):
+                action_trigger_label = f"Action Changed"
+                action_control_page_label = f"Action"
+                action_state = self.getDeviceStateDictForStringType("action", action_trigger_label, action_control_page_label)
+                if action_state not in state_list:
+                    state_list.append(action_state)
+                last_action_state_id = "lastAction"
+                last_action_trigger_label = "Last Action Changed"
+                last_action_control_page_label = "Last Action"
+                last_action_state = self.getDeviceStateDictForStringType(last_action_state_id, last_action_trigger_label, last_action_control_page_label)
+                if last_action_state not in state_list:
+                    state_list.append(last_action_state)
+
             # Angle States
             if bool(dev_plugin_props.get("uspAngles", False)):
                 angle_state = self.getDeviceStateDictForStringType("angle", "Angle Changed", "Angle")
@@ -1460,6 +1478,24 @@ class Plugin(indigo.PluginBase):
                 presence_state = self.getDeviceStateDictForBoolTrueFalseType("presence", "Presence Changed", "Presence")
                 if presence_state not in state_list:
                     state_list.append(presence_state)
+
+            # Rotation States
+            if bool(dev_plugin_props.get("uspRotations", False)):
+                rotation_angle = self.getDeviceStateDictForStringType("rotation_angle", "Rotation Angle Changed", "Rotation Angle")
+                rotation_angle_speed = self.getDeviceStateDictForStringType("rotation_angle_speed", "Rotation Angle Speed Changed", "Rotation Angle Speed")
+                rotation_percent = self.getDeviceStateDictForStringType("rotation_percent", "Rotation Percent Changed", "Rotation Percent")
+                rotation_percent_speed = self.getDeviceStateDictForStringType("rotation_percent_speed", "Rotation Percent Speed Changed", "Rotation Percent Speed")
+                rotation_time = self.getDeviceStateDictForStringType("rotation_time", "Rotation Time Changed", "Rotation Time")
+                if rotation_angle not in state_list:
+                    state_list.append(rotation_angle)
+                if rotation_angle_speed not in state_list:
+                    state_list.append(rotation_angle_speed)
+                if rotation_percent not in state_list:
+                    state_list.append(rotation_percent)
+                if rotation_percent_speed not in state_list:
+                    state_list.append(rotation_percent_speed)
+                if rotation_time not in state_list:
+                    state_list.append(rotation_time)
 
             # State  [used by Blind]
             if bool(dev_plugin_props.get("uspState", False)):
@@ -1537,8 +1573,6 @@ class Plugin(indigo.PluginBase):
                 voltage_state = self.getDeviceStateDictForNumberType("voltage", "Voltage Changed", "Voltage")
                 if voltage_state not in state_list:
                     state_list.append(voltage_state)
-
-
 
             return state_list
         except Exception as exception_error:
@@ -1646,6 +1680,10 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_state = "uspRemoteDimmerIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
+                case "sceneRotary":
+                    usp_primary_device_main_ui_state = "uspSceneRotaryIndigo"
+                    usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
+                    values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
                 case "temperatureSensor":
                     usp_primary_device_main_ui_state = "uspTemperatureIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
@@ -1662,14 +1700,15 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
 
-
             if type_id == "multiSocket":
                 pass
             else:
                 for usp_field_id in ("uspAccelerationIndigo", "uspActionIndigo", "uspAnglesIndigo", "uspBrightnessIndigo", "uspColorIndigo", "uspColorTemperatureIndigo",
                                      "uspContactIndigo", "uspEnergyIndigo", "uspHumidityIndigo", "uspIlluminanceIndigo", "uspLinkQualityIndigo", "uspOccupancyIndigo",
-                                     "uspOnOffIndigo", "uspPositionIndigo", "uspPowerIndigo", "uspPowerLeftIndigo", "uspPowerRightIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
-                                     "uspRadarIndigo", "uspRemoteAudioIndigo", "uspRemoteADimmerIndigo", "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspStateRightIndigo",
+                                     "uspOnOffIndigo",
+                                     "uspPositionIndigo", "uspPowerIndigo", "uspPowerLeftIndigo", "uspPowerRightIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
+                                     "uspRadarIndigo", "uspRemoteAudioIndigo", "uspRemoteADimmerIndigo", "uspRotationsIndigo",
+                                     "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspStateRightIndigo",
                                      "uspStrengthIndigo", "uspTamperIndigo", "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo"):
                     if usp_field_id not in usp_primary_device_main_ui_states:
                         if usp_field_id not in values_dict or values_dict[usp_field_id] not in [INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE, INDIGO_SECONDARY_DEVICE]:
@@ -1699,6 +1738,9 @@ class Plugin(indigo.PluginBase):
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+        debug_values_dict = dict(values_dict)
+        debug_errors_dict = dict(errors_dict)
 
         return values_dict, errors_dict
 
@@ -2252,10 +2294,13 @@ class Plugin(indigo.PluginBase):
 
             # if self.globals[DEBUG]: self.logger.error(f"list_device_state_menu_options. filter='{filter}', type_id='{type_id}'")
 
-            dev = indigo.devices[target_id]
+            # dev = indigo.devices[target_id]
+
+            aa = filter
 
             if ((filter == "button" and type_id == "button") or
                     (filter == "contact" and type_id == "contactSensor") or
+                    (filter == "SceneRotary" and type_id == "sceneRotary") or  # TODO: Sort out for SceneRotary device
                     (filter == "blind" and type_id == "blind") or
                     (filter == "brightness" and type_id == "dimmer") or
                     (filter == "onoff" and type_id == "dimmer") or
@@ -2284,6 +2329,7 @@ class Plugin(indigo.PluginBase):
                   (filter == "color" and type_id == "dimmer") or
                   (filter == "colorTemperature" and type_id == "dimmer") or
                   (filter == "onoff" and type_id == "dimmer") or
+                  (filter == "rotations" and type_id == "sceneRotary") or
                   (filter == "powerLeft")):
                 menu_list = [("1", "Primary Device - Additional State")]
             elif ((filter == "stateL2-5") or
@@ -2826,6 +2872,11 @@ class Plugin(indigo.PluginBase):
                                 values_dict["zigbeePropertyRemoteDimmer"] = True
                             else:
                                 values_dict["zigbeePropertyRemoteDimmer"] = False
+                        elif dev.deviceTypeId == "sceneRotary":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertySceneRotary"] = True
+                            else:
+                                values_dict["zigbeePropertySceneRotary"] = False
                         # elif dev.deviceTypeId == "vibrationSensor":
                         #     if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                         #         values_dict["zigbeePropertyVibrationAction"] = True
@@ -2833,10 +2884,17 @@ class Plugin(indigo.PluginBase):
                         #         values_dict["zigbeePropertyVibrationAction"] = False
 
                     case "angle" | "angle_x" | "angle_x_absolute" | "angle_y" | "angle_y_absolute" | "angle_z":
-                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["angles"]:
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["rotations"]:
                             values_dict["zigbeePropertyAngles"] = True
                         else:
                             values_dict["zigbeePropertyAngles"] = False
+
+                    case("action_rotation_angle" | "action_rotation_angle_speed" | "action_rotation_percent" |
+                         "action_rotation_percent_speed" | "action_rotation_time"):
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["rotations"]:
+                            values_dict["zigbeePropertyRotations"] = True
+                        else:
+                            values_dict["zigbeePropertyRotations"] = False
 
                     case "position":
                         if dev.deviceTypeId == "blind":
