@@ -106,7 +106,7 @@
 
     <!-- Multi-Adapter -->
     <Device id="multiOutlet"  type="relay" subType="indigo.kRelayDeviceSubType.Outlet">
-        <Name>Multi-Adapter)</Name>
+        <Name>Multi-Adapter</Name>
         <ConfigUI>
             <Template file="Templates/template_zigbee.xml" />
             <Template file="Templates/template_zigbee_device_properties.xml" />
@@ -129,6 +129,16 @@
             <Template file="Templates/template_zigbee.xml" />
             <Template file="Templates/template_zigbee_device_properties.xml" />
 		</ConfigUI>
+	</Device>
+
+    <!-- Multi-Switch -->
+    <Device id="multiSwitch" type="custom" subType="indigo.kDeviceSubType.Other, ui=Scene">
+        <Name>Multi-Switch</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>action</UiDisplayStateId>
 	</Device>
 
     <!-- Outlet (Smart Plug) -->
@@ -159,7 +169,7 @@
 	</Device>
 
     <!-- Remote [Audio] -->
-    <Device id="remoteAudio"  type="custom" subType="indigo.kDeviceSubType.Remote">>
+    <Device id="remoteAudio"  type="custom" subType="indigo.kDeviceSubType.Remote">
         <Name>Remote [Audio]</Name>
         <ConfigUI>
             <Template file="Templates/template_zigbee.xml" />
@@ -308,7 +318,25 @@
         <UiDisplayStateId>onOff</UiDisplayStateId>
 	</Device>
 
-   <!-- Presence Sensor [Secondary] -->
+    <!-- Multi Switch Left [Secondary] -->
+    <Device id="multiSwitchSecondaryLeft" type="relay" subType="indigo.kRelayDeviceSubType.Switch, ui=Switch Left" allowUserCreation="false">
+        <Name>Multi-Switch [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
+	</Device>
+
+<!-- Multi Switch Right [Secondary] -->
+    <Device id="multiSwitchSecondaryRight" type="relay" subType="indigo.kRelayDeviceSubType.Switch, ui=Switch Right" allowUserCreation="false">
+        <Name>Multi-Switch [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
+	</Device>
+
+    <!-- Presence Sensor [Secondary] -->
     <Device id="presenceSensorSecondary" type="sensor" subType="indigo.kSensorDeviceSubType.Presence" allowUserCreation="false">
         <Name>Presence Sensor [Secondary]</Name>
         <ConfigUI>

@@ -238,11 +238,11 @@ class ThreadZigbeeHandler(threading.Thread):
                 else:
                     if self.globals[DEBUG]: self.zigbeeLogger.error(f"UNKNOWN DEVICE TYPE: {zigbee_device['type']}, Details ...\n{payload}")
 
-            # TESTING Aqara Rotary Knob
-            test_aqara_rotary_knob = True
+            # TESTING Aqara Rotary Knob - START ..._rotary_knob_ieee
+            test_aqara_rotary_knob = False
             if test_aqara_rotary_knob:
-
-                zigbee_device_ieee = "0x54ef4410007f501c"
+                aqara_rotary_knob_ieee = "0x54ef4410007f501c"
+                zigbee_device_ieee = aqara_rotary_knob_ieee
                 if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
                     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
 
@@ -251,7 +251,7 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
 
                 # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "0x54ef4410007f501c"
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Aqara Rotary Knob"
 
                 if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
                     zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
@@ -277,7 +277,7 @@ class ThreadZigbeeHandler(threading.Thread):
                 aqara_rotary_knob_properties = ["battery", "linkquality",
                                                 "action", "action_rotation_angle", "action_rotation_angle_speed",
                                                 "action_rotation_percent", "action_rotation_percent_speed", "action_rotation_time"]
-                self.globals[ZD][zigbee_coordinator_ieee]["0x54ef4410007f501c"][ZD_PROPERTIES] = aqara_rotary_knob_properties  # Store properties list in Globals for this zigbee device
+                self.globals[ZD][zigbee_coordinator_ieee][aqara_rotary_knob_ieee][ZD_PROPERTIES] = aqara_rotary_knob_properties  # Store properties list in Globals for this zigbee device
                 self.properties_set.add("battery")
                 self.properties_set.add("linkquality")
                 self.properties_set.add("action")
@@ -286,6 +286,54 @@ class ThreadZigbeeHandler(threading.Thread):
                 self.properties_set.add("action_rotation_percent")
                 self.properties_set.add("action_rotation_percent_speed")
                 self.properties_set.add("action_rotation_time")
+            # TESTING Aqara Rotary Knob - ... END
+
+            # TESTING Aqara E1 2 gang switch (with neutral) - START ...
+            test_aqara_e1 = False
+            if test_aqara_e1:
+                aqara_e1_ieee = "0x54ef4410006804af"
+                zigbee_device_ieee = aqara_e1_ieee
+                if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
+
+                # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
+                if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
+
+                # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Aqara E1 Switch"
+
+                if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
+                    zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
+                    if zd_dev_id in indigo.devices:
+                        zd_dev = indigo.devices[zd_dev_id]
+                        if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
+                            zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "LUMI"  # zigbee_device.get('manufacturer', "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Mains (single phase)"  # zigbee_device.get("power_source", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
+                # zigbee_device_definition = zigbee_device['definition']
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Aqara E1 2 gang switch (with neutral)"  # zigbee_device_definition["description"]
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Lumi"  # zigbee_device_definition["vendor"]
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "QBKG41LM"  # zigbee_device_definition["model"]
+
+                aqara_e1_properties = ["linkquality",
+                                       "action", "device_temperature",
+                                       "state_left", "state_right"]
+                self.globals[ZD][zigbee_coordinator_ieee][aqara_e1_ieee][ZD_PROPERTIES] = aqara_e1_properties  # Store properties list in Globals for this zigbee device
+                self.properties_set.add("linkquality")
+                self.properties_set.add("action")
+                self.properties_set.add("device_temperature")
+                self.properties_set.add("state_left")
+                self.properties_set.add("state_right")
+            # TESTING Aqara E1 2 gang switch (with neutral) - ... END
 
             if self.globals[DEBUG]: self.zigbeeLogger.warning(f"All Properties: {sorted(self.properties_set)}")
 
@@ -534,6 +582,7 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_voltage(zd_dev, json_payload)
 
                 case "multiOutlet":
+                    self.process_property_action(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_multi_state(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
@@ -551,6 +600,14 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_power_left_right(zigbee_coordinator_ieee, zd_dev, json_payload)
                     self.process_property_multi_state(zd_dev, json_payload)
+                    self.process_property_temperature(zd_dev, json_payload)
+
+                case "multiSwitch":
+                    if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
+                        self.process_property_action_multi_switch(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
+                    self.process_property_multi_state(zd_dev, json_payload)
+                    self.process_property_temperature(zd_dev, json_payload)
 
                 case "outlet":
                     self.process_property_energy(zd_dev, json_payload)
@@ -799,6 +856,37 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
+    def process_property_action_multi_switch(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if "action" in json_payload:
+                if zd_dev.pluginProps.get("uspMultiSwitchAction", False):
+                    multi_switch_action = json_payload["action"]
+                    zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
+
+                    self.key_value_lists[zd_dev.id].append({'key': "action", 'value': multi_switch_action})
+                    self.key_value_lists[zd_dev.id].append({'key': 'lastAction', 'value': multi_switch_action, 'uiValue': multi_switch_action})
+
+                    # Kick off a one-second timer
+                    try:
+                        if zd_dev.id in self.timers:
+                            self.timers[zd_dev.id].cancel()
+                            del self.timers[zd_dev.id]
+                    except Exception:
+                        pass
+
+                    self.timers[zd_dev.id] = threading.Timer(1.0, self.process_property_action_idle_timer, [[zd_dev.id, "action"]])
+                    self.timers[zd_dev.id].start()
+
+                    zd_dev.updateStateImageOnServer(indigo.kStateImageSel.SensorOn)
+
+                    if not bool(zd_dev.pluginProps.get("hideMultiSwitchActionBroadcast", False)):
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" multi-switch '{multi_switch_action}' event")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
     def process_property_action_idle_timer(self, parameters):
         try:
             zd_dev_id = parameters[0]
@@ -937,6 +1025,35 @@ class ThreadZigbeeHandler(threading.Thread):
                         if action_rotation_percent != zd_dev_state_rotation_percent:
                             self.key_value_lists[zd_dev.id].append({'key': "rotation_percent", 'value': action_rotation_percent})
                             rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Percent: {action_rotation_percent},"
+                    except ValueError as exception_error:
+                        pass
+
+                try:
+                    zd_dev_state_rotation_percent_positive = int(zd_dev.states["rotation_percent_positive"])
+                except ValueError:
+                    zd_dev_state_rotation_percent_positive = 0
+                action_rotation_percent_positive = json_payload.get("action_rotation_percent", None)
+                if action_rotation_percent_positive is not None:
+                    try:
+                        action_rotation_percent_positive = int(action_rotation_percent_positive)
+                        if action_rotation_percent_positive < 0:
+                            action_rotation_percent_positive = 0
+                        if action_rotation_percent_positive != zd_dev_state_rotation_percent_positive:
+                            self.key_value_lists[zd_dev.id].append({'key': "rotation_percent_positive", 'value': action_rotation_percent_positive})
+                            if action_rotation_percent != action_rotation_percent_positive:
+                                # Only show 'Rotation Positive Percent' value if not the same as 'Rotation Percent' i.e 'Rotation Percent' is negative.
+                                rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Positive Percent: {action_rotation_percent_positive},"
+                            try:
+                                rotation_variable_id = int(zd_dev.pluginProps.get("uspRotationPercentPositiveVariableId", 0))
+                                if rotation_variable_id != 0:
+                                    rotation_variable = indigo.variables[rotation_variable_id]
+                                    if action_rotation_percent_positive < 0 or action_rotation_percent_positive > 100:  # Shouldn't be possible!
+                                        pass
+                                    else:
+                                        indigo.variable.updateValue(rotation_variable_id, value=f"{action_rotation_percent_positive}")
+                            except ValueError as exception_error:
+                                pass
+
                     except ValueError as exception_error:
                         pass
 
@@ -1351,49 +1468,69 @@ class ThreadZigbeeHandler(threading.Thread):
                 else:
                     if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{zd_dev.name}\" unchanged state L1 [On|off] {on_off_state_ui} event")
 
-            elif "state_left" in json_payload and zd_dev.enabled:
-                on_off_state = True if json_payload["state_left"] == "ON" else False
-                on_off_state_ui = "on" if on_off_state else "off"
-                if (zd_dev.states["onOffState"] != on_off_state) or ("onOffState.ui" in zd_dev.states and (zd_dev.states["onOffState.ui"] != on_off_state_ui)):
-                    self.key_value_lists[zd_dev.id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
-                    if not bool(zd_dev.pluginProps.get(f"hideStateLeftBroadcast", False)):
-                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" state Left [On|off] '{on_off_state_ui}' event")
-                else:
-                    if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{zd_dev.name}\" unchanged state Left [On|off] {on_off_state_ui} event")
-
-            def process_secondary_switches(switch):
-                if switch == "state_right":
-                    secondary_property_name = "secondaryDeviceMultiSocket"
-                else:
-                    secondary_property_name = f"secondaryDeviceMultiOutlet{switch}"
-                secondary_dev_id = zd_dev.pluginProps.get(secondary_property_name, 0)
-                # TODO: Check for zero
-                secondary_dev = indigo.devices[secondary_dev_id]
-                if not secondary_dev.enabled:
-                    return
-                if switch == "state_right":
-                    secondary_state_name = switch
-                    secondary_state_name_ui = "Right"
-                else:
-                    secondary_state_name = f"state_l{switch}"
-                    secondary_state_name_ui = f"L{switch}"
-                if secondary_state_name in json_payload:
-                    on_off_state = True if json_payload[secondary_state_name] == "ON" else False
+            elif zd_dev.deviceTypeId != "multiSwitch":
+                if "state_left" in json_payload and zd_dev.enabled:
+                    on_off_state = True if json_payload["state_left"] == "ON" else False
                     on_off_state_ui = "on" if on_off_state else "off"
-
-                    if (secondary_dev.states["onOffState"] != on_off_state) or ("onOffState.ui" in secondary_dev.states and (secondary_dev.states["onOffState.ui"] != on_off_state_ui)):
-                        self.key_value_lists[secondary_dev_id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
-                        broadcast_property_name = f"hideState{secondary_state_name_ui}Broadcast"
-                        if not bool(zd_dev.pluginProps.get(broadcast_property_name, False)):
-                            self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" state {secondary_state_name_ui} [On|off] '{on_off_state_ui}' event")
+                    if (zd_dev.states["onOffState"] != on_off_state) or ("onOffState.ui" in zd_dev.states and (zd_dev.states["onOffState.ui"] != on_off_state_ui)):
+                        self.key_value_lists[zd_dev.id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
+                        if not bool(zd_dev.pluginProps.get(f"hideStateLeftBroadcast", False)):
+                            self.zigbeeLogger.info(f"received \"{zd_dev.name}\" state Left [On|off] '{on_off_state_ui}' event")
                     else:
-                        if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" unchanged state {secondary_state_name_ui} [On|off] {on_off_state_ui} event")
+                        if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{zd_dev.name}\" unchanged state Left [On|off] {on_off_state_ui} event")
+
+            def process_secondary_switches(device_type, switch):
+                try:
+                    if device_type == "multiSocket":
+                        secondary_property_name = "secondaryDeviceMultiSocket"
+                    elif device_type == "multiSwitch":
+                        if switch == "state_left":
+                            secondary_property_name = "secondaryDeviceMultiSwitchLeft"
+                        elif switch == "state_right":
+                            secondary_property_name = "secondaryDeviceMultiSwitchRight"
+                        else:
+                            return
+                    elif device_type == "multiOutlet":
+                        secondary_property_name = f"secondaryDeviceMultiOutlet{switch}"
+                    else:
+                        return
+                    secondary_dev_id = zd_dev.pluginProps.get(secondary_property_name, 0)
+                    # TODO: Check for zero
+                    secondary_dev = indigo.devices[secondary_dev_id]
+                    if not secondary_dev.enabled:
+                        return
+                    if switch == "state_right":
+                        secondary_state_name = switch
+                        secondary_state_name_ui = "Right"
+                    elif switch == "state_left":
+                        secondary_state_name = switch
+                        secondary_state_name_ui = "Left"
+                    else:
+                        secondary_state_name = f"state_l{switch}"
+                        secondary_state_name_ui = f"L{switch}"
+                    if secondary_state_name in json_payload:
+                        on_off_state = True if json_payload[secondary_state_name] == "ON" else False
+                        on_off_state_ui = "on" if on_off_state else "off"
+
+                        if (secondary_dev.states["onOffState"] != on_off_state) or ("onOffState.ui" in secondary_dev.states and (secondary_dev.states["onOffState.ui"] != on_off_state_ui)):
+                            self.key_value_lists[secondary_dev_id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
+                            broadcast_property_name = f"hideState{secondary_state_name_ui}Broadcast"
+                            if not bool(zd_dev.pluginProps.get(broadcast_property_name, False)):
+                                self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" state {secondary_state_name_ui} [On|off] '{on_off_state_ui}' event")
+                        else:
+                            if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" unchanged state {secondary_state_name_ui} [On|off] {on_off_state_ui} event")
+
+                except Exception as exception_error:
+                    self.exception_handler(exception_error, True)  # Log error and display failing statement
 
             if zd_dev.deviceTypeId == "multiSocket":
-                process_secondary_switches("state_right")
-            else:
+                process_secondary_switches(zd_dev.deviceTypeId, "state_right")  # Inline 'def', see above
+            elif zd_dev.deviceTypeId == "multiSwitch":
+                process_secondary_switches(zd_dev.deviceTypeId, "state_right")  # Inline 'def', see above
+                process_secondary_switches(zd_dev.deviceTypeId, "state_left")  # Inline 'def', see above
+            elif zd_dev.deviceTypeId == "multiOutlet":
                 for switch in ["2", "3", "4", "5"]:
-                    process_secondary_switches(switch)
+                    process_secondary_switches(zd_dev.deviceTypeId, switch)  # Inline 'def', see above
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement

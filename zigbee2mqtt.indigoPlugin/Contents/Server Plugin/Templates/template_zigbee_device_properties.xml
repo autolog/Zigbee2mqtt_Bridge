@@ -23,6 +23,9 @@
     <Field id="zigbeePropertyHvacState" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyIlluminance" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyLinkQuality" type="checkbox" defaultValue="false" hidden="true" />
+
+    <Field id="zigbeePropertyMultiSwitchAction" type="checkbox" defaultValue="false" hidden="true" />
+
     <Field id="zigbeePropertyOccupancy" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyOnOff" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPosition" type="checkbox" defaultValue="false" hidden="true" />
@@ -64,7 +67,7 @@
     <Field id="NumHumidityInputs" type="textfield" defaultValue="1" hidden="true"/>
     <Field id="NumTemperatureInputs" type="textfield" defaultValue="1" hidden="true"/>
     <Field id="ShowCoolHeatEquipmentStateUI" type="checkbox" defaultValue="false" hidden="true"/>
-    <Field id="SupportsBatteryLevel" type="checkbox" defaultValue="true" hidden="true"/>
+    <Field id="SupportsBatteryLevel" type="checkbox" defaultValue="false" hidden="true"/>
     <Field id="SupportsColor" type="checkbox" defaultValue="false" hidden="true"/>
     <Field id="SupportsCoolSetpoint" type="checkbox" defaultValue="false" hidden="true"/>
     <Field id="SupportsEnergyMeter" type="checkbox" defaultValue="false" hidden="true"/>
@@ -228,6 +231,26 @@
         <Label/>
     </Field>
     <Field id="separator-uspSceneRotary" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertySceneRotary" visibleBindingValue="true"/>
+
+    <!-- Action [MultiSwitch]-->
+    <Field id="space-header-uspMultiSwitchAction" type="label" visibleBindingId="zigbeePropertyMultiSwitchAction" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="header-uspMultiSwitchAction" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange" visibleBindingId="zigbeePropertyMultiSwitchAction" visibleBindingValue="true">
+        <Label>Action</Label>
+    </Field>
+    <Field id="uspMultiSwitchAction" type="checkbox" defaultValue="false" visibleBindingId="zigbeePropertyMultiSwitchAction" visibleBindingValue="true">
+        <Label>Action [Multi-Switch]:</Label>
+        <Description>Associated with Zigbee 'action' Property</Description>
+    </Field>
+    <Field id="uspMultiSwitchActionIndigo" type="menu" defaultValue="0" visibleBindingId="uspMultiSwitchAction" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="multiSwitch" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspMultiSwitchAction" type="label" visibleBindingId="zigbeePropertyMultiSwitchAction" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="separator-uspMultiSwitchAction" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyMultiSwitchAction" visibleBindingValue="true"/>
 
     <!-- Angle [Vibration Sensor]-->
     <Field id="space-header-uspAngles" type="label" visibleBindingId="zigbeePropertyAngles" visibleBindingValue="true">
@@ -805,10 +828,20 @@
         <Label>Rotations:</Label>
         <Description>Associated with Zigbee 'Rotation' Properties</Description>
     </Field>
+
+     <Field id="uspRotationPercentPositiveVariableId" type="menu" defaultValue="0" visibleBindingId="uspRotations" visibleBindingValue="true">
+        <Label>Rotation Variable:</Label>
+        <List class="self" method="list_rotation_variables"/>
+    </Field>
+
     <Field id="uspRotationsIndigo" type="menu" defaultValue="0" visibleBindingId="uspRotations" visibleBindingValue="true">
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="rotations" method="list_device_state_menu_options"/>
-     </Field>
+    </Field>
+
+
+
+
     <Field id="space-uspRotations" type="label" visibleBindingId="zigbeePropertyRotations" visibleBindingValue="true">
         <Label/>
     </Field>
@@ -1267,6 +1300,14 @@
     </Field>
     <Field id="space-hideActionBroadcast" type="label"
            visibleBindingId="uspAction" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Action [Multi-Switch] -->
+    <Field id="hideMultiSwitchActionBroadcast" type="checkbox" defaultValue="false"
+           visibleBindingId="uspMultiSwitchAction" visibleBindingValue="true">
+        <Description>Hide action message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideMultiSwitchActionBroadcast" type="label"
+           visibleBindingId="uspMultiSwitchAction" visibleBindingValue="true"><Label/></Field>
 
     <!-- Angles -->
     <Field id="hideAnglesBroadcast" type="checkbox" defaultValue="false" visibleBindingId="uspAngles" visibleBindingValue="true">

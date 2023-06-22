@@ -249,6 +249,12 @@ class Plugin(indigo.PluginBase):
                     case "multiSocketSecondary":
                         topic_payload = '{"state_right": "ON"}'
                         action_request = True
+                    case "multiSwitchSecondaryLeft":
+                        topic_payload = '{"state_left": "ON"}'
+                        action_request = True
+                    case "multiSwitchSecondaryRight":
+                        topic_payload = '{"state_right": "ON"}'
+                        action_request = True
                     case "dimmer":
                         topic_payload = "ON"
                         action_request = True
@@ -281,6 +287,12 @@ class Plugin(indigo.PluginBase):
                         topic_payload = '{"state_left": "OFF"}'
                         action_request = True
                     case "multiSocketSecondary":
+                        topic_payload = '{"state_right": "OFF"}'
+                        action_request = True
+                    case "multiSwitchSecondaryLeft":
+                        topic_payload = '{"state_left": "OFF"}'
+                        action_request = True
+                    case "multiSwitchSecondaryRight":
                         topic_payload = '{"state_right": "OFF"}'
                         action_request = True
                     case "dimmer":
@@ -318,6 +330,13 @@ class Plugin(indigo.PluginBase):
                         case "multiSocketSecondary":
                             topic_payload = '{"state_right": "OFF"}'
                             action_request = True
+                        case "multiSwitchSecondaryLeft":
+                            topic_payload = '{"state_left": "OFF"}'
+                            action_request = True
+                        case "multiSwitchSecondaryRight":
+                            topic_payload = '{"state_right": "OFF"}'
+                            action_request = True
+
                         case "dimmer":
                             topic_payload = "OFF"
                             action_request = True
@@ -348,6 +367,12 @@ class Plugin(indigo.PluginBase):
                             topic_payload = '{"state_left": "ON"}'
                             action_request = True
                         case "multiSocketSecondary":
+                            topic_payload = '{"state_right": "ON"}'
+                            action_request = True
+                        case "multiSwitchSecondaryLeft":
+                            topic_payload = '{"state_left": "ON"}'
+                            action_request = True
+                        case "multiSwitchSecondaryRight":
                             topic_payload = '{"state_right": "ON"}'
                             action_request = True
                         case "dimmer":
@@ -702,6 +727,8 @@ class Plugin(indigo.PluginBase):
                     pass
                 case "multiSocket":
                     pass
+                case "multiSwitch":
+                    pass
                 case "outlet":
                     pass
                 case "presenceSensor":
@@ -725,6 +752,10 @@ class Plugin(indigo.PluginBase):
                 case "illuminanceSensorSecondary":
                     pass
                 case "motionSensorSecondary":
+                    pass
+                case "multiSwitchSecondaryLeft":
+                    pass
+                case "multiSwitchSecondaryRight":
                     pass
                 case "presenceSensorSecondary":
                     pass
@@ -1218,6 +1249,7 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyLinkQuality"] = False
                     plugin_props["zigbeePropertyOccupancy"] = False
                     plugin_props["zigbeePropertyOnOff"] = False
+                    plugin_props["zigbeePropertyMultiSwitchAction"] = False
                     plugin_props["zigbeePropertyPosition"] = False
                     plugin_props["zigbeePropertyPower"] = False
                     plugin_props["zigbeePropertyPower_left"] = False
@@ -1291,7 +1323,7 @@ class Plugin(indigo.PluginBase):
 
             elif type_id in ("accelerationSensorSecondary", "humiditySensorSecondary", "illuminanceSensorSecondary", "motionSensorSecondary",
                              "multiOutletSecondary2", "multiOutletSecondary3", "multiOutletSecondary4", "multiOutletSecondary5",
-                             "multiSocketSecondary",
+                             "multiSocketSecondary", "multiSwitchSecondaryLeft", "multiSwitchSecondaryRight",
                              "presenceSensorSecondary", "pressureSensorSecondary",
                              "temperatureSensorSecondary", "valveSecondary"):
                 plugin_props['primaryIndigoDevice'] = False
@@ -1420,6 +1452,20 @@ class Plugin(indigo.PluginBase):
                 if last_action_state not in state_list:
                     state_list.append(last_action_state)
 
+            # Action State [Multi-Switch] [Aqara E1] related States
+            if bool(dev_plugin_props.get("uspMultiSwitchAction", False)):
+                action_trigger_label = f"Action Changed"
+                action_control_page_label = f"Action"
+                action_state = self.getDeviceStateDictForStringType("action", action_trigger_label, action_control_page_label)
+                if action_state not in state_list:
+                    state_list.append(action_state)
+                last_action_state_id = "lastAction"
+                last_action_trigger_label = "Last Action Changed"
+                last_action_control_page_label = "Last Action"
+                last_action_state = self.getDeviceStateDictForStringType(last_action_state_id, last_action_trigger_label, last_action_control_page_label)
+                if last_action_state not in state_list:
+                    state_list.append(last_action_state)
+
             # Angle States
             if bool(dev_plugin_props.get("uspAngles", False)):
                 angle_state = self.getDeviceStateDictForStringType("angle", "Angle Changed", "Angle")
@@ -1484,6 +1530,7 @@ class Plugin(indigo.PluginBase):
                 rotation_angle = self.getDeviceStateDictForStringType("rotation_angle", "Rotation Angle Changed", "Rotation Angle")
                 rotation_angle_speed = self.getDeviceStateDictForStringType("rotation_angle_speed", "Rotation Angle Speed Changed", "Rotation Angle Speed")
                 rotation_percent = self.getDeviceStateDictForStringType("rotation_percent", "Rotation Percent Changed", "Rotation Percent")
+                rotation_percent_positive = self.getDeviceStateDictForStringType("rotation_percent_positive", "Rotation Percent Positive Changed", "Rotation Positive Percent")
                 rotation_percent_speed = self.getDeviceStateDictForStringType("rotation_percent_speed", "Rotation Percent Speed Changed", "Rotation Percent Speed")
                 rotation_time = self.getDeviceStateDictForStringType("rotation_time", "Rotation Time Changed", "Rotation Time")
                 if rotation_angle not in state_list:
@@ -1492,6 +1539,8 @@ class Plugin(indigo.PluginBase):
                     state_list.append(rotation_angle_speed)
                 if rotation_percent not in state_list:
                     state_list.append(rotation_percent)
+                if rotation_percent_positive not in state_list:
+                    state_list.append(rotation_percent_positive)
                 if rotation_percent_speed not in state_list:
                     state_list.append(rotation_percent_speed)
                 if rotation_time not in state_list:
@@ -1608,8 +1657,6 @@ class Plugin(indigo.PluginBase):
             if not values_dict.get("list_zigbee_device_selected", False):
                 self.list_zigbee_device_selected(values_dict, type_id, dev_id)  # Force selection on initial load
 
-
-
             usp_primary_device_main_ui_states = list()
 
             match type_id:
@@ -1660,6 +1707,14 @@ class Plugin(indigo.PluginBase):
                     values_dict["uspPowerLeftIndigo"] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE
                     values_dict["uspPowerRightIndigo"] = INDIGO_SECONDARY_DEVICE_ADDITIONAL_STATE
                     values_dict["uspLinkQualityIndigo"] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE
+                case "multiSwitch":
+                    usp_primary_device_main_ui_state = "uspMultiSwitchActionIndigo"
+                    usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
+                    values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
+                    values_dict["uspStateLeftIndigo"] = INDIGO_SECONDARY_DEVICE
+                    values_dict["uspStateRightIndigo"] = INDIGO_SECONDARY_DEVICE
+                    values_dict["uspLinkQualityIndigo"] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE
+
                 case "outlet":
                     usp_primary_device_main_ui_state = "uspOnOffIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
@@ -1700,7 +1755,7 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
 
-            if type_id == "multiSocket":
+            if type_id == "multiSocket" or type_id == "multiSwitch":
                 pass
             else:
                 for usp_field_id in ("uspAccelerationIndigo", "uspActionIndigo", "uspAnglesIndigo", "uspBrightnessIndigo", "uspColorIndigo", "uspColorTemperatureIndigo",
@@ -1735,6 +1790,9 @@ class Plugin(indigo.PluginBase):
                         values_dict["show_update_notes_json"] = False
             else:
                 values_dict["show_update_notes_json"] = False
+
+            debug_values_dict = dict(values_dict)  # so that values_dict can be interogated in Pycharm debug
+            debug_breakpoint = 1  # so that Pycharm breakpoint can be set
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -2161,6 +2219,13 @@ class Plugin(indigo.PluginBase):
                             values_dict["SupportsEnergyMeterCurPower"] = True
                         values_dict["SupportsStatusRequest"] = True
 
+                case "multiSwitch":
+                    # Multi-Switch validation and option settings
+                    if not values_dict.get("uspMultiSwitchAction", False):
+                        error_message = "An Indigo Multi-Switch device requires an association to the Zigbee 'action' property"
+                        error_dict['uspMultiSwitchAction'] = error_message
+                        error_dict["showAlertText"] = error_message
+
                 case "outlet":
                     # Outlet (Socket) validation and option settings
                     if not values_dict.get("uspOnOff", False):
@@ -2285,6 +2350,40 @@ class Plugin(indigo.PluginBase):
     #
     #################################
 
+    def list_rotation_variables(self, filter="", values_dict=None, type_id="", target_id=0):  # noqa [parameter value is not used]
+        try:
+            self.globals[ZC_LIST] = list()
+
+            variables_list = list()
+            variables_list.append((0, "-- Select Rotation Variable --"))
+            for variable in indigo.variables.iter("self"):
+                variables_list.append((variable.id, variable.name))
+            if len(variables_list) == 2:
+                del variables_list[0]
+                return variables_list
+            elif len(variables_list) > 2:
+                return sorted(variables_list, key=lambda name: name[1].lower())   # sort by Zigbee Coordinator name
+            else:
+                variables_list = list()
+                variables_list.append(("-NONE-", "No Variables available"))
+                return variables_list
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+    def list_rotation_variable_selected(self, values_dict, type_id, dev_id):  # noqa [parameter value is not used]
+        try:
+            # do whatever you need to here
+            #   type_id is the device type specified in the Devices.xml
+            #   devId is the device ID - 0 if it's a new device
+            self.logger.error(f"Rotation Variable Selected: {values_dict['uspRotationPercentPositiveVariableId']}")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+        return values_dict
+
+
+
     def list_device_state_menu_options(self, filter="", values_dict=None, type_id="", target_id=0):   # noqa [parameter value is not used]
         try:
             # <Option value="0">Primary Device - Main UI State</Option>
@@ -2297,6 +2396,8 @@ class Plugin(indigo.PluginBase):
             # dev = indigo.devices[target_id]
 
             aa = filter
+            if filter == "multiSwitch":
+                bb = filter
 
             if ((filter == "button" and type_id == "button") or
                     (filter == "contact" and type_id == "contactSensor") or
@@ -2308,6 +2409,7 @@ class Plugin(indigo.PluginBase):
                     (filter == "illuminanceSensor" and type_id == "illuminanceSensor") or
                     (filter == "motionSensor" and type_id == "motionSensor") or
                     (filter == "motionSensor" and type_id == "multiSensor") or
+                    (filter == "multiSwitch" and type_id == "multiSwitch") or
                     (filter == "onoff" and type_id == "outlet") or
                     (filter == "presenceSensor" and type_id == "presenceSensor") or
                     (filter == "radarSensor" and type_id == "radarSensor") or
@@ -2333,12 +2435,14 @@ class Plugin(indigo.PluginBase):
                   (filter == "powerLeft")):
                 menu_list = [("1", "Primary Device - Additional State")]
             elif ((filter == "stateL2-5") or
-                  (filter == "stateRight")):
+                  (filter == "stateRight") or
+                  (filter == "stateLeft")):
                 menu_list = [("2", "Secondary Device")]
             elif filter == "powerRight":
                 menu_list = [("3", "Secondary Device - Additional State")]
             else:
                 menu_list = [("1", "Primary Device - Additional State"), ("2", "Secondary Device")]
+            debug_point = menu_list
             return menu_list
 
         except Exception as exception_error:
@@ -2877,6 +2981,11 @@ class Plugin(indigo.PluginBase):
                                 values_dict["zigbeePropertySceneRotary"] = True
                             else:
                                 values_dict["zigbeePropertySceneRotary"] = False
+                        if dev.deviceTypeId == "multiSwitch":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyMultiSwitchAction"] = True
+                            else:
+                                values_dict["zigbeePropertyMultiSwitchAction"] = False
                         # elif dev.deviceTypeId == "vibrationSensor":
                         #     if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                         #         values_dict["zigbeePropertyVibrationAction"] = True
@@ -3021,9 +3130,19 @@ class Plugin(indigo.PluginBase):
                                 values_dict["zigbeePropertyStateLeft"] = True
                             else:
                                 values_dict["zigbeePropertyStateLeft"] = False
+                        elif type_id == "multiSwitch":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyStateLeft"] = True
+                            else:
+                                values_dict["zigbeePropertyStateLeft"] = False
 
                     case "state_right":
                         if type_id == "multiSocket":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyStateRight"] = True
+                            else:
+                                values_dict["zigbeePropertyStateRight"] = False
+                        elif type_id == "multiSwitch":
                             if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                                 values_dict["zigbeePropertyStateRight"] = True
                             else:
@@ -3228,6 +3347,21 @@ class Plugin(indigo.PluginBase):
                     dev.subType = indigo.kRelayDeviceSubType.Outlet
                     dev.replaceOnServer()
 
+            elif dev.deviceTypeId == "multiSwitch":
+                if dev.subType != indigo.kDeviceSubType.Other:
+                    dev.subType = indigo.kDeviceSubType.Other + ",ui=Scene"
+                    dev.replaceOnServer()
+
+            elif dev.deviceTypeId == "multiSwitchSecondaryLeft":
+                if dev.subType != indigo.kRelayDeviceSubType.Switch:
+                    dev.subType = indigo.kRelayDeviceSubType.Switch + ",ui=Switch Left"
+                    dev.replaceOnServer()
+
+            elif dev.deviceTypeId == "multiSwitchSecondaryRight":
+                if dev.subType != indigo.kRelayDeviceSubType.Switch:
+                    dev.subType = indigo.kRelayDeviceSubType.Switch + ",ui=Switch Right"
+                    dev.replaceOnServer()
+
             elif dev.deviceTypeId == "motionSensor" or dev.deviceTypeId == "multiSensor" or dev.deviceTypeId == "motionSensorSecondary":
                 if dev.subType != indigo.kSensorDeviceSubType.Motion:
                     dev.subType = indigo.kSensorDeviceSubType.Motion
@@ -3428,6 +3562,10 @@ class Plugin(indigo.PluginBase):
                         primary_props["secondaryDeviceMultiOutlet5"] = 0
                     case "multiSocketSecondary":
                         primary_props["secondaryDeviceMultiSocket"] = 0
+                    case "multiSwitchSecondaryLeft":
+                        primary_props["secondaryDeviceMultiSwitchLeft"] = 0
+                    case "multiSwitchSecondaryRight":
+                        primary_props["secondaryDeviceMultiSwitchRight"] = 0
                     case "presenceSensorSecondary":
                         primary_props["secondaryDevicePresenceSensor"] = 0
                     case "pressureSensorSecondary":
@@ -3518,6 +3656,10 @@ class Plugin(indigo.PluginBase):
                         primary_props["secondaryDeviceMultiOutlet5"] = secondary_dev_id
                     case "multiSocketSecondary":
                         primary_props["secondaryDeviceMultiSocket"] = secondary_dev_id
+                    case "multiSwitchSecondaryLeft":
+                        primary_props["secondaryDeviceMultiSwitchLeft"] = secondary_dev_id
+                    case "multiSwitchSecondaryRight":
+                        primary_props["secondaryDeviceMultiSwitchRight"] = secondary_dev_id
                     case "presenceSensorSecondary":
                         primary_props["secondaryDevicePresenceSensor"] = secondary_dev_id
                     case "pressureSensorSecondary":
