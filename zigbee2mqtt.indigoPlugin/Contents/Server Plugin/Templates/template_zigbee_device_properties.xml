@@ -51,8 +51,11 @@
     <Field id="zigbeePropertyStateL5" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyStateLeft" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyStateRight" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyStateSingle" type="checkbox" defaultValue="false" hidden="true" />
 
     <Field id="zigbeePropertyStrength" type="checkbox" defaultValue="false" hidden="true" />
+
+    <Field id="zigbeePropertySwitchAction" type="checkbox" defaultValue="false" hidden="true" />
 
     <Field id="zigbeePropertyTamper" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyTemperature" type="checkbox" defaultValue="false" hidden="true" />
@@ -1043,6 +1046,31 @@
     <Field id="separator-uspStateRight" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyStateRight" visibleBindingValue="true"/>
 
+    <!-- State [single] -->
+    <Field id="space-header-uspStateSingle" type="label"
+           visibleBindingId="zigbeePropertyStateSingle" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspStateSingle" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyStateSingle" visibleBindingValue="true">
+        <Label>State</Label>
+    </Field>
+    <Field id="uspStateSingle" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyStateSingle" visibleBindingValue="true">
+        <Label>State:</Label>
+        <Description>Associated with Zigbee 'state' Property</Description>
+    </Field>
+
+<!--    <Field id="uspStateSingleIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspStateSingleIndigo" type="menu" defaultValue="0" visibleBindingId="uspStateSingle" visibleBindingValue="true">
+<!--        enabledBindingId="uspStateSingleIndigoEnabled">-->
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="stateSingle" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspStateSingle" type="label"
+           visibleBindingId="zigbeePropertyStateSingle" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspStateSingle" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyStateSingle" visibleBindingValue="true"/>
+
+
 
 
     <!-- Strength [Vibration Sensor]-->
@@ -1064,6 +1092,28 @@
         <Label/>
     </Field>
     <Field id="separator-uspStrength" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertyStrength" visibleBindingValue="true"/>
+
+    <!-- Action [Switch]-->
+    <Field id="space-header-uspSwitchAction" type="label" visibleBindingId="zigbeePropertySwitchAction" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="header-uspSwitchAction" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange" visibleBindingId="zigbeePropertySwitchAction" visibleBindingValue="true">
+        <Label>Action</Label>
+    </Field>
+    <Field id="uspSwitchAction" type="checkbox" defaultValue="false" visibleBindingId="zigbeePropertySwitchAction" visibleBindingValue="true">
+        <Label>Action [Switch]:</Label>
+        <Description>Associated with Zigbee 'action' Property</Description>
+    </Field>
+    <Field id="uspSwitchActionIndigo" type="menu" defaultValue="0" visibleBindingId="uspSwitchAction" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="switch" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspSwitchAction" type="label" visibleBindingId="zigbeePropertySwitchAction" visibleBindingValue="true">
+        <Label/>
+    </Field>
+    <Field id="separator-uspSwitchAction" type="separator" alwaysUseInDialogHeightCalc="true" visibleBindingId="zigbeePropertySwitchAction" visibleBindingValue="true"/>
+
+
 
     <!-- Tamper -->
     <Field id="space-header-uspTamper" type="label"
@@ -1521,12 +1571,27 @@
     <Field id="space-hideStateRightBroadcast" type="label"
            visibleBindingId="uspStateRight" visibleBindingValue="true"><Label/></Field>
 
-    <!-- Strength -->
+    <!--  State [Single] -->
+    <Field id="hideStateSingleBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspStateSingle" visibleBindingValue="true">
+        <Description>Hide state message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideStateSingleBroadcast" type="label"
+           visibleBindingId="uspStateSingle" visibleBindingValue="true"><Label/></Field>
+
+<!-- Strength -->
     <Field id="hideStrengthBroadcast" type="checkbox" defaultValue="false" visibleBindingId="uspStrength" visibleBindingValue="true">
         <Description>Hide strength message broadcasts in Event Log</Description>
     </Field>
     <Field id="space-hideStrengthBroadcast" type="label" visibleBindingId="uspStrength" visibleBindingValue="true"><Label/></Field>
 
+    <!-- Action [Switch] -->
+    <Field id="hideSwitchActionBroadcast" type="checkbox" defaultValue="false"
+           visibleBindingId="uspSwitchAction" visibleBindingValue="true">
+        <Description>Hide action message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideSwitchActionBroadcast" type="label"
+           visibleBindingId="uspSwitchAction" visibleBindingValue="true"><Label/></Field>
 
     <!-- Tamper -->
     <Field id="hideTamperBroadcast" type="checkbox" defaultValue="false"

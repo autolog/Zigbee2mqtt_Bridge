@@ -238,102 +238,149 @@ class ThreadZigbeeHandler(threading.Thread):
                 else:
                     if self.globals[DEBUG]: self.zigbeeLogger.error(f"UNKNOWN DEVICE TYPE: {zigbee_device['type']}, Details ...\n{payload}")
 
-            # TESTING Aqara Rotary Knob - START ..._rotary_knob_ieee
-            test_aqara_rotary_knob = False
-            if test_aqara_rotary_knob:
-                aqara_rotary_knob_ieee = "0x54ef4410007f501c"
-                zigbee_device_ieee = aqara_rotary_knob_ieee
-                if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
-                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
+            # # TESTING Aqara Rotary Knob - START ..._rotary_knob_ieee
+            # test_aqara_rotary_knob = False
+            # if test_aqara_rotary_knob:
+            #     aqara_rotary_knob_ieee = "0x54ef4410007f501c"
+            #     zigbee_device_ieee = aqara_rotary_knob_ieee
+            #     if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
+            #         self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
+            #
+            #     # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
+            #     if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+            #         self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
+            #
+            #     # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Aqara Rotary Knob"
+            #
+            #     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
+            #         zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
+            #         if zd_dev_id in indigo.devices:
+            #             zd_dev = indigo.devices[zd_dev_id]
+            #             if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
+            #                 zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "LUMI"  # zigbee_device.get('manufacturer', "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Battery"  # zigbee_device.get("power_source", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
+            #     # zigbee_device_definition = zigbee_device['definition']
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Aqara Rotary Knob"  # zigbee_device_definition["description"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Lumi"  # zigbee_device_definition["vendor"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "ZNXNKG02LM"  # zigbee_device_definition["model"]
+            #
+            #     aqara_rotary_knob_properties = ["battery", "linkquality",
+            #                                     "action", "action_rotation_angle", "action_rotation_angle_speed",
+            #                                     "action_rotation_percent", "action_rotation_percent_speed", "action_rotation_time"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][aqara_rotary_knob_ieee][ZD_PROPERTIES] = aqara_rotary_knob_properties  # Store properties list in Globals for this zigbee device
+            #     self.properties_set.add("battery")
+            #     self.properties_set.add("linkquality")
+            #     self.properties_set.add("action")
+            #     self.properties_set.add("action_rotation_angle")
+            #     self.properties_set.add("action_rotation_angle_speed")
+            #     self.properties_set.add("action_rotation_percent")
+            #     self.properties_set.add("action_rotation_percent_speed")
+            #     self.properties_set.add("action_rotation_time")
+            # # TESTING Aqara Rotary Knob - ... END
+            #
+            # # TESTING Aqara E1 2 gang switch (with neutral) - START ...
+            # test_aqara_e1 = False
+            # if test_aqara_e1:
+            #     aqara_e1_ieee = "0x54ef4410006804af"
+            #     zigbee_device_ieee = aqara_e1_ieee
+            #     if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
+            #         self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
+            #
+            #     # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
+            #     if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+            #         self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
+            #
+            #     # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Aqara E1 Switch"
+            #
+            #     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
+            #         zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
+            #         if zd_dev_id in indigo.devices:
+            #             zd_dev = indigo.devices[zd_dev_id]
+            #             if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
+            #                 zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "LUMI"  # zigbee_device.get('manufacturer', "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Mains (single phase)"  # zigbee_device.get("power_source", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
+            #     # zigbee_device_definition = zigbee_device['definition']
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Aqara E1 2 gang switch (with neutral)"  # zigbee_device_definition["description"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Lumi"  # zigbee_device_definition["vendor"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "QBKG41LM"  # zigbee_device_definition["model"]
+            #
+            #     aqara_e1_properties = ["linkquality",
+            #                            "action", "device_temperature",
+            #                            "state_left", "state_right"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][aqara_e1_ieee][ZD_PROPERTIES] = aqara_e1_properties  # Store properties list in Globals for this zigbee device
+            #     self.properties_set.add("linkquality")
+            #     self.properties_set.add("action")
+            #     self.properties_set.add("device_temperature")
+            #     self.properties_set.add("state_left")
+            #     self.properties_set.add("state_right")
+            # # TESTING Aqara E1 2 gang switch (with neutral) - ... END
 
-                # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
-                if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
-                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
-
-                # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Aqara Rotary Knob"
-
-                if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
-                    zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
-                    if zd_dev_id in indigo.devices:
-                        zd_dev = indigo.devices[zd_dev_id]
-                        if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
-                            zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
-
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "LUMI"  # zigbee_device.get('manufacturer', "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Battery"  # zigbee_device.get("power_source", "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
-
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
-                # zigbee_device_definition = zigbee_device['definition']
-
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Aqara Rotary Knob"  # zigbee_device_definition["description"]
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Lumi"  # zigbee_device_definition["vendor"]
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "ZNXNKG02LM"  # zigbee_device_definition["model"]
-
-                aqara_rotary_knob_properties = ["battery", "linkquality",
-                                                "action", "action_rotation_angle", "action_rotation_angle_speed",
-                                                "action_rotation_percent", "action_rotation_percent_speed", "action_rotation_time"]
-                self.globals[ZD][zigbee_coordinator_ieee][aqara_rotary_knob_ieee][ZD_PROPERTIES] = aqara_rotary_knob_properties  # Store properties list in Globals for this zigbee device
-                self.properties_set.add("battery")
-                self.properties_set.add("linkquality")
-                self.properties_set.add("action")
-                self.properties_set.add("action_rotation_angle")
-                self.properties_set.add("action_rotation_angle_speed")
-                self.properties_set.add("action_rotation_percent")
-                self.properties_set.add("action_rotation_percent_speed")
-                self.properties_set.add("action_rotation_time")
-            # TESTING Aqara Rotary Knob - ... END
-
-            # TESTING Aqara E1 2 gang switch (with neutral) - START ...
-            test_aqara_e1 = False
-            if test_aqara_e1:
-                aqara_e1_ieee = "0x54ef4410006804af"
-                zigbee_device_ieee = aqara_e1_ieee
-                if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
-                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
-
-                # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
-                if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
-                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
-
-                # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Aqara E1 Switch"
-
-                if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
-                    zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
-                    if zd_dev_id in indigo.devices:
-                        zd_dev = indigo.devices[zd_dev_id]
-                        if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
-                            zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
-
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "LUMI"  # zigbee_device.get('manufacturer', "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Mains (single phase)"  # zigbee_device.get("power_source", "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
-
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
-                # zigbee_device_definition = zigbee_device['definition']
-
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Aqara E1 2 gang switch (with neutral)"  # zigbee_device_definition["description"]
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Lumi"  # zigbee_device_definition["vendor"]
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "QBKG41LM"  # zigbee_device_definition["model"]
-
-                aqara_e1_properties = ["linkquality",
-                                       "action", "device_temperature",
-                                       "state_left", "state_right"]
-                self.globals[ZD][zigbee_coordinator_ieee][aqara_e1_ieee][ZD_PROPERTIES] = aqara_e1_properties  # Store properties list in Globals for this zigbee device
-                self.properties_set.add("linkquality")
-                self.properties_set.add("action")
-                self.properties_set.add("device_temperature")
-                self.properties_set.add("state_left")
-                self.properties_set.add("state_right")
-            # TESTING Aqara E1 2 gang switch (with neutral) - ... END
+            # # TESTING Aqara E1 single gang switch (with neutral) - START ...
+            # test_aqara_e1_single = False
+            # if test_aqara_e1_single:
+            #     aqara_e1_ieee = "0x54ef44100065b6ef"
+            #     zigbee_device_ieee = aqara_e1_ieee
+            #     if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
+            #         self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
+            #
+            #     # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
+            #     if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+            #         self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
+            #
+            #     # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Aqara E1 Single Switch"
+            #
+            #     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
+            #         zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
+            #         if zd_dev_id in indigo.devices:
+            #             zd_dev = indigo.devices[zd_dev_id]
+            #             if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
+            #                 zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "LUMI"  # zigbee_device.get('manufacturer', "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Mains (single phase)"  # zigbee_device.get("power_source", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
+            #     # zigbee_device_definition = zigbee_device['definition']
+            #
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Aqara E1 single gang switch (with neutral)"  # zigbee_device_definition["description"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Lumi"  # zigbee_device_definition["vendor"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "QBKG40LM"  # zigbee_device_definition["model"]
+            #
+            #     aqara_e1_properties = ["linkquality",
+            #                            "action", "device_temperature",
+            #                            "state"]
+            #     self.globals[ZD][zigbee_coordinator_ieee][aqara_e1_ieee][ZD_PROPERTIES] = aqara_e1_properties  # Store properties list in Globals for this zigbee device
+            #     self.properties_set.add("linkquality")
+            #     self.properties_set.add("action")
+            #     self.properties_set.add("device_temperature")
+            #     self.properties_set.add("state")
+            #
+            # # TESTING Aqara E1 single gang switch (with neutral) - ... END
 
             if self.globals[DEBUG]: self.zigbeeLogger.warning(f"All Properties: {sorted(self.properties_set)}")
 
@@ -653,6 +700,13 @@ class ThreadZigbeeHandler(threading.Thread):
                         self.process_property_action_scene_rotary(zd_dev, json_payload)
                     self.process_property_rotations(zd_dev, json_payload)
 
+                case "switch":
+                    if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
+                        self.process_property_action_switch(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
+                    self.process_property_multi_state(zd_dev, json_payload)
+                    self.process_property_temperature(zd_dev, json_payload)
+
                 case "thermostat":
                     pass
 
@@ -883,6 +937,37 @@ class ThreadZigbeeHandler(threading.Thread):
 
                     if not bool(zd_dev.pluginProps.get("hideMultiSwitchActionBroadcast", False)):
                         self.zigbeeLogger.info(f"received \"{zd_dev.name}\" multi-switch '{multi_switch_action}' event")
+
+        except Exception as exception_error:
+            self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+    def process_property_action_switch(self, zd_dev, json_payload):
+        try:
+            if not zd_dev.enabled:
+                return
+            if "action" in json_payload:
+                if zd_dev.pluginProps.get("uspSwitchAction", False):
+                    multi_switch_action = json_payload["action"]
+                    zd_dev.updateStateOnServer(key="action", value="")  # To force Indigo to recognise a state change
+
+                    self.key_value_lists[zd_dev.id].append({'key': "action", 'value': multi_switch_action})
+                    self.key_value_lists[zd_dev.id].append({'key': 'lastAction', 'value': multi_switch_action, 'uiValue': multi_switch_action})
+
+                    # Kick off a one-second timer
+                    try:
+                        if zd_dev.id in self.timers:
+                            self.timers[zd_dev.id].cancel()
+                            del self.timers[zd_dev.id]
+                    except Exception:
+                        pass
+
+                    self.timers[zd_dev.id] = threading.Timer(1.0, self.process_property_action_idle_timer, [[zd_dev.id, "action"]])
+                    self.timers[zd_dev.id].start()
+
+                    zd_dev.updateStateImageOnServer(indigo.kStateImageSel.SensorOn)
+
+                    if not bool(zd_dev.pluginProps.get("hideSwitchActionBroadcast", False)):
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" switch '{multi_switch_action}' event")
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -1456,8 +1541,6 @@ class ThreadZigbeeHandler(threading.Thread):
 
     def process_property_multi_state(self, zd_dev, json_payload):
         try:
-            plugin_props = zd_dev.pluginProps
-
             if "state_l1" in json_payload and zd_dev.enabled:
                 on_off_state = True if json_payload["state_l1"] == "ON" else False
                 on_off_state_ui = "on" if on_off_state else "off"
@@ -1468,7 +1551,7 @@ class ThreadZigbeeHandler(threading.Thread):
                 else:
                     if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{zd_dev.name}\" unchanged state L1 [On|off] {on_off_state_ui} event")
 
-            elif zd_dev.deviceTypeId != "multiSwitch":
+            elif zd_dev.deviceTypeId != "multiSwitch" and zd_dev.deviceTypeId != "switch":
                 if "state_left" in json_payload and zd_dev.enabled:
                     on_off_state = True if json_payload["state_left"] == "ON" else False
                     on_off_state_ui = "on" if on_off_state else "off"
@@ -1490,6 +1573,11 @@ class ThreadZigbeeHandler(threading.Thread):
                             secondary_property_name = "secondaryDeviceMultiSwitchRight"
                         else:
                             return
+                    elif device_type == "switch":
+                        if switch == "state_single":
+                            secondary_property_name = "secondaryDeviceSwitchSingle"
+                        else:
+                            return
                     elif device_type == "multiOutlet":
                         secondary_property_name = f"secondaryDeviceMultiOutlet{switch}"
                     else:
@@ -1501,13 +1589,16 @@ class ThreadZigbeeHandler(threading.Thread):
                         return
                     if switch == "state_right":
                         secondary_state_name = switch
-                        secondary_state_name_ui = "Right"
+                        secondary_state_name_ui = " Right"
                     elif switch == "state_left":
                         secondary_state_name = switch
-                        secondary_state_name_ui = "Left"
+                        secondary_state_name_ui = " Left"
+                    elif switch == "state_single":
+                        secondary_state_name = "state"
+                        secondary_state_name_ui = ""
                     else:
                         secondary_state_name = f"state_l{switch}"
-                        secondary_state_name_ui = f"L{switch}"
+                        secondary_state_name_ui = f" L{switch}"
                     if secondary_state_name in json_payload:
                         on_off_state = True if json_payload[secondary_state_name] == "ON" else False
                         on_off_state_ui = "on" if on_off_state else "off"
@@ -1516,9 +1607,9 @@ class ThreadZigbeeHandler(threading.Thread):
                             self.key_value_lists[secondary_dev_id].append({'key': 'onOffState', 'value': on_off_state, 'uiValue': on_off_state_ui})
                             broadcast_property_name = f"hideState{secondary_state_name_ui}Broadcast"
                             if not bool(zd_dev.pluginProps.get(broadcast_property_name, False)):
-                                self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" state {secondary_state_name_ui} [On|off] '{on_off_state_ui}' event")
+                                self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" state{secondary_state_name_ui} [On|off] '{on_off_state_ui}' event")
                         else:
-                            if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" unchanged state {secondary_state_name_ui} [On|off] {on_off_state_ui} event")
+                            if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{secondary_dev.name}\" unchanged state{secondary_state_name_ui} [On|off] {on_off_state_ui} event")
 
                 except Exception as exception_error:
                     self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -1528,6 +1619,8 @@ class ThreadZigbeeHandler(threading.Thread):
             elif zd_dev.deviceTypeId == "multiSwitch":
                 process_secondary_switches(zd_dev.deviceTypeId, "state_right")  # Inline 'def', see above
                 process_secondary_switches(zd_dev.deviceTypeId, "state_left")  # Inline 'def', see above
+            elif zd_dev.deviceTypeId == "switch":
+                process_secondary_switches(zd_dev.deviceTypeId, "state_single")  # Inline 'def', see above
             elif zd_dev.deviceTypeId == "multiOutlet":
                 for switch in ["2", "3", "4", "5"]:
                     process_secondary_switches(zd_dev.deviceTypeId, switch)  # Inline 'def', see above
@@ -1789,7 +1882,7 @@ class ThreadZigbeeHandler(threading.Thread):
             if not zd_dev.enabled:
                 return
             if "state" in json_payload:
-                if zd_dev.deviceTypeId in ("outlet", "dimmer", "zigbeeGroupRelay", "zigbeeGroupDimmer"):
+                if zd_dev.deviceTypeId in ("outlet", "dimmer", "switch", "zigbeeGroupRelay", "zigbeeGroupDimmer"):
                     if zd_dev.pluginProps.get("uspOnOff", False):
                         on_off_state = True if json_payload["state"] == "ON" else False
                         on_off_state_ui = "on" if on_off_state else "off"
@@ -1829,8 +1922,6 @@ class ThreadZigbeeHandler(threading.Thread):
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
-
-
 
     def process_property_tamper(self, zd_dev, json_payload):
         try:

@@ -208,6 +208,18 @@
         <UiDisplayStateId>action</UiDisplayStateId>
     </Device>
 
+    <!-- Switch -->
+    <Device id="switch" type="custom" subType="indigo.kDeviceSubType.Other, ui=Scene">
+        <Name>Switch</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>action</UiDisplayStateId>
+	</Device>
+
+
+
     <!-- Temperature Sensor -->
 	<Device id="temperatureSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.Temperature">
         <Name>Temperature Sensor</Name>
@@ -350,6 +362,15 @@
         <ConfigUI>
             <Template file="Templates/template_sub_model.xml" />
 		</ConfigUI>
+	</Device>
+
+    <!-- Switch Single [Secondary] -->
+    <Device id="switchSecondarySingle" type="relay" subType="indigo.kRelayDeviceSubType.Switch, ui=Switch" allowUserCreation="false">
+        <Name>Switch [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
 	</Device>
 
     <!-- Temperature Sensor [Secondary] -->
