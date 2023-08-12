@@ -832,9 +832,12 @@
         <Description>Associated with Zigbee 'Rotation' Properties</Description>
     </Field>
 
-     <Field id="uspRotationPercentPositiveVariableId" type="menu" defaultValue="0" visibleBindingId="uspRotations" visibleBindingValue="true">
+    <Field id="uspRotationVariableId" type="menu" defaultValue="0" visibleBindingId="uspRotations" visibleBindingValue="true">
         <Label>Rotation Variable:</Label>
         <List class="self" method="list_rotation_variables"/>
+    </Field>
+    <Field id="uspRotationVariableFactor" type="textfield" defaultValue="1" visibleBindingId="uspRotations" visibleBindingValue="true">
+        <Label>Rotation Variable Factor:</Label>
     </Field>
 
     <Field id="uspRotationsIndigo" type="menu" defaultValue="0" visibleBindingId="uspRotations" visibleBindingValue="true">

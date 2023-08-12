@@ -187,7 +187,7 @@ class Plugin(indigo.PluginBase):
     def exception_handler(self, exception_error_message, log_failing_statement):
         filename, line_number, method, statement = traceback.extract_tb(sys.exc_info()[2])[-1]
         module = filename.split('/')
-        log_message = f"'{exception_error_message}' in module '{module[-1]}', method '{method}'"
+        log_message = f"'{exception_error_message}' in module '{module[-1]}', method '{method} [{self.globals[PLUGIN_INFO][PLUGIN_VERSION]}]'"
         if log_failing_statement:
             log_message = log_message + f"\n   Failing statement [line {line_number}]: '{statement}'"
         else:

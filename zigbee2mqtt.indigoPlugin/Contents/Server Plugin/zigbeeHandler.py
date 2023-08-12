@@ -4,6 +4,12 @@
 # Zigbee2mqtt - Plugin © Autolog 2023
 #
 
+try:
+    from colormath.color_objects import XYZColor, sRGBColor, xyYColor
+    from colormath.color_conversions import convert_color
+except ImportError:
+    pass
+
 import colorsys
 import datetime
 try:
@@ -60,7 +66,7 @@ class ThreadZigbeeHandler(threading.Thread):
     def exception_handler(self, exception_error_message, log_failing_statement):
         filename, line_number, method, statement = traceback.extract_tb(sys.exc_info()[2])[-1]  # noqa [Ignore duplicate code warning]
         module = filename.split('/')
-        log_message = f"'{exception_error_message}' in module '{module[-1]}', method '{method}'"
+        log_message = f"'{exception_error_message}' in module '{module[-1]}', method '{method} [{self.globals[PLUGIN_INFO][PLUGIN_VERSION]}]'"
         if log_failing_statement:
             log_message = log_message + f"\n   Failing statement [line {line_number}]: '{statement}'"
         else:
@@ -238,56 +244,6 @@ class ThreadZigbeeHandler(threading.Thread):
                 else:
                     if self.globals[DEBUG]: self.zigbeeLogger.error(f"UNKNOWN DEVICE TYPE: {zigbee_device['type']}, Details ...\n{payload}")
 
-            # # TESTING Aqara Rotary Knob - START ..._rotary_knob_ieee
-            # test_aqara_rotary_knob = False
-            # if test_aqara_rotary_knob:
-            #     aqara_rotary_knob_ieee = "0x54ef4410007f501c"
-            #     zigbee_device_ieee = aqara_rotary_knob_ieee
-            #     if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
-            #         self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
-            #
-            #     # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
-            #     if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
-            #         self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
-            #
-            #     # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Aqara Rotary Knob"
-            #
-            #     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
-            #         zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
-            #         if zd_dev_id in indigo.devices:
-            #             zd_dev = indigo.devices[zd_dev_id]
-            #             if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
-            #                 zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
-            #
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "LUMI"  # zigbee_device.get('manufacturer', "")
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Battery"  # zigbee_device.get("power_source", "")
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
-            #
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
-            #     # zigbee_device_definition = zigbee_device['definition']
-            #
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Aqara Rotary Knob"  # zigbee_device_definition["description"]
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Lumi"  # zigbee_device_definition["vendor"]
-            #     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "ZNXNKG02LM"  # zigbee_device_definition["model"]
-            #
-            #     aqara_rotary_knob_properties = ["battery", "linkquality",
-            #                                     "action", "action_rotation_angle", "action_rotation_angle_speed",
-            #                                     "action_rotation_percent", "action_rotation_percent_speed", "action_rotation_time"]
-            #     self.globals[ZD][zigbee_coordinator_ieee][aqara_rotary_knob_ieee][ZD_PROPERTIES] = aqara_rotary_knob_properties  # Store properties list in Globals for this zigbee device
-            #     self.properties_set.add("battery")
-            #     self.properties_set.add("linkquality")
-            #     self.properties_set.add("action")
-            #     self.properties_set.add("action_rotation_angle")
-            #     self.properties_set.add("action_rotation_angle_speed")
-            #     self.properties_set.add("action_rotation_percent")
-            #     self.properties_set.add("action_rotation_percent_speed")
-            #     self.properties_set.add("action_rotation_time")
-            # # TESTING Aqara Rotary Knob - ... END
-            #
             # # TESTING Aqara E1 2 gang switch (with neutral) - START ...
             # test_aqara_e1 = False
             # if test_aqara_e1:
@@ -697,8 +653,8 @@ class ThreadZigbeeHandler(threading.Thread):
                 case "sceneRotary":
                     self.process_property_battery(zd_dev, json_payload)
                     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
-                        self.process_property_action_scene_rotary(zd_dev, json_payload)
-                    self.process_property_rotations(zd_dev, json_payload)
+                        self.process_property_action_scene_rotary(zd_dev, json_payload, self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee])
+                    self.process_property_rotations(zd_dev, json_payload, self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee])
 
                 case "switch":
                     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] > 1:
@@ -879,7 +835,7 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def process_property_action_scene_rotary(self, zd_dev, json_payload):
+    def process_property_action_scene_rotary(self, zd_dev, json_payload, zd_dev_internal):
         try:
             if not zd_dev.enabled:
                 return
@@ -890,6 +846,20 @@ class ThreadZigbeeHandler(threading.Thread):
 
                     self.key_value_lists[zd_dev.id].append({'key': "action", 'value': rotary_action})
                     self.key_value_lists[zd_dev.id].append({'key': 'lastAction', 'value': rotary_action, 'uiValue': rotary_action})
+
+                    if rotary_action == "start_rotating":
+                        rotation_variable_id = int(zd_dev.pluginProps.get("uspRotationVariableId", 0))
+                        if rotation_variable_id != 0:
+                            try:
+                                rotation_variable = int(indigo.variables[rotation_variable_id].value)
+                            except Exception as exception_error:
+                                rotation_variable = 0
+                            if rotation_variable < 0:
+                                rotation_variable = 0
+                            elif rotation_variable > 100:
+                                rotation_variable = 100
+                            zd_dev_internal[ZD_ROTATION_VARIABLE] = rotation_variable
+                            zd_dev_internal[ZD_ROTATION_INITIAL] = rotation_variable
 
                     # Kick off a one-second timer
                     try:
@@ -1064,7 +1034,7 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def process_property_rotations(self, zd_dev, json_payload):
+    def process_property_rotations(self, zd_dev, json_payload, zd_dev_internal):
         try:
             if not zd_dev.enabled:
                 return
@@ -1082,6 +1052,35 @@ class ThreadZigbeeHandler(threading.Thread):
                         if action_rotation_angle != zd_dev_state_rotation_angle:
                             self.key_value_lists[zd_dev.id].append({'key': "rotation_angle", 'value': action_rotation_angle})
                             rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Angle: {action_rotation_angle},"
+
+                        rotation_variable_id = int(zd_dev.pluginProps.get("uspRotationVariableId", 0))
+                        if rotation_variable_id != 0:
+                            try:
+                                rotation_factor = int(zd_dev.pluginProps.get("uspRotationVariableFactor", 1))
+                            except ValueError as exception_error:
+                                rotation_factor = 1
+
+                            try:
+                                rotation_variable = int(indigo.variables[rotation_variable_id].value)
+                            except ValueError as exception_error:
+                                rotation_variable = 0
+                            if rotation_variable < 0:
+                                rotation_variable = 0
+                            elif rotation_variable > 100:
+                                rotation_variable = 100
+
+                            action_rotation_change = int(action_rotation_angle / 12)  # action_rotation_angle is multiple of 12
+                            action_rotation_change = action_rotation_change * rotation_factor
+                            try:
+                                action_rotation_new_value = zd_dev_internal[ZD_ROTATION_INITIAL] + action_rotation_change
+                                if action_rotation_new_value < 0:
+                                    action_rotation_new_value = 0
+                                elif action_rotation_new_value > 100:
+                                    action_rotation_new_value = 100
+                                indigo.variable.updateValue(rotation_variable_id, value=f"{action_rotation_new_value}")
+                            except KeyError as exception_error:
+                                pass
+
                     except ValueError as exception_error:
                         pass
 
@@ -1128,17 +1127,6 @@ class ThreadZigbeeHandler(threading.Thread):
                             if action_rotation_percent != action_rotation_percent_positive:
                                 # Only show 'Rotation Positive Percent' value if not the same as 'Rotation Percent' i.e 'Rotation Percent' is negative.
                                 rotations_broadcast_ui = f"{rotations_broadcast_ui} Rotation Positive Percent: {action_rotation_percent_positive},"
-                            try:
-                                rotation_variable_id = int(zd_dev.pluginProps.get("uspRotationPercentPositiveVariableId", 0))
-                                if rotation_variable_id != 0:
-                                    rotation_variable = indigo.variables[rotation_variable_id]
-                                    if action_rotation_percent_positive < 0 or action_rotation_percent_positive > 100:  # Shouldn't be possible!
-                                        pass
-                                    else:
-                                        indigo.variable.updateValue(rotation_variable_id, value=f"{action_rotation_percent_positive}")
-                            except ValueError as exception_error:
-                                pass
-
                     except ValueError as exception_error:
                         pass
 
@@ -1256,25 +1244,66 @@ class ThreadZigbeeHandler(threading.Thread):
         try:
             if not zd_dev.enabled:
                 return
-            if "color_mode" in json_payload and json_payload["color_mode"] != "color_temp" and "color" in json_payload and "brightness" in json_payload:
+            if ("color_mode" in json_payload and json_payload["color_mode"] != "color_temp") and "color" in json_payload and "brightness" in json_payload:
                 valid = False
+                color_mode = json_payload["color_mode"]
+                x = 0.0
+                y = 0.0
                 try:
                     brightness = int(json_payload["brightness"])
-                    hue = int(json_payload["color"]["hue"])
-                    saturation = int(json_payload["color"]["saturation"])
-                    valid = True
+                    if color_mode == "xy":
+                        x = json_payload["color"]["x"]
+                        y = json_payload["color"]["y"]
+                        valid = True
+                    elif "hue" in json_payload["color"] and "saturation" in json_payload["color"]:
+                        hue = int(json_payload["color"]["hue"])
+                        saturation = int(json_payload["color"]["saturation"])
+                        valid = True
+                    else:
+                        payload = json.dumps(json_payload)
+                        self.zigbeeLogger.info(f"received color event with an unknown payload of \"{payload}\" for device \"{zd_dev.name}\". Event discarded and ignored.")
                 except ValueError:
                     payload = json.dumps(json_payload)
                     self.zigbeeLogger.info(f"received color event with an invalid payload of \"{payload}\" for device \"{zd_dev.name}\". Event discarded and ignored.")
                 if valid:
                     try:
-                        hue_for_colorsys = float(hue) / 360.0  # noqa: reference before assignment
-                        saturation_for_colorsys = float(saturation) / 255.0  # noqa: reference before assignment
-                        value_for_colorsys = float(brightness) / 255.0  # noqa: reference before assignment
-                        red, green, blue = colorsys.hsv_to_rgb(hue_for_colorsys, saturation_for_colorsys, value_for_colorsys)
-                        red = int(red * 100.0)
-                        green = int(green * 100.0)
-                        blue = int(blue * 100.0)
+                        if color_mode == "xy":
+                            # convert x and y to RGB Start . . .
+                            z_value = 1.0
+                            observer_value = '10'
+                            xyz_color = xyYColor(x, y, z_value, observer=observer_value)
+                            rgb = convert_color(xyz_color, sRGBColor)
+                            rgb_tuple = rgb.get_value_tuple()
+
+                            rgb_tuple_red = rgb_tuple[0]
+                            rgb_tuple_green = rgb_tuple[1]
+                            rgb_tuple_blue = rgb_tuple[2]
+
+                            if rgb_tuple_red > 1.0:
+                                rgb_tuple_red = 1.0
+                            if rgb_tuple_green > 1.0:
+                                rgb_tuple_green = 1.0
+                            if rgb_tuple_blue > 1.0:
+                                rgb_tuple_blue = 1.0
+
+                            # native_red = rgb_tuple_red * 255
+                            # native_green = rgb_tuple_green * 255
+                            # native_blue = rgb_tuple_blue * 255
+
+                            # Convert to Indigo RGB values (0 - 100)
+                            red = int(rgb_tuple_red * 100)
+                            green = int(rgb_tuple_green * 100)
+                            blue = int(rgb_tuple_blue * 100)
+
+                            # . . . convert x and y to RGB End
+                        else:
+                            hue_for_colorsys = float(hue) / 360.0  # noqa: reference before assignment
+                            saturation_for_colorsys = float(saturation) / 255.0  # noqa: reference before assignment
+                            value_for_colorsys = float(brightness) / 255.0  # noqa: reference before assignment
+                            red, green, blue = colorsys.hsv_to_rgb(hue_for_colorsys, saturation_for_colorsys, value_for_colorsys)
+                            red = int(red * 100.0)
+                            green = int(green * 100.0)
+                            blue = int(blue * 100.0)
                     except Exception:  # noqa: too wide exception
                         return
 
