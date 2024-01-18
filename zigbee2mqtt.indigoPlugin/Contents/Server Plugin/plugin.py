@@ -12,15 +12,10 @@
 
 # ============================== Native Imports ===============================
 import base64
-
-try:
-    from cryptography.fernet import Fernet  # noqa
-    from cryptography.hazmat.primitives import hashes  # noqa
-    from cryptography.hazmat.primitives import hashes  # noqa
-    from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC  # noqa
-except ImportError:
-    pass
-
+from cryptography.fernet import Fernet  # noqa
+from cryptography.hazmat.primitives import hashes  # noqa
+from cryptography.hazmat.primitives import hashes  # noqa
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC  # noqa
 from datetime import datetime
 import json
 import os
@@ -42,8 +37,20 @@ except ImportError:
 
 from constants import *
 from coordinatorHandler import ThreadCoordinatorHandler
-import requirements
 from zigbeeHandler import ThreadZigbeeHandler
+
+import_errors = []
+try:
+    import paho.mqtt.client as mqtt
+except ImportError:
+    import_errors.append("paho-mqtt")
+
+try:
+    from colormath.color_objects import XYZColor, sRGBColor, xyYColor
+    from colormath.color_conversions import convert_color
+except ImportError:
+    import_errors.append("colormath")
+
 
 # ================================== Header ===================================
 __author__    = "Autolog"
@@ -101,8 +108,6 @@ class Plugin(indigo.PluginBase):
         #     self.log(LOG_LEVEL_TOPIC, message, *args, **kws)
         #
         # logging.Logger.topic = topic
-
-        self.do_not_start_stop_devices = False
 
         # Initialise dictionary to store plugin Globals
         self.globals = dict()
@@ -243,6 +248,13 @@ class Plugin(indigo.PluginBase):
                         switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2", "3", "4" or "5"
                         topic_payload = f'{{"state_l{switch_number}": "ON"}}'
                         action_request = True
+                    case "multiDimmer":
+                        topic_payload = '{"state_l1": "ON"}'
+                        action_request = True
+                    case "multiDimmerSecondary2" | "multiDimmerSecondary3":
+                        switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2" or "3"
+                        topic_payload = f'{{"state_l{switch_number}": "ON"}}'
+                        action_request = True
                     case "multiSocket":
                         topic_payload = '{"state_left": "ON"}'
                         action_request = True
@@ -284,6 +296,13 @@ class Plugin(indigo.PluginBase):
                         action_request = True
                     case "multiOutletSecondary2" | "multiOutletSecondary3" | "multiOutletSecondary4" | "multiOutletSecondary5":
                         switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2", "3", "4" or "5"
+                        topic_payload = f'{{"state_l{switch_number}": "OFF"}}'
+                        action_request = True
+                    case "multiDimmer":
+                        topic_payload = '{"state_l1": "OFF"}'
+                        action_request = True
+                    case "multiDimmerSecondary2" | "multiDimmerSecondary3":
+                        switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2" or "3"
                         topic_payload = f'{{"state_l{switch_number}": "OFF"}}'
                         action_request = True
                     case "multiSocket":
@@ -330,6 +349,13 @@ class Plugin(indigo.PluginBase):
                             switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2", "3", "4" or "5"
                             topic_payload = f'{{"state_l{switch_number}": "OFF"}}'
                             action_request = True
+                        case "multiDimmer":
+                            topic_payload = '{"state_l1": "OFF"}'
+                            action_request = True
+                        case "multiDimmerSecondary2" | "multiDimmerSecondary3":
+                            switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2" or "3"
+                            topic_payload = f'{{"state_l{switch_number}": "OFF"}}'
+                            action_request = True
                         case "multiSocket":
                             topic_payload = '{"state_left": "OFF"}'
                             action_request = True
@@ -371,6 +397,13 @@ class Plugin(indigo.PluginBase):
                             switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2", "3", "4" or "5"
                             topic_payload = f'{{"state_l{switch_number}": "ON"}}'
                             action_request = True
+                        case "multiDimmer":
+                            topic_payload = '{"state_l1": "ON"}'
+                            action_request = True
+                        case "multiDimmerSecondary2" | "multiDimmerSecondary3":
+                            switch_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "2" or "3"
+                            topic_payload = f'{{"state_l{switch_number}": "ON"}}'
+                            action_request = True
                         case "multiSocket":
                             topic_payload = '{"state_left": "ON"}'
                             action_request = True
@@ -402,110 +435,163 @@ class Plugin(indigo.PluginBase):
 
             # ##### SET BRIGHTNESS ######
             elif action.deviceAction == indigo.kDeviceAction.SetBrightness:
-                if dev.deviceTypeId == "dimmer" or dev.deviceTypeId == "zigbeeGroupDimmer":
-                    new_brightness = int(action.actionValue)   # action.actionValue contains brightness value (0 - 100)
-                    action_ui = "set"
-                    if new_brightness > 0:
-                        if new_brightness > dev.brightness:
-                            action_ui = "brighten"
-                        else:
-                            action_ui = "dim"
-                    new_brightness_ui = f"{new_brightness}%"
-                    new_brightness_255 = int((new_brightness * 255) / 100)
-                    topic_payload = f'{{"brightness": {new_brightness_255}}}'
-                    self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                match dev.deviceTypeId:
+                    case "dimmer" | "zigbeeGroupDimmer":
+                        new_brightness = int(action.actionValue)   # action.actionValue contains brightness value (0 - 100)
+                        action_ui = "set"
+                        if new_brightness > 0:
+                            if new_brightness > dev.brightness:
+                                action_ui = "brighten"
+                            else:
+                                action_ui = "dim"
+                        new_brightness_ui = f"{new_brightness}%"
+                        new_brightness_255 = int((new_brightness * 255) / 100)
+                        topic_payload = f'{{"brightness": {new_brightness_255}}}'
+                        self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
 
-                    self.logger.info(f"sending \"{action_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
-                elif dev.deviceTypeId == "blind":
-                    new_brightness = int(action.actionValue)   # action.actionValue contains brightness [Position] value (0 - 100)
-                    action_ui = "position"
-                    if new_brightness > 0:
-                        if new_brightness > dev.brightness:
-                            action_ui = "open"
-                        else:
-                            action_ui = "close"
-                    new_brightness_ui = f"{new_brightness}%"
-                    topic_payload = f'{{"position": {new_brightness}}}'
-                    self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                        self.logger.info(f"sending \"{action_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
+                    case "multiDimmer" | "multiDimmerSecondary2" | "multiDimmerSecondary3":
+                        new_brightness = int(action.actionValue)   # action.actionValue contains brightness value (0 - 100)
+                        action_ui = "set"
+                        if new_brightness > 0:
+                            if new_brightness > dev.brightness:
+                                action_ui = "brighten"
+                            else:
+                                action_ui = "dim"
+                        new_brightness_ui = f"{new_brightness}%"
+                        new_brightness_255 = int((new_brightness * 255) / 100)
+                        dimmer_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "1", "2" or "3"
+                        topic_payload = f'{{"brightness_l{dimmer_number}": {new_brightness_255}}}'
+                        self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
 
-                    self.logger.info(f"sending \"{action_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
+                        self.logger.info(f"sending \"{action_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
+                    case "blind":
+                        new_brightness = int(action.actionValue)   # action.actionValue contains brightness [Position] value (0 - 100)
+                        action_ui = "position"
+                        if new_brightness > 0:
+                            if new_brightness > dev.brightness:
+                                action_ui = "open"
+                            else:
+                                action_ui = "close"
+                        new_brightness_ui = f"{new_brightness}%"
+                        topic_payload = f'{{"position": {new_brightness}}}'
+                        self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+
+                        self.logger.info(f"sending \"{action_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
 
             # # ##### BRIGHTEN BY ######
             elif action.deviceAction == indigo.kDeviceAction.BrightenBy:
                 # if not dev.onState:
                 #     pass  # TODO: possibly turn on if currently off?
-                if dev.deviceTypeId == "dimmer" or dev.deviceTypeId == "zigbeeGroupDimmer":
-                    if dev.brightness < 100:
-                        brighten_by = int(action.actionValue)  # action.actionValue contains brightness increase value
-                        new_brightness = dev.brightness + brighten_by
-                        if new_brightness > 100:
-                            new_brightness = 100
-                        brighten_by_ui = f"{brighten_by}%"
-                        new_brightness_255 = int((new_brightness * 255) / 100)
-                        new_brightness_ui = f"{new_brightness}%"
-
-                        topic_payload = f'{{"brightness": {new_brightness_255}}}'
-                        self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
-                        self.logger.info(f"sending brighten by {brighten_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
-                    else:
-                        self.logger.info(f"Ignoring brighten request for \"{dev.name}\" as device is already at full brightness")
-                elif dev.deviceTypeId == "blind":
-                    if dev.brightness < 100:
-                        brighten_by = int(action.actionValue)  # action.actionValue contains brightness increase value
-                        new_brightness = dev.brightness + brighten_by
-                        if new_brightness > 100:
-                            new_brightness = 100
-                        brighten_by_ui = f"{brighten_by}%"
-                        new_brightness_ui = f"{new_brightness}%"
-
-                        topic_payload = f'{{"position": {new_brightness_ui}}}'
-                        self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
-                        self.logger.info(f"sending open by {brighten_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
-                    else:
-                        self.logger.info(f"Ignoring Position request for \"{dev.name}\" as device is already fully open")
-
-            # ##### DIM BY ######
-            elif action.deviceAction == indigo.kDeviceAction.DimBy:
-                if dev.deviceTypeId == "dimmer" or dev.deviceTypeId == "zigbeeGroupDimmer":
-                    if dev.onState and dev.brightness > 0:
-                        dim_by = int(action.actionValue)  # action.actionValue contains brightness decrease value
-                        new_brightness = dev.brightness - dim_by
-                        if new_brightness < 0:
-                            new_brightness_255 = 0
-                            topic_payload = f'{{"brightness": {new_brightness_255}}}'
-                            self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
-                            topic_payload = "OFF"
-                            self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
-                            self.logger.info(f"sending \"dim to off\" to \"{dev.name}\"")
-                        else:
-                            dim_by_ui = f"{dim_by}%"
+                match dev.deviceTypeId:
+                    case "dimmer" | "zigbeeGroupDimmer":
+                        if dev.brightness < 100:
+                            brighten_by = int(action.actionValue)  # action.actionValue contains brightness increase value
+                            new_brightness = dev.brightness + brighten_by
+                            if new_brightness > 100:
+                                new_brightness = 100
+                            brighten_by_ui = f"{brighten_by}%"
                             new_brightness_255 = int((new_brightness * 255) / 100)
                             new_brightness_ui = f"{new_brightness}%"
 
                             topic_payload = f'{{"brightness": {new_brightness_255}}}'
                             self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
-                            self.logger.info(f"sending \"dim by {dim_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
-                    else:
-                        self.logger.info(f"Ignoring dim request for '{dev.name}'' as device is already Off")
-                if dev.deviceTypeId == "blind":
-                    if dev.onState and dev.brightness > 0:
-                        dim_by = int(action.actionValue)  # action.actionValue contains brightness decrease value
-                        new_brightness = dev.brightness - dim_by
-                        if new_brightness < 0:
-                            topic_payload = '{"position": 0}'
-                            self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
-                            topic_payload = "OFF"
-                            self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
-                            self.logger.info(f"sending fully close to \"{dev.name}\"")
+                            self.logger.info(f"sending brighten by {brighten_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
                         else:
-                            dim_by_ui = f"{dim_by}%"
+                            self.logger.info(f"Ignoring brighten request for \"{dev.name}\" as device is already at full brightness")
+                    case "multiDimmer" | "multiDimmerSecondary2" | "multiDimmerSecondary3":
+                        if dev.brightness < 100:
+                            brighten_by = int(action.actionValue)  # action.actionValue contains brightness increase value
+                            new_brightness = dev.brightness + brighten_by
+                            if new_brightness > 100:
+                                new_brightness = 100
+                            brighten_by_ui = f"{brighten_by}%"
+                            new_brightness_255 = int((new_brightness * 255) / 100)
                             new_brightness_ui = f"{new_brightness}%"
-
-                            topic_payload = f'{{"position": {new_brightness}}}'
+                            dimmer_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "1", "2" or "3"
+                            topic_payload = f'{{"brightness_l{dimmer_number}": {new_brightness_255}}}'
                             self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
-                            self.logger.info(f"sending close by {dim_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
-                    else:
-                        self.logger.info(f"Ignoring Position request for \"{dev.name}\" as device is already fully closed")
+                            self.logger.info(f"sending brighten by {brighten_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
+                        else:
+                            self.logger.info(f"Ignoring brighten request for \"{dev.name}\" as device is already at full brightness")
+                    case "blind":
+                        if dev.brightness < 100:
+                            brighten_by = int(action.actionValue)  # action.actionValue contains brightness increase value
+                            new_brightness = dev.brightness + brighten_by
+                            if new_brightness > 100:
+                                new_brightness = 100
+                            brighten_by_ui = f"{brighten_by}%"
+                            new_brightness_ui = f"{new_brightness}%"
+                            topic_payload = f'{{"position": {new_brightness_ui}}}'
+                            self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                            self.logger.info(f"sending open by {brighten_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
+                        else:
+                            self.logger.info(f"Ignoring Position request for \"{dev.name}\" as device is already fully open")
+
+            # ##### DIM BY ######
+            elif action.deviceAction == indigo.kDeviceAction.DimBy:
+                match dev.deviceTypeId:
+                    case "dimmer" | "zigbeeGroupDimmer":
+                        if dev.onState and dev.brightness > 0:
+                            dim_by = int(action.actionValue)  # action.actionValue contains brightness decrease value
+                            new_brightness = dev.brightness - dim_by
+                            if new_brightness < 0:
+                                new_brightness_255 = 0
+                                topic_payload = f'{{"brightness": {new_brightness_255}}}'
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                topic_payload = "OFF"
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                self.logger.info(f"sending \"dim to off\" to \"{dev.name}\"")
+                            else:
+                                dim_by_ui = f"{dim_by}%"
+                                new_brightness_255 = int((new_brightness * 255) / 100)
+                                new_brightness_ui = f"{new_brightness}%"
+
+                                topic_payload = f'{{"brightness": {new_brightness_255}}}'
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                self.logger.info(f"sending \"dim by {dim_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
+                        else:
+                            self.logger.info(f"Ignoring dim request for '{dev.name}'' as device is already Off")
+                    case "multiDimmer" | "multiDimmerSecondary2" | "multiDimmerSecondary3":
+                        if dev.onState and dev.brightness > 0:
+                            dim_by = int(action.actionValue)  # action.actionValue contains brightness decrease value
+                            new_brightness = dev.brightness - dim_by
+                            if new_brightness < 0:
+                                new_brightness_255 = 0
+                                topic_payload = f'{{"brightness": {new_brightness_255}}}'
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                topic_payload = "OFF"
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                self.logger.info(f"sending \"dim to off\" to \"{dev.name}\"")
+                            else:
+                                dim_by_ui = f"{dim_by}%"
+                                new_brightness_255 = int((new_brightness * 255) / 100)
+                                new_brightness_ui = f"{new_brightness}%"
+                                dimmer_number = dev.deviceTypeId[-1]  # Get last character from deviceTypeId i.e. "1", "2" or "3"
+                                topic_payload = f'{{"brightness_l{dimmer_number}": {new_brightness_255}}}'
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                self.logger.info(f"sending \"dim by {dim_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
+                        else:
+                            self.logger.info(f"Ignoring dim request for '{dev.name}'' as device is already Off")
+                    case "blind":
+                        if dev.onState and dev.brightness > 0:
+                            dim_by = int(action.actionValue)  # action.actionValue contains brightness decrease value
+                            new_brightness = dev.brightness - dim_by
+                            if new_brightness < 0:
+                                topic_payload = '{"position": 0}'
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                topic_payload = "OFF"
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                self.logger.info(f"sending fully close to \"{dev.name}\"")
+                            else:
+                                dim_by_ui = f"{dim_by}%"
+                                new_brightness_ui = f"{new_brightness}%"
+
+                                topic_payload = f'{{"position": {new_brightness}}}'
+                                self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
+                                self.logger.info(f"sending close by {dim_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
+                        else:
+                            self.logger.info(f"Ignoring Position request for \"{dev.name}\" as device is already fully closed")
 
             # ##### SET COLOR LEVELS ######
             elif action.deviceAction == indigo.kDeviceAction.SetColorLevels:
@@ -732,6 +818,8 @@ class Plugin(indigo.PluginBase):
                     pass
                 case "motionSensor":
                     pass
+                case "multiDimmer":
+                    pass
                 case "multiOutlet":
                     pass
                 case "multiSensor":
@@ -739,8 +827,6 @@ class Plugin(indigo.PluginBase):
                 case "multiSocket":
                     pass
                 case "multiSwitch":
-                    pass
-                case "outlet":
                     pass
                 case "presenceSensor":
                     pass
@@ -842,9 +928,6 @@ class Plugin(indigo.PluginBase):
 
     def device_start_comm(self, dev):
         try:
-            if self.do_not_start_stop_devices:  # This is set on if Package requirements listed in requirements.txt are not met
-                return
-
             self.logger.info(f"Starting '{dev.name}'")
             dev.stateListOrDisplayStateIdChanged()  # Ensure that latest devices.xml is being used
 
@@ -1112,9 +1195,6 @@ class Plugin(indigo.PluginBase):
 
     def device_stop_comm(self, dev):
         try:
-            if self.do_not_start_stop_devices:  # This is set on if Package requirements listed in requirements.txt are not met
-                return
-
             match dev.deviceTypeId:
                 case "zigbeeCoordinator":
                     # DEBUG self.logger.error("COORDINATOR STOPPED [1]")
@@ -1250,6 +1330,9 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyAcceleration"] = False
                     plugin_props["zigbeePropertyBattery"] = False
                     plugin_props["zigbeePropertyBrightness"] = False
+                    plugin_props["zigbeePropertyBrightnessL1"] = False
+                    plugin_props["zigbeePropertyBrightnessL2"] = False
+                    plugin_props["zigbeePropertyBrightnessL3"] = False
                     plugin_props["zigbeePropertyAction"] = False
                     plugin_props["zigbeePropertyAngles"] = False
                     plugin_props["zigbeePropertyColor"] = False
@@ -1296,6 +1379,9 @@ class Plugin(indigo.PluginBase):
                     plugin_props["uspAcceleration"] = False
                     plugin_props["uspBattery"] = False
                     plugin_props["uspBrightness"] = False
+                    plugin_props["uspBrightnessL1"] = False
+                    plugin_props["uspBrightnessL2"] = False
+                    plugin_props["uspBrightnessL3"] = False
                     plugin_props["uspAction"] = False
                     plugin_props["uspAngles"] = False
                     plugin_props["uspColorRGB"] = False
@@ -1339,6 +1425,7 @@ class Plugin(indigo.PluginBase):
                     plugin_props["UpdateNotesJsonList"] = "SELECT"
 
             elif type_id in ("accelerationSensorSecondary", "humiditySensorSecondary", "illuminanceSensorSecondary", "motionSensorSecondary",
+                             "multiDimmerSecondary2", "multiDimmerSecondary3",
                              "multiOutletSecondary2", "multiOutletSecondary3", "multiOutletSecondary4", "multiOutletSecondary5",
                              "multiSocketSecondary", "multiSwitchSecondaryLeft", "multiSwitchSecondaryRight",
                              "presenceSensorSecondary", "pressureSensorSecondary", "switchSecondarySingle",
@@ -1722,6 +1809,10 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_state = "uspOccupancyIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
+                case "multiDimmer":
+                    usp_primary_device_main_ui_state = "uspStateL1Indigo"
+                    usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
+                    values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
                 case "multiOutlet":
                     usp_primary_device_main_ui_state = "uspStateL1Indigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
@@ -1798,10 +1889,12 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
 
-            if type_id == "multiSocket" or type_id == "multiSwitch" or type_id == "switch":
+            if type_id == "multiSocket" or type_id == "multiSwitch" or type_id == "multiDimmer" or type_id == "switch":
                 pass
             else:
-                for usp_field_id in ("uspAccelerationIndigo", "uspActionIndigo", "uspAnglesIndigo", "uspBrightnessIndigo", "uspColorIndigo", "uspColorTemperatureIndigo",
+                for usp_field_id in ("uspAccelerationIndigo", "uspActionIndigo", "uspAnglesIndigo",
+                                     "uspBrightnessIndigo", "uspBrightnessL1Indigo", "uspBrightnessL2Indigo", "uspBrightnessL3Indigo",
+                                     "uspColorIndigo", "uspColorTemperatureIndigo",
                                      "uspContactIndigo", "uspEnergyIndigo", "uspHumidityIndigo", "uspIlluminanceIndigo", "uspLinkQualityIndigo", "uspOccupancyIndigo",
                                      "uspOnOffIndigo",
                                      "uspPositionIndigo", "uspPowerIndigo", "uspPowerLeftIndigo", "uspPowerRightIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
@@ -1903,12 +1996,11 @@ class Plugin(indigo.PluginBase):
 
     def startup(self):
         try:
-            try:
-                requirements.requirements_check(self.globals[PLUGIN_INFO][PLUGIN_ID])
-            except ImportError as exception_error:
-                self.logger.critical(f"PLUGIN STOPPED: {exception_error}")
-                self.do_not_start_stop_devices = True
-                self.stopPlugin()
+            if len(import_errors):
+                stop_message = "Plugin startup cancelled due to one or more required plugin Python libraries missing:\n"
+                for package in import_errors:
+                    stop_message = f"{stop_message}      - {package}\n"
+                return stop_message
 
             indigo.devices.subscribeToChanges()
 
@@ -2222,6 +2314,16 @@ class Plugin(indigo.PluginBase):
                         values_dict["SupportsOnState"] = True
                         values_dict["allowOnStateChange"] = False
 
+                case "multiDimmer":
+                    # Multi-Dimmer (Light) validation and option settings
+                    if not values_dict.get("uspStateL1", False):
+                        error_message = "An Indigo Multi-Dimmer (Light) device requires an association to the Zigbee 'state_l1' property"
+                        error_dict['uspStateL1'] = error_message
+                        error_dict["showAlertText"] = error_message
+                    else:
+                        values_dict["SupportsOnState"] = True
+                        values_dict["SupportsStatusRequest"] = True
+
                 case "multiOutlet":
                     # Multi-Outlet (Socket) validation and option settings
                     if not values_dict.get("uspStateL1", False):
@@ -2454,6 +2556,7 @@ class Plugin(indigo.PluginBase):
                     (filter == "SceneRotary" and type_id == "sceneRotary") or  # TODO: Sort out for SceneRotary device
                     (filter == "blind" and type_id == "blind") or
                     (filter == "brightness" and type_id == "dimmer") or
+                    (filter == "brightnessL1" and type_id == "multiDimmer") or
                     (filter == "onoff" and type_id == "dimmer") or
                     (filter == "humiditySensor" and type_id == "humiditySensor") or
                     (filter == "illuminanceSensor" and type_id == "illuminanceSensor") or
@@ -2465,6 +2568,7 @@ class Plugin(indigo.PluginBase):
                     (filter == "radarSensor" and type_id == "radarSensor") or
                     (filter == "remoteAudio" and type_id == "remoteAudio") or
                     (filter == "remoteDimmer" and type_id == "remoteDimmer") or
+                    (filter == "stateL1" and type_id == "multiDimmer") or
                     (filter == "stateL1" and type_id == "multiOutlet") or
                     (filter == "stateLeft" and type_id == "multiSocket") or
                     (filter == "strength" and type_id == "strength") or
@@ -2486,6 +2590,7 @@ class Plugin(indigo.PluginBase):
                   (filter == "powerLeft")):
                 menu_list = [("1", "Primary Device - Additional State")]
             elif ((filter == "stateL2-5") or
+                  (filter == "brightnessL2-3") or
                   (filter == "stateRight") or
                   (filter == "stateLeft")):
                 menu_list = [("2", "Secondary Device")]
@@ -3011,6 +3116,25 @@ class Plugin(indigo.PluginBase):
                             else:
                                 values_dict["zigbeePropertyBrightness"] = False
 
+                    case "brightness_l1":
+                        if type_id == "multiDimmer":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyBrightnessL1"] = True
+                            else:
+                                values_dict["zigbeePropertyBrightnessL1"] = False
+                    case "brightness_l2":
+                        if type_id == "multiDimmer":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyBrightnessL2"] = True
+                            else:
+                                values_dict["zigbeePropertyBrightnessL2"] = False
+                    case "brightness_l3":
+                        if type_id == "multiDimmer":
+                            if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                                values_dict["zigbeePropertyBrightnessL3"] = True
+                            else:
+                                values_dict["zigbeePropertyBrightnessL3"] = False
+
                     case "action":
                         if dev.deviceTypeId == "button":
                             if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
@@ -3148,21 +3272,19 @@ class Plugin(indigo.PluginBase):
                                     values_dict["zigbeePropertyOnOff"] = False
 
                     case "state_l1":
-                        if type_id == "multiOutlet":
-                            # MULTI-OUTLET
+                        if type_id == "multiDimmer" or  type_id == "multiOutlet":
                             if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                                 values_dict["zigbeePropertyStateL1"] = True
                             else:
                                 values_dict["zigbeePropertyStateL1"] = False
                     case "state_l2":
-                        if type_id == "multiOutlet":
+                        if type_id == "multiDimmer" or type_id == "multiOutlet":
                             if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                                 values_dict["zigbeePropertyStateL2"] = True
                             else:
                                 values_dict["zigbeePropertyStateL2"] = False
                     case "state_l3":
-                        if type_id == "multiOutlet":
-
+                        if type_id == "multiDimmer" or type_id == "multiOutlet":
                             if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                                 values_dict["zigbeePropertyStateL3"] = True
                             else:
@@ -3398,6 +3520,11 @@ class Plugin(indigo.PluginBase):
                     dev.subType = indigo.kSensorDeviceSubType.Illuminance
                     dev.replaceOnServer()
 
+            elif dev.deviceTypeId == "multiDimmer" or dev.deviceTypeId == "multiDimmerSecondary2" or dev.deviceTypeId == "multiDimmerSecondary3":
+                if dev.subType != indigo.kDimmerDeviceSubType.Dimmer:
+                    dev.subType = indigo.kDimmerDeviceSubType.Dimmer
+                    dev.replaceOnServer()
+
             elif dev.deviceTypeId == "multiOutlet" or dev.deviceTypeId == "multiOutletSecondary2" or dev.deviceTypeId == "multiOutletSecondary3" or dev.deviceTypeId == "multiOutletSecondary4" or dev.deviceTypeId == "multiOutletSecondary5":
                 if dev.subType != indigo.kRelayDeviceSubType.Outlet:
                     dev.subType = indigo.kRelayDeviceSubType.Outlet
@@ -3621,6 +3748,10 @@ class Plugin(indigo.PluginBase):
                         primary_props["secondaryDeviceIlluminanceSensor"] = 0
                     case "motionSensorSecondary":
                         primary_props["secondaryDeviceMotionSensor"] = 0
+                    case "multiDimmerSecondary2":
+                        primary_props["secondaryDeviceMultiDimmer2"] = 0
+                    case "multiDimmerSecondary3":
+                        primary_props["secondaryDeviceMultiDimmer3"] = 0
                     case "multiOutletSecondary2":
                         primary_props["secondaryDeviceMultiOutlet2"] = 0
                     case "multiOutletSecondary3":
@@ -3660,7 +3791,7 @@ class Plugin(indigo.PluginBase):
             primary_props = primary_dev.ownerProps
 
             if secondary_device_type_id not in existing_secondary_devices:  # TODO: WARNING: ONLY HANDLES 1 occurrence of a subtype
-                                                                            # TODO:   WORKED ROUND THIS FOR MULTI-OUTLET BY HAVING DIFFERENT SECONDARY DEVICE TYPES
+                                                                            # TODO:   WORKED ROUND THIS FOR MULTI_DIMMER & MULTI-OUTLET BY HAVING DIFFERENT SECONDARY DEVICE TYPES
                 # Create Secondary Device
                 if hasattr(primary_dev, "subType"):  # If subType property supported for primary device - assume supported on Secondary
                     usp_indigo_name = INDIGO_SUB_TYPE_INFO[secondary_device_type_id][1][0]
@@ -3717,6 +3848,10 @@ class Plugin(indigo.PluginBase):
                         primary_props["secondaryDeviceIlluminanceSensor"] = secondary_dev_id
                     case "motionSensorSecondary":
                         primary_props["secondaryDeviceMotionSensor"] = secondary_dev_id
+                    case "multiODimmerSecondary2":
+                        primary_props["secondaryDeviceMultiDimmert2"] = secondary_dev_id
+                    case "multiODimmerSecondary3":
+                        primary_props["secondaryDeviceMultiDimmert3"] = secondary_dev_id
                     case "multiOutletSecondary2":
                         primary_props["secondaryDeviceMultiOutlet2"] = secondary_dev_id
                     case "multiOutletSecondary3":
@@ -3752,7 +3887,7 @@ class Plugin(indigo.PluginBase):
                 secondary_dev = indigo.devices[existing_secondary_devices[secondary_device_type_id]]
 
                 if update_device_name:
-                    # TODO: Differentiate for Outlet devices L1 thru L5
+                    # TODO: Differentiate for Outlet devices L1 thru L5 + Dimmer devices L1 thru L3
                     if hasattr(primary_dev, "subType"):  # If subType property supported for primary device - assume supported on Secondary
                         usp_indigo_name = INDIGO_SUB_TYPE_INFO[secondary_device_type_id][1][0]
                     else:

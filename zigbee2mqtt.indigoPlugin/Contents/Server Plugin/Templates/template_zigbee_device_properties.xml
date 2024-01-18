@@ -9,6 +9,14 @@
 <!-- Zigbee Properties   -->
     <Field id="zigbeePropertiesInitialised" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyBrightness" type="checkbox" defaultValue="false" hidden="true" />
+
+    <Field id="zigbeePropertyBrightnessL1" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyBrightnessL2" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyBrightnessL3" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyBrightnessL4" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyBrightnessL5" type="checkbox" defaultValue="false" hidden="true" />
+
+
     <Field id="zigbeePropertyAcceleration" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyAngles" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyBattery" type="checkbox" defaultValue="false" hidden="true" />
@@ -288,9 +296,7 @@
         <Label>Dimmer:</Label>
         <Description>Associated with Zigbee 'brightness' Property</Description>
     </Field>
-<!--    <Field id="uspBrightnessIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
     <Field id="uspBrightnessIndigo" type="menu" defaultValue="0" visibleBindingId="uspBrightness" visibleBindingValue="true">
-<!--        enabledBindingId="uspBrightnessIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="brightness" method="list_device_state_menu_options"/>
     </Field>
@@ -298,6 +304,69 @@
            visibleBindingId="zigbeePropertyBrightness" visibleBindingValue="true"><Label/></Field>
     <Field id="separator-uspBrightness" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyBrightness" visibleBindingValue="true"/>
+
+    <!-- Brightness_l1 -->
+    <Field id="space-header-uspBrightnessL1" type="label"
+           visibleBindingId="zigbeePropertyBrightnessL1" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspBrightnessL1" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyBrightnessL1" visibleBindingValue="true">
+        <Label>Dimmer_L1</Label>
+    </Field>
+    <Field id="uspBrightnessL1" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyBrightnessL1" visibleBindingValue="true">
+        <Label>Dimmer_L1:</Label>
+        <Description>Associated with Zigbee 'brightness_l1' Property</Description>
+    </Field>
+    <Field id="uspBrightnessL1Indigo" type="menu" defaultValue="0" visibleBindingId="uspBrightnessL1" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="brightnessL1" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspBrightnessL1" type="label"
+           visibleBindingId="zigbeePropertyBrightnessL1" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspBrightnessL1" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyBrightnessL1" visibleBindingValue="true"/>
+
+    <!-- Brightness_l2 -->
+    <Field id="space-header-uspBrightnessL2" type="label"
+           visibleBindingId="zigbeePropertyBrightnessL2" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspBrightnessL2" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyBrightnessL2" visibleBindingValue="true">
+        <Label>Dimmer_L2</Label>
+    </Field>
+    <Field id="uspBrightnessL2" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyBrightnessL2" visibleBindingValue="true">
+        <Label>Dimmer_L2:</Label>
+        <Description>Associated with Zigbee 'brightness_l2' Property</Description>
+    </Field>
+    <Field id="uspBrightnessL2Indigo" type="menu" defaultValue="0" visibleBindingId="uspBrightnessL2" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="brightnessL2-3" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspBrightnessL2" type="label"
+           visibleBindingId="zigbeePropertyBrightnessL2" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspBrightnessL2" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyBrightnessL2" visibleBindingValue="true"/>
+
+    <!-- Brightness_l3 -->
+    <Field id="space-header-uspBrightnessL3" type="label"
+           visibleBindingId="zigbeePropertyBrightnessL3" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspBrightnessL3" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyBrightnessL3" visibleBindingValue="true">
+        <Label>Dimmer_L3</Label>
+    </Field>
+    <Field id="uspBrightnessL3" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyBrightnessL3" visibleBindingValue="true">
+        <Label>Dimmer_L3:</Label>
+        <Description>Associated with Zigbee 'brightness_l3' Property</Description>
+    </Field>
+    <Field id="uspBrightnessL3Indigo" type="menu" defaultValue="0" visibleBindingId="uspBrightnessL3" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="brightnessL2-3" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspBrightnessL3" type="label"
+           visibleBindingId="zigbeePropertyBrightnessL3" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspBrightnessL3" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyBrightnessL3" visibleBindingValue="true"/>
 
     <!-- Color -->
     <Field id="space-header-uspColorRGB" type="label"
@@ -892,11 +961,7 @@
         <Label>State_L1:</Label>
         <Description>Associated with Zigbee 'state_l1' Property</Description>
     </Field>
-
-
-<!--    <Field id="uspStateL1IndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
     <Field id="uspStateL1Indigo" type="menu" defaultValue="0" visibleBindingId="uspStateL1" visibleBindingValue="true">
-<!--        enabledBindingId="uspStateL1IndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
         <List class="self" filter="stateL1" method="list_device_state_menu_options"/>
     </Field>

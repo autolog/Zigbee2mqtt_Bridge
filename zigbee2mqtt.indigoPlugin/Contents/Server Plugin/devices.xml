@@ -68,6 +68,15 @@
 		</ConfigUI>
 	</Device>
 
+    <!-- Multi Dimmer -->
+	<Device id="multiDimmer" type="dimmer">
+        <Name>Multi Dimmer (Light)</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
+
     <!-- Blind aka Roller Shutter -->
 	<Device id="blind" type="dimmer" subType="indigo.kDimmerDeviceSubType.Blind">
         <Name>Dimmer (Blind / Shade)</Name>
@@ -283,6 +292,24 @@
             <Template file="Templates/template_sub_model.xml" />
 		</ConfigUI>
         <UiDisplayStateId>motion</UiDisplayStateId>
+	</Device>
+
+    <!-- Multi Dimmer L2 [Secondary] -->
+    <Device id="multiDimmerSecondary2" type="dimmer" subType="indigo.kDimmerDeviceSubType.Dimmer" allowUserCreation="false">
+        <Name>Multi-Dimmer L2 [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
+	</Device>
+
+    <!-- Multi Dimmer L3 [Secondary] -->
+    <Device id="multiDimmerSecondary3" type="dimmer" subType="indigo.kDimmerDeviceSubType.Dimmer" allowUserCreation="false">
+        <Name>Multi-Dimmer L3 [Secondary]</Name>
+        <ConfigUI>
+            <Template file="Templates/template_sub_model.xml" />
+		</ConfigUI>
+        <UiDisplayStateId>onOff</UiDisplayStateId>
 	</Device>
 
     <!-- Multi Outlet L2 [Secondary] -->

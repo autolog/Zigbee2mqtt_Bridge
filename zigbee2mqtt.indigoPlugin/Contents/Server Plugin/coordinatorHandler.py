@@ -17,6 +17,11 @@ try:
 except ImportError:
     pass
 
+# try:
+#     import paho.mqtt.client as mqtt
+# except ImportError:
+#     pass
+
 try:
     import paho.mqtt.client as mqtt
 except ImportError:

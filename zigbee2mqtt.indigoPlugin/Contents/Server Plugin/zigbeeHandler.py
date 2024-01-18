@@ -18,11 +18,9 @@ try:
 except ImportError:
     pass
 import json
-import logging
 import queue
 import sys
 import threading
-import time
 import traceback
 
 from constants import *
@@ -338,6 +336,56 @@ class ThreadZigbeeHandler(threading.Thread):
             #
             # # TESTING Aqara E1 single gang switch (with neutral) - ... END
 
+            # TESTING Tuya Dimmer Module - START ...
+            test_tuya_dimmer_module = True
+            if test_tuya_dimmer_module:
+                tuya_dimmer_module_ieee = "0x123456789"
+                zigbee_device_ieee = tuya_dimmer_module_ieee
+                if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()
+
+                # Default to the Indigo Device Id associated with this Zigbee device to zero if not setup
+                if ZD_INDIGO_DEVICE_ID not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] = 0
+
+                # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = "Study/Tuya Dimmer Module"
+
+                if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
+                    zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
+                    if zd_dev_id in indigo.devices:
+                        zd_dev = indigo.devices[zd_dev_id]
+                        if "topicFriendlyName" not in zd_dev.states or self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] != zd_dev.states["topicFriendlyName"]:
+                            zd_dev.updateStateOnServer("topicFriendlyName", self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME])
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MANUFACTURER] = "Tuya"  # zigbee_device.get('manufacturer', "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MODEL_ID] = ""  # zigbee_device.get("model_id", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_POWER_SOURCE] = "Mains (single phase)"  # zigbee_device.get("power_source", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DESCRIPTION_USER] = ""  # zigbee_device.get("description", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DISABLED] = ""  # zigbee_device.get("disabled", "")
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_SOFTWARE_BUILD_ID] = ""  # zigbee_device.get("software_build_id", "")
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
+                # zigbee_device_definition = zigbee_device['definition']
+
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_DESCRIPTION_HW] = "Tuya Dimmer Module"  # zigbee_device_definition["description"]
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR] = "Tuya"  # zigbee_device_definition["vendor"]
+                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL] = "TS0601_dimmer_3"  # zigbee_device_definition["model"]
+
+                tuya_dimmer_properties = ["linkquality",
+                                          "brightness_l1", "brightness_l2", "brightness_l3",
+                                          "state_l1", "state_l2", "state_l3"]
+                self.globals[ZD][zigbee_coordinator_ieee][tuya_dimmer_module_ieee][ZD_PROPERTIES] = tuya_dimmer_properties  # Store properties list in Globals for this zigbee device
+                self.properties_set.add("linkquality")
+                self.properties_set.add("brightness_l1")
+                self.properties_set.add("brightness_l2")
+                self.properties_set.add("brightness_l3")
+                self.properties_set.add("state_l1")
+                self.properties_set.add("state_l2")
+                self.properties_set.add("state_l3")
+
+            # TESTING Tuya Dimmer Module - ... END
+
             if self.globals[DEBUG]: self.zigbeeLogger.warning(f"All Properties: {sorted(self.properties_set)}")
 
         except Exception as exception_error:
@@ -477,13 +525,12 @@ class ThreadZigbeeHandler(threading.Thread):
 
                     self.zigbee_devices_offline[topic_friendly_name] = True
 
-
                     self.zigbeeLogger.warning(f"Availability for '{topic_friendly_name}' offline")
                 else:
                     self.zigbee_devices_offline[topic_friendly_name] = False
                     zc_dev.setErrorStateOnServer(None)
                 return
-            elif topics_list[last_topic_index] in ["set", "get"]: # removes any topics ending in /set or /get
+            elif topics_list[last_topic_index] in ["set", "get", "action"]:  # removes any topics ending in '/set' or '/get' or '/action'. Note: '/action' is added if Home Assistant Integration is enabled in Zigbee2mqtt settings
                 return
 
             try:
@@ -583,6 +630,11 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
+
+                case "multiDimmer":
+                    self.process_property_multi_brightness(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
+                    self.process_property_multi_state(zd_dev, json_payload)
 
                 case "multiOutlet":
                     self.process_property_action(zd_dev, json_payload)
@@ -702,6 +754,8 @@ class ThreadZigbeeHandler(threading.Thread):
             if "action" in json_payload:
                 if zd_dev.pluginProps.get("uspAction", False):
                     action = json_payload["action"]
+                    if action is None or action == "":
+                        return
                     action_split = action.split("_")  # e.g. "1_single" or "double_left" or "button_1_single
                     if len(action_split) == 3 and action_split[0] == "button":
                         action_split_reformat = [action_split[1],action_split[2]]
@@ -1177,6 +1231,8 @@ class ThreadZigbeeHandler(threading.Thread):
                     try:
                         battery_level = int(json_payload["battery"])
                         valid = True
+                    except TypeError:
+                        pass
                     except ValueError:
                         try:
                             battery_level = int(float(json_payload["battery"]))
@@ -1591,27 +1647,30 @@ class ThreadZigbeeHandler(threading.Thread):
                     else:
                         if self.globals[DEBUG]: self.zigbeeLogger.info(f"received \"{zd_dev.name}\" unchanged state Left [On|off] {on_off_state_ui} event")
 
+            # v Start of inline process_secondary_switches Function ....
             def process_secondary_switches(device_type, switch):
                 try:
                     if device_type == "multiSocket":
-                        secondary_property_name = "secondaryDeviceMultiSocket"
+                        secondary_device_id_property_key = "secondaryDeviceMultiSocket"
                     elif device_type == "multiSwitch":
                         if switch == "state_left":
-                            secondary_property_name = "secondaryDeviceMultiSwitchLeft"
+                            secondary_device_id_property_key = "secondaryDeviceMultiSwitchLeft"
                         elif switch == "state_right":
-                            secondary_property_name = "secondaryDeviceMultiSwitchRight"
+                            secondary_device_id_property_key = "secondaryDeviceMultiSwitchRight"
                         else:
                             return
                     elif device_type == "switch":
                         if switch == "state_single":
-                            secondary_property_name = "secondaryDeviceSwitchSingle"
+                            secondary_device_id_property_key = "secondaryDeviceSwitchSingle"
                         else:
                             return
+                    elif device_type == "multiDimmer":
+                        secondary_device_id_property_key = f"secondaryDeviceMultiDimmer{switch}"
                     elif device_type == "multiOutlet":
-                        secondary_property_name = f"secondaryDeviceMultiOutlet{switch}"
+                        secondary_device_id_property_key = f"secondaryDeviceMultiOutlet{switch}"
                     else:
                         return
-                    secondary_dev_id = zd_dev.pluginProps.get(secondary_property_name, 0)
+                    secondary_dev_id = zd_dev.pluginProps.get(secondary_device_id_property_key, 0)
                     # TODO: Check for zero
                     secondary_dev = indigo.devices[secondary_dev_id]
                     if not secondary_dev.enabled:
@@ -1643,6 +1702,66 @@ class ThreadZigbeeHandler(threading.Thread):
                 except Exception as exception_error:
                     self.exception_handler(exception_error, True)  # Log error and display failing statement
 
+            # ^ ... End of inline process_secondary_switches Function
+
+            # v Start of inline process_secondary_dimmers Function ....
+            def process_secondary_dimmers(device_type, dimmer):
+                try:
+                    if device_type == "multiDimmer":
+                        secondary_device_id_property_key = f"secondaryDeviceMultiDimmer{dimmer}"
+                    else:
+                        return
+                    secondary_dev_id = zd_dev.pluginProps.get(secondary_device_id_property_key, 0)
+                    # TODO: Check for zero
+                    secondary_dev = indigo.devices[secondary_dev_id]
+                    if not secondary_dev.enabled:
+                        return
+                    secondary_state_name = f"brightness_l{switch}"
+                    secondary_state_name_ui = f" L{switch}"
+                    if secondary_state_name in json_payload:
+                        valid = False
+                        try:
+                            brightness_255 = json_payload[secondary_state_name]
+                            if "state" in json_payload and json_payload["state"] == "OFF":
+                                brightness_255 = 0
+                            brightness_100 = int((brightness_255 / 255) * 100)
+                            if brightness_100 >= 99:
+                                brightness_100 = 100
+                            brightness_100_ui = f"{brightness_100}"
+                            valid = True
+                        except ValueError:
+                            self.zigbeeLogger.info(f"received brightness event with an invalid payload of \"{json_payload['brightness']}\" for device \"{secondary_dev.name}\". Event discarded and ignored.")
+                        if valid:
+                            if "brightnessLevel" in secondary_dev.states:
+                                if secondary_dev.states["brightnessLevel"] != brightness_100:  # noqa: reference before assignment
+                                    brighten_dim_ui = "set"
+                                    if brightness_100 > 0:
+                                        if brightness_100 > secondary_dev.brightness:
+                                            brighten_dim_ui = "brighten"
+                                        else:
+                                            brighten_dim_ui = "dim"
+                                    if brightness_100 > 0:
+                                        secondary_dev.updateStateImageOnServer(indigo.kStateImageSel.DimmerOn)
+                                    else:
+                                        secondary_dev.updateStateImageOnServer(indigo.kStateImageSel.DimmerOff)
+                                    self.key_value_lists[secondary_dev.id].append({'key': 'brightnessLevel', 'value': brightness_100, 'uiValue': brightness_100_ui})  # noqa: reference before assignment
+                                    if bool(zd_dev.pluginProps.get("SupportsWhite", False)):
+                                        self.key_value_lists[secondary_dev.id].append({'key': 'whiteLevel', 'value': brightness_100})  # noqa: reference before assignment
+
+                                    if not bool(secondary_dev.pluginProps.get("hideDimmerBroadcast", False)):
+                                        self.zigbeeLogger.info(f"received {brighten_dim_ui} \"{secondary_dev.name}\" to brightness level {brightness_100_ui}")
+                                else:
+                                    if not bool(secondary_dev.pluginProps.get("hideDimmerBroadcast", False)):
+                                        if self.globals[DEBUG]: self.zigbeeLogger.info(
+                                            f"received \"{secondary_dev.name}\" unchanged brightness level {brightness_100_ui}")  # noqa: reference before assignment
+                            else:
+                                self.zigbeeLogger.error(f"received \"{secondary_dev.name}\" status update of \"{brightness_100_ui}\" for missing brightnessLevel state.")  # noqa: reference before assignment
+
+                except Exception as exception_error:
+                    self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+            # ^ ... End of inline process_secondary_dimmers Function
+
             if zd_dev.deviceTypeId == "multiSocket":
                 process_secondary_switches(zd_dev.deviceTypeId, "state_right")  # Inline 'def', see above
             elif zd_dev.deviceTypeId == "multiSwitch":
@@ -1650,6 +1769,10 @@ class ThreadZigbeeHandler(threading.Thread):
                 process_secondary_switches(zd_dev.deviceTypeId, "state_left")  # Inline 'def', see above
             elif zd_dev.deviceTypeId == "switch":
                 process_secondary_switches(zd_dev.deviceTypeId, "state_single")  # Inline 'def', see above
+            elif zd_dev.deviceTypeId == "multiDimmer":
+                for switch in ["2", "3"]:
+                    process_secondary_switches(zd_dev.deviceTypeId, switch)  # Inline 'def', see above
+                    process_secondary_dimmers(zd_dev.deviceTypeId, switch)  # Inline 'def', see above
             elif zd_dev.deviceTypeId == "multiOutlet":
                 for switch in ["2", "3", "4", "5"]:
                     process_secondary_switches(zd_dev.deviceTypeId, switch)  # Inline 'def', see above
