@@ -229,7 +229,14 @@ class Plugin(indigo.PluginBase):
                         return
                     else:
                         zigbee_device_ieee = dev_props["zigbee_device_ieee"]
-                friendly_name = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME]
+                if ZD_FRIENDLY_NAME in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+                    friendly_name = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME]
+                else:
+                    self.logger.warning(
+                        f"Action Control Device '{dev.name}': Friendly name missing for zigbee device with address: {zigbee_device_ieee}")
+                    self.logger.warning(
+                        f"Unhandled \"actionControlDevice\" action \"{action.deviceAction}\" for \"{dev.name}\"")
+                    return
 
             # Set default topic for turn on / off / toggle
             topic = f"{self.globals[ZC][zc_dev_id][MQTT_ROOT_TOPIC]}/{friendly_name}/set"  # e.g. "zibee2mqtt/<zigbee_coordinator_ieee>/<zigbee_device_ieee>/set"
@@ -971,6 +978,9 @@ class Plugin(indigo.PluginBase):
             for zigbee_coordinator_ieee in self.globals[ZD]:
                 for zigbee_device_ieee in self.globals[ZD][zigbee_coordinator_ieee]:
                     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT] = 0
+                    # Added 2024-12-28
+                    if ZD_FRIENDLY_NAME not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+                        self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = f"!!! {zigbee_device_ieee}"
 
             # Create Queue
 
@@ -1830,7 +1840,8 @@ class Plugin(indigo.PluginBase):
                     values_dict["uspPowerRightIndigo"] = INDIGO_SECONDARY_DEVICE_ADDITIONAL_STATE
                     values_dict["uspLinkQualityIndigo"] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE
                 case "multiSwitch":
-                    usp_primary_device_main_ui_state = "uspMultiSwitchActionIndigo"
+                    # usp_primary_device_main_ui_state = "uspMultiSwitchActionIndigo"
+                    usp_primary_device_main_ui_state = "uspActionIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
                     values_dict["uspStateLeftIndigo"] = INDIGO_SECONDARY_DEVICE
@@ -1927,7 +1938,7 @@ class Plugin(indigo.PluginBase):
             else:
                 values_dict["show_update_notes_json"] = False
 
-            debug_values_dict = dict(values_dict)  # so that values_dict can be interogated in Pycharm debug
+            debug_values_dict = dict(values_dict)  # so that values_dict can be interrogated in Pycharm debug
             debug_breakpoint = 1  # so that Pycharm breakpoint can be set
 
         except Exception as exception_error:
@@ -2364,12 +2375,15 @@ class Plugin(indigo.PluginBase):
                             values_dict["SupportsEnergyMeterCurPower"] = True
                         values_dict["SupportsStatusRequest"] = True
 
+
+
                 case "multiSwitch":
                     # Multi-Switch validation and option settings
                     if not values_dict.get("uspMultiSwitchAction", False):
-                        error_message = "An Indigo Multi-Switch device requires an association to the Zigbee 'action' property"
-                        error_dict['uspMultiSwitchAction'] = error_message
-                        error_dict["showAlertText"] = error_message
+                        if values_dict["zigbee_vendor"].lower() != "tuya" and values_dict["zigbee_vendor"].lower() != "ts0012":
+                            error_message = "An Indigo Multi-Switch device requires an association to the Zigbee 'action' property"
+                            error_dict['uspMultiSwitchAction'] = error_message
+                            error_dict["showAlertText"] = error_message
 
                 case "outlet":
                     # Outlet (Socket) validation and option settings
@@ -2534,8 +2548,6 @@ class Plugin(indigo.PluginBase):
 
         return values_dict
 
-
-
     def list_device_state_menu_options(self, filter="", values_dict=None, type_id="", target_id=0):   # noqa [parameter value is not used]
         try:
             # <Option value="0">Primary Device - Main UI State</Option>
@@ -2689,6 +2701,7 @@ class Plugin(indigo.PluginBase):
 
             zigbee_devices_list.append(("-SELECT-", "-- Select Zigbee Device --"))
             for zigbee_device_ieee, zigbee_device_info in self.globals[ZD][zigbee_coordinator_ieee].items():
+                # self.logger.warning(f"list_zigbee_coordinator_devices: {zigbee_device_ieee}")  # Debug 2024-12-28
                 if ZD_INDIGO_DEVICE_ID not in zigbee_device_info:
                     continue
                 # indigo_zd_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
@@ -2960,9 +2973,6 @@ class Plugin(indigo.PluginBase):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-
-
-
     def group_action_button(self, values_dict=None, type_id="", dev_id=0):  # noqa [parameter value is not used]
         try:
             self.logger.warning(f"group_device_clone. Type_ID: {type_id}, Dev: {indigo.devices[dev_id].name}. Values Dict:\n{values_dict}")
@@ -2983,10 +2993,6 @@ class Plugin(indigo.PluginBase):
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
         return values_dict
-
-
-
-
 
     def list_zigbee_devices(self, filter="", values_dict=None, type_id="", target_id=0):  # noqa [parameter value is not used]
         try:
@@ -3069,9 +3075,13 @@ class Plugin(indigo.PluginBase):
             else:
                 # zigbee_device = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]
                 zigbee_description_user = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee].get(ZD_DESCRIPTION_USER, "-")
+                if ZD_DEFINITION not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
                 zigbee_hw = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION].get(ZD_DESCRIPTION_HW, "-")
-                zigbee_model = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_MODEL]
-                zigbee_vendor = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION][ZD_VENDOR]
+                zigbee_model = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION].get(ZD_MODEL, "Unknown")
+                zigbee_vendor = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION].get(ZD_VENDOR, "Unknown")
+                if ZD_FRIENDLY_NAME not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = f"!!! {zigbee_device_ieee}"
                 zigbee_friendly_name = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME].replace("/", " - ")
 
                 values_dict["zigbee_description_user"] = zigbee_description_user
@@ -3092,6 +3102,9 @@ class Plugin(indigo.PluginBase):
                 return
 
             dev = indigo.devices[dev_id]
+
+            if ZD_PROPERTIES not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
+                return
 
             # loop down the list of properties for this device stored from interogating the Coordinator
             for zigbee_device_property in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_PROPERTIES]:

@@ -2184,7 +2184,7 @@ class ThreadZigbeeHandler(threading.Thread):
 
     def process_property_voltage(self, zd_dev, json_payload):
         try:
-            if not zd_dev.pluginProps.get("uspVoltage", False) or not "voltage" in json_payload:
+            if not zd_dev.pluginProps.get("uspVoltage", False) or "voltage" not in json_payload:
                 return
 
             uspVoltageIndigo = zd_dev.pluginProps.get("uspVoltageIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE)
@@ -2207,8 +2207,12 @@ class ThreadZigbeeHandler(threading.Thread):
             # The "voltage" (primary) or "sensorValue" (secondary) state will be updated on the 'zd_dev_to_process' device if valid and has a changed value
 
             try:
-                voltage = int(json_payload["voltage"])
-                valid = True
+                if json_payload["voltage"] is None:
+                    # self.zigbeeLogger.warning(f"received voltage event with an invalid payload of \"None\" for device \"{zd_dev_to_process.name}\". Event discarded and ignored.")
+                    valid = False
+                else:
+                    voltage = int(json_payload["voltage"])
+                    valid = True
             except ValueError:
                 self.zigbeeLogger.warning(f"received voltage event with an invalid payload of \"{json_payload['voltage']}\" for device \"{zd_dev_to_process.name}\". Event discarded and ignored.")
                 valid = False
