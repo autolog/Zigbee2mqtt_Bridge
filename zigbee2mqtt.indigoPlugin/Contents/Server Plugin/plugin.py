@@ -2375,12 +2375,14 @@ class Plugin(indigo.PluginBase):
                             values_dict["SupportsEnergyMeterCurPower"] = True
                         values_dict["SupportsStatusRequest"] = True
 
-
-
                 case "multiSwitch":
                     # Multi-Switch validation and option settings
                     if not values_dict.get("uspMultiSwitchAction", False):
-                        if values_dict["zigbee_vendor"].lower() != "tuya" and values_dict["zigbee_vendor"].lower() != "ts0012":
+                        if values_dict["zigbee_vendor"].lower() == "tuya" and values_dict["zigbee_vendor"].lower() == "ts0012":
+                            pass
+                        elif values_dict["zigbee_vendor"].lower() != "Moes":
+                            pass
+                        else:
                             error_message = "An Indigo Multi-Switch device requires an association to the Zigbee 'action' property"
                             error_dict['uspMultiSwitchAction'] = error_message
                             error_dict["showAlertText"] = error_message
@@ -3025,6 +3027,10 @@ class Plugin(indigo.PluginBase):
             zigbee_devices_list.append(("-SELECT-", "-- Select Zigbee Device --"))
             for zigbee_device_ieee, zigbee_device_info in self.globals[ZD][zigbee_coordinator_ieee].items():
                 if ZD_INDIGO_DEVICE_ID not in zigbee_device_info:
+                    self.logger.warning(f"No Indigo Device ID for IEEE Address: " + zigbee_device_ieee)
+                    continue
+                if ZD_FRIENDLY_NAME not in zigbee_device_info:  # Fix for https://forums.indigodomo.com/viewtopic.php?t=28682
+                    self.logger.warning(f"No Friendly Name ID for IEEE Address: " + zigbee_device_ieee + ", Indigo Device Id: " + zigbee_device_info[ZD_INDIGO_DEVICE_ID])
                     continue
                 indigo_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
                 zigbee_device_filter = values_dict.get("zigbee_device_filter", "AVAILABLE")
