@@ -166,8 +166,14 @@ ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["position"] = ["blind"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["power"] = ["outlet"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["power_left"] = ["multiSocket"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["power_right"] = ["multiSocket"]
+
+ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["presence_detection_options"] = ["radarSensor"]
+ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["pir_detection"] = ["radarSensor"]
+
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["presence"] = ["button", "contactSensor", "motionSensor", "multiSensor", "presenceSensor", "outlet", "temperatureSensor", "radarSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["presence_event"] = ["radarSensor"]
+
+
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["presence-sensor"] = ["button", "contactSensor", "motionSensor", "multiSensor", "outlet", "presenceSensor", "temperatureSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["pressure"] = ["multiSensor", "temperatureSensor"]
 ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["rotations"] = ["sceneRotary"]

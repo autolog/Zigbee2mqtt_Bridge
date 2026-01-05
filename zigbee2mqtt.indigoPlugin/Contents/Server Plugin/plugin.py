@@ -138,7 +138,7 @@ class Plugin(indigo.PluginBase):
 
         self.logger = logging.getLogger("Plugin.Zigbee2mqtt")
 
-        self.globals[ZC] = dict()  # Dictionary of  Zigbee Coordinators - keyed on Indigo Device Id
+        self.globals[ZC] = dict()  # Dictionary of  Zigbee Coordinators - keyed on Indigo Device ID
         # ZC [Dict]
         #  Indigo Coordinator Id [Dict]
 
@@ -935,6 +935,7 @@ class Plugin(indigo.PluginBase):
 
     def device_start_comm(self, dev):
         try:
+
             self.logger.info(f"Starting '{dev.name}'")
             dev.stateListOrDisplayStateIdChanged()  # Ensure that latest devices.xml is being used
 
@@ -1169,8 +1170,10 @@ class Plugin(indigo.PluginBase):
             # Check if secondary device(s) required to be created and create as necessary
 
             if zigbee_coordinator_ieee not in self.globals[ZD]:
+                self.logger.warning(f"'" + zd_dev.name + "'zigbee_coordinator_ieee not in self.globals[ZD]: '" + zigbee_coordinator_ieee + "'")
                 self.globals[ZD][zigbee_coordinator_ieee] = dict()  # Zigbee Coordinator
             if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
+                self.logger.warning(f"'" + zd_dev.name + "'zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]: '" + zigbee_device_ieee + "'")
                 self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()  # Zigbee device
 
             # TODO: Consider setting image for UI depending on deviceTypeId?
@@ -1362,6 +1365,10 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyPower"] = False
                     plugin_props["zigbeePropertyPower_left"] = False
                     plugin_props["zigbeePropertyPower_right"] = False
+
+                    plugin_props["zigbeePropertyPresenceDetectionOptions"] = False
+                    plugin_props["zigbeePropertyPirDetection"] = False
+
                     plugin_props["zigbeePropertyPresence"] = False
                     plugin_props["zigbeePropertyPressure"] = False
                     plugin_props["zigbeePropertyRadar"] = False
@@ -1636,6 +1643,20 @@ class Plugin(indigo.PluginBase):
                 if pressure_state not in state_list:
                     state_list.append(pressure_state)
 
+            #  Presence Detection Options
+            if (bool(dev_plugin_props.get("uspPresenceDetectionOptions", False)) and
+                    dev_plugin_props.get("uspPresenceDetectionOptionsIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE):
+                presence_detection_options = self.getDeviceStateDictForBoolTrueFalseType("presenceDetectionOptions", "Presence Detection Options Changed", "Presence Detection Options")
+                if presence_detection_options not in state_list:
+                    state_list.append(presence_detection_options)
+
+            # PIR Detection
+            if (bool(dev_plugin_props.get("uspPirDetection", False)) and
+                    dev_plugin_props.get("uspPirDetectionIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE):
+                pir_detection_state = self.getDeviceStateDictForBoolTrueFalseType("pirDetection", "PIR Detection Changed", "PIR Detection")
+                if pir_detection_state not in state_list:
+                    state_list.append(pir_detection_state)
+
             # Presence State
             if (bool(dev_plugin_props.get("uspPresence", False)) and
                     dev_plugin_props.get("uspPresenceIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE):
@@ -1908,7 +1929,8 @@ class Plugin(indigo.PluginBase):
                                      "uspColorIndigo", "uspColorTemperatureIndigo",
                                      "uspContactIndigo", "uspEnergyIndigo", "uspHumidityIndigo", "uspIlluminanceIndigo", "uspLinkQualityIndigo", "uspOccupancyIndigo",
                                      "uspOnOffIndigo",
-                                     "uspPositionIndigo", "uspPowerIndigo", "uspPowerLeftIndigo", "uspPowerRightIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
+                                     "uspPositionIndigo", "uspPowerIndigo", "uspPowerLeftIndigo", "uspPowerRightIndigo",
+                                     "uspPresenceDetectionOptionsIndigo", "uspPirDetectionIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
                                      "uspRadarIndigo", "uspRemoteAudioIndigo", "uspRemoteADimmerIndigo", "uspRotationsIndigo",
                                      "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspStateRightIndigo", "uspStateSingleIndigo",
                                      "uspStrengthIndigo", "uspTamperIndigo", "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo"):
@@ -3018,7 +3040,7 @@ class Plugin(indigo.PluginBase):
                     if zigbee_device != "":
                         if zigbee_device not in allocated_devices:
                             allocated_devices[zigbee_device] = dev.id
-            # self.logger.warning(f"List of allocated Devices: {allocated_devices}")
+            # self.logger.warning(f"List of allocated Devices: {allocated_devices}")  # Debug
 
             # zigbee_dev = indigo.devices[target_id]
 
@@ -3026,23 +3048,24 @@ class Plugin(indigo.PluginBase):
 
             zigbee_devices_list.append(("-SELECT-", "-- Select Zigbee Device --"))
             for zigbee_device_ieee, zigbee_device_info in self.globals[ZD][zigbee_coordinator_ieee].items():
-                if ZD_INDIGO_DEVICE_ID not in zigbee_device_info:
-                    self.logger.warning(f"No Indigo Device ID for IEEE Address: " + zigbee_device_ieee)
-                    continue
-                if ZD_FRIENDLY_NAME not in zigbee_device_info:  # Fix for https://forums.indigodomo.com/viewtopic.php?t=28682
-                    self.logger.warning(f"No Friendly Name ID for IEEE Address: " + zigbee_device_ieee + ", Indigo Device Id: " + zigbee_device_info[ZD_INDIGO_DEVICE_ID])
-                    continue
-                indigo_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
-                zigbee_device_filter = values_dict.get("zigbee_device_filter", "AVAILABLE")
-                if zigbee_device_filter == "AVAILABLE" and indigo_dev_id != 0 and indigo_dev_id != target_id:  # Not the current device
-                    continue  # As filtering on Zigbee devices available to be allocated and this device is already allocated to an Indigo device
-                elif zigbee_device_filter == "ALLOCATED" and indigo_dev_id == 0:
-                    continue  # As filtering on Zigbee devices already allocated to Indigo and this device isn't yet allocated to an Indigo device
-                # Assume Filter set to "ALL" - so show all zigbee devices
+                if zigbee_device_ieee != "":
+                    if ZD_INDIGO_DEVICE_ID not in zigbee_device_info:
+                        self.logger.warning(f"No Indigo Device ID for IEEE Address: '" + zigbee_device_ieee + "'" + ", Length of 'zigbee_device_info': " +  str(len(zigbee_device_info)) + ", Length of 'self.globals[ZD][zigbee_coordinator_ieee]': " + str(len(self.globals[ZD][zigbee_coordinator_ieee])))
+                        continue
+                    if ZD_FRIENDLY_NAME not in zigbee_device_info:  # Fix for https://forums.indigodomo.com/viewtopic.php?t=28682
+                        self.logger.warning(f"No Friendly Name ID for IEEE Address: " + zigbee_device_ieee + ", Indigo Device Id: " + zigbee_device_info[ZD_INDIGO_DEVICE_ID])
+                        continue
+                    indigo_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
+                    zigbee_device_filter = values_dict.get("zigbee_device_filter", "AVAILABLE")
+                    if zigbee_device_filter == "AVAILABLE" and indigo_dev_id != 0 and indigo_dev_id != target_id:  # Not the current device
+                        continue  # As filtering on Zigbee devices available to be allocated and this device is already allocated to an Indigo device
+                    elif zigbee_device_filter == "ALLOCATED" and indigo_dev_id == 0:
+                        continue  # As filtering on Zigbee devices already allocated to Indigo and this device isn't yet allocated to an Indigo device
+                    # Assume Filter set to "ALL" - so show all zigbee devices
 
-                # self.logger.info(f"Zigbee Device List Entry: {zigbee_device_info[ZD_FRIENDLY_NAME]} [{zigbee_device_ieee}]")
-                zigbee_devices_list.append((zigbee_device_ieee, zigbee_device_info[ZD_FRIENDLY_NAME]))
-                # already_allocated = False
+                    # self.logger.info(f"Zigbee Device List Entry: {zigbee_device_info[ZD_FRIENDLY_NAME]} [{zigbee_device_ieee}]")
+                    zigbee_devices_list.append((zigbee_device_ieee, zigbee_device_info[ZD_FRIENDLY_NAME]))
+                    # already_allocated = False
 
             if len(zigbee_devices_list) > 1:
                 return sorted(zigbee_devices_list, key=lambda name: name[1].lower())  # sort by Zigbee device name
@@ -3242,21 +3265,21 @@ class Plugin(indigo.PluginBase):
                             values_dict["zigbeePropertyContact"] = False
 
                     case "energy":
-                        zigbee_device_property = "energy"
+                        # zigbee_device_property = "energy"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyEnergy"] = True
                         else:
                             values_dict["zigbeePropertyEnergy"] = False
 
                     case "humidity":
-                        zigbee_device_property = "humidity"
+                        # zigbee_device_property = "humidity"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyHumidity"] = True
                         else:
                             values_dict["zigbeePropertyHumidity"] = False
 
                     case "illuminance" | "illuminance_lux":
-                        zigbee_device_property = "illuminance"
+                        # zigbee_device_property = "illuminance"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyIlluminance"] = True
                         else:
@@ -3346,28 +3369,42 @@ class Plugin(indigo.PluginBase):
                                 values_dict["zigbeePropertyStateRight"] = False
 
                     case "power":
-                        zigbee_device_property = "power"
+                        # zigbee_device_property = "power"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPower"] = True
                         else:
                             values_dict["zigbeePropertyPower"] = False
 
                     case "power_left":
-                        zigbee_device_property = "power_left"
+                        # zigbee_device_property = "power_left"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPowerLeft"] = True
                         else:
                             values_dict["zigbeePropertyPowerLeft"] = False
 
                     case "power_right":
-                        zigbee_device_property = "power_right"
+                        # zigbee_device_property = "power_right"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPowerRight"] = True
                         else:
                             values_dict["zigbeePropertyPowerRight"] = False
 
+                    case "presence_detection_options":
+                        # zigbee_device_property = "presenceDetectionOptions"
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                            values_dict["zigbeePropertyPresenceDetectionOptions"] = True
+                        else:
+                            values_dict["zigbeePropertyPresenceDetectionOptions"] = False
+
+                    case "pir_detection":
+                        # zigbee_device_property = "pirDetection"
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                            values_dict["zigbeePropertyPirDetection"] = True
+                        else:
+                            values_dict["zigbeePropertyPirDetection"] = False
+
                     case "presence":
-                        zigbee_device_property = "presence"
+                        # zigbee_device_property = "presence"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPresence"] = True
                         else:
@@ -3398,7 +3435,7 @@ class Plugin(indigo.PluginBase):
                             values_dict["zigbeePropertyTamper"] = False
 
                     case "temperature" | "device_temperature":
-                        zigbee_device_property = "temperature"
+                        # zigbee_device_property = "temperature"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyTemperature"] = True
                         else:
@@ -3417,7 +3454,7 @@ class Plugin(indigo.PluginBase):
                                 values_dict["zigbeePropertyVibration"] = False
 
                     case "voltage":
-                        zigbee_device_property = "voltage"
+                        # zigbee_device_property = "voltage"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyVoltage"] = True
                         else:

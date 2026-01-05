@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Zigbee2mqtt - Plugin © Autolog 2023
+# Zigbee2mqtt - Plugin © Autolog 2023 - 2026
 #
 
 try:
@@ -81,9 +81,9 @@ class ThreadZigbeeHandler(threading.Thread):
                         self.handle_zigbee_device_topics(zc_dev_id, mqtt_topics, mqtt_topics_list, mqtt_payload)
                     elif zigbee_process_command == HANDLE_ZIGBEE_COORDINATOR_MQTT_TOPIC:
                         # if self.globals[DEBUG]: self.zigbeeLogger.error(f"=========== > ZIGBEE COORDINATOR TOPIC: {mqtt_topics}")
-                        self.handle_zigebee_coordinator_topics(zc_dev_id, mqtt_topics, mqtt_topics_list, mqtt_payload)
+                        self.handle_zigbee_coordinator_topics(zc_dev_id, mqtt_topics, mqtt_topics_list, mqtt_payload)
                     elif zigbee_process_command == HANDLE_ZIGBEE_GROUP_MQTT_TOPIC:
-                        self.handle_zigebee_group_topics(zc_dev_id, mqtt_topics, mqtt_topics_list, mqtt_payload)
+                        self.handle_zigbee_group_topics(zc_dev_id, mqtt_topics, mqtt_topics_list, mqtt_payload)
                 except queue.Empty:
                     pass
                 except Exception as exception_error:
@@ -96,7 +96,7 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def handle_zigebee_coordinator_topics(self, zc_dev_id, topics, topics_list, payload):
+    def handle_zigbee_coordinator_topics(self, zc_dev_id, topics, topics_list, payload):
         # print(f"Payload Type: {type(payload)}")
         try:
             # self.zigbeeLogger.error(f"Zigbee Coordinator: Topic={topics}")
@@ -104,13 +104,13 @@ class ThreadZigbeeHandler(threading.Thread):
             coordinator_topic = topics_list[2]
             # self.zigbeeLogger.error(f"Zigbee Coordinator: Coordinator Topic={coordinator_topic}")
             if coordinator_topic == "config":
-                self.handle_zigebee_coordinator_topic_config(zc_dev_id, topics, topics_list, payload)
+                self.handle_zigbee_coordinator_topic_config(zc_dev_id, topics, topics_list, payload)
             elif coordinator_topic == "devices":
-                self.handle_zigebee_coordinator_topic_devices(zc_dev_id, topics, topics_list, payload)
+                self.handle_zigbee_coordinator_topic_devices(zc_dev_id, topics, topics_list, payload)
             elif coordinator_topic == "extensions":
                 pass
             elif coordinator_topic == "groups":
-                self.handle_zigebee_coordinator_topic_groups(zc_dev_id, topics, topics_list, payload)
+                self.handle_zigbee_coordinator_topic_groups(zc_dev_id, topics, topics_list, payload)
             elif coordinator_topic == "info":
                 pass
             elif coordinator_topic == "logging":
@@ -121,14 +121,14 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def handle_zigebee_coordinator_topic_config(self, zc_dev_id, topics, topics_list, payload):
+    def handle_zigbee_coordinator_topic_config(self, zc_dev_id, topics, topics_list, payload):
         try:
             # json_payload = json.loads(payload)
             pass
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def handle_zigebee_coordinator_topic_devices(self, zc_dev_id, topics, topics_list, payload):
+    def handle_zigbee_coordinator_topic_devices(self, zc_dev_id, topics, topics_list, payload):
         try:
             zc_dev = indigo.devices[zc_dev_id]
             if not zc_dev.enabled:
@@ -160,7 +160,8 @@ class ThreadZigbeeHandler(threading.Thread):
                         if self.globals[DEBUG]: self.zigbeeLogger.error(f"ZIGBEE COORDINATORS: {self.globals[ZC_TO_INDIGO_ID]}")
                     coordinator_dev.updateStateOnServer("topicFriendlyName", "bridge")
 
-                elif (zigbee_device['type'] == "EndDevice" or zigbee_device['type'] == "Router") and zigbee_coordinator_ieee != "":
+            for zigbee_device in json_payload:
+                if (zigbee_device['type'] == "EndDevice" or zigbee_device['type'] == "Router") and zigbee_coordinator_ieee != "":
 
                     zigbee_device_ieee = zigbee_device['ieee_address']
                     if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
@@ -172,6 +173,9 @@ class ThreadZigbeeHandler(threading.Thread):
 
                     # Now store rest of the device details from the coordinator Bridge mqtt message in the global store
                     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME] = zigbee_device['friendly_name']
+
+                    # self.zigbeeLogger.warning(f"Zigbee Device: IEEE Address={zigbee_device['ieee_address']}, FriendlyName={zigbee_device['friendly_name']}")
+                    # Debug code above
 
                     if self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID] != 0:
                         zd_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
@@ -391,7 +395,7 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def handle_zigebee_coordinator_topic_groups(self, zc_dev_id, topics, topics_list, payload):
+    def handle_zigbee_coordinator_topic_groups(self, zc_dev_id, topics, topics_list, payload):
         try:
             zc_dev = indigo.devices[zc_dev_id]
             if not zc_dev.enabled:
@@ -430,7 +434,7 @@ class ThreadZigbeeHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def handle_zigebee_group_topics(self, zc_dev_id, topics, topics_list, payload):
+    def handle_zigbee_group_topics(self, zc_dev_id, topics, topics_list, payload):
         try:
             group_friendly_name = topics_list[1]
             zc_dev = indigo.devices[zc_dev_id]
@@ -456,7 +460,7 @@ class ThreadZigbeeHandler(threading.Thread):
             try:
                 json_payload = json.loads(payload)
             except:
-                self.zigbeeLogger.error(f"handle_zigebee_group_topics. Invalid JSON: Topic: {topics}, payload: {payload}")
+                self.zigbeeLogger.error(f"handle_zigbee_group_topics. Invalid JSON: Topic: {topics}, payload: {payload}")
                 return
 
             self.key_value_lists = dict()
@@ -531,6 +535,9 @@ class ThreadZigbeeHandler(threading.Thread):
                     zc_dev.setErrorStateOnServer(None)
                 return
             elif topics_list[last_topic_index] in ["set", "get", "action"]:  # removes any topics ending in '/set' or '/get' or '/action'. Note: '/action' is added if Home Assistant Integration is enabled in Zigbee2mqtt settings
+                return
+            elif topics_list[last_topic_index] in ["report_mode", "reporting_interval", "reporting_threshold", "sampling", "sampling_period"]:  # removes any topics ending in '/set' or '/get' or '/action'. Note: '/action' is added if Home Assistant Integration is enabled in Zigbee2mqtt settings
+                # Fix for Aqara FP300-1 which has extra topics that we want to ignore
                 return
 
             try:
@@ -2011,7 +2018,7 @@ class ThreadZigbeeHandler(threading.Thread):
                         if not bool(zd_dev.pluginProps.get("hidePresenceBroadcast", False)):
                             self.zigbeeLogger.info(f"received \"{zd_dev.name}\" radar sensor '{on_off_state_ui}', presence '{presence}', presence event '{presence_event}'")
 
-            # Check for Radar [Presence & Presence Event] e.g. Aqara FP1
+            # Check for just Presence
             elif "presence" in json_payload:
                 if zd_dev.pluginProps.get("uspPresence", False):
                     try:
@@ -2025,6 +2032,23 @@ class ThreadZigbeeHandler(threading.Thread):
                         self.key_value_lists[zd_dev.id].append({'key': 'presence', 'value': presence})
                         if not bool(zd_dev.pluginProps.get("hidePresenceBroadcast", False)):
                             self.zigbeeLogger.info(f"received \"{zd_dev.name}\" radar sensor '{on_off_state_ui}', presence '{presence}'")
+
+            if "presence_detection_options" in json_payload:
+                if zd_dev.pluginProps.get("uspPresenceDetectionOptions", False):
+                    valid_values = {"both", "mmwave", "pir"}
+                    presence_detection_options_state = (value if (value := json_payload.get("presence_detection_options")) in valid_values else "Unknown")
+
+                    self.key_value_lists[zd_dev.id].append({'key': 'presenceDetectionOptions', 'value': presence_detection_options_state})
+
+            if "pir_detection" in json_payload:
+                if zd_dev.pluginProps.get("uspPirDetection", False):
+                    try:
+                        pir_detection_state = bool(json_payload["pir_detection"])  # Can be null on Zigbee2mqtt startup
+                    except ValueError:
+                        pir_detection_state = False
+                    self.key_value_lists[zd_dev.id].append({'key': 'pirDetection', 'value': pir_detection_state})
+                    if not bool(zd_dev.pluginProps.get("hidePirDetectionBroadcast", False)):
+                        self.zigbeeLogger.info(f"received \"{zd_dev.name}\" PIR detection '{pir_detection_state}'")
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement

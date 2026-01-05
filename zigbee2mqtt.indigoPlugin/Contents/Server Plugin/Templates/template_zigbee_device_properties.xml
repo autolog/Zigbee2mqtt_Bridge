@@ -40,6 +40,10 @@
     <Field id="zigbeePropertyPower" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPowerLeft" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPowerRight" type="checkbox" defaultValue="false" hidden="true" />
+
+    <Field id="zigbeePropertyPresenceDetectionOptions" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyPirDetection" type="checkbox" defaultValue="false" hidden="true" />
+
     <Field id="zigbeePropertyPresence" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPresenceEvent" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyPressure" type="checkbox" defaultValue="false" hidden="true" />
@@ -782,6 +786,52 @@
     <Field id="separator-uspPowerRight" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyPowerRight" visibleBindingValue="true"/>
 
+
+    <!-- Presence Detection Options-->
+    <Field id="space-header-uspPresenceDetectionOptions" type="label"
+           visibleBindingId="zigbeePropertyPresenceDetectionOptions" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPresenceDetectionOptions" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPresenceDetectionOptions" visibleBindingValue="true">
+        <Label>Presence</Label>
+    </Field>
+    <Field id="uspPresenceDetectionOptions" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyPresenceDetectionOptions" visibleBindingValue="true">
+        <Label>Presence:</Label>
+        <Description>Associated with Zigbee 'presence_detection_options' Property</Description>
+    </Field>
+<!--    <Field id="uspPresenceDetectionOptionsIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspPresenceDetectionOptionsIndigo" type="menu" defaultValue="0" visibleBindingId="uspPresenceDetectionOptions" visibleBindingValue="true">
+<!--        enabledBindingId="uspPresenceDetectionOptionsIndigoEnabled">-->
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="presenceSensor" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspPresenceDetectionOptions" type="label"
+           visibleBindingId="zigbeePropertyPresenceDetectionOptions" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPresenceDetectionOptions" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPresenceDetectionOptions" visibleBindingValue="true"/>
+
+    <!-- PIR Detection -->
+    <Field id="space-header-uspPirDetection" type="label"
+           visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspPirDetection" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true">
+        <Label>Presence</Label>
+    </Field>
+    <Field id="uspPirDetection" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true">
+        <Label>Presence:</Label>
+        <Description>Associated with Zigbee 'presence' Property</Description>
+    </Field>
+<!--    <Field id="uspPirDetectionIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
+    <Field id="uspPirDetectionIndigo" type="menu" defaultValue="0" visibleBindingId="uspPirDetection" visibleBindingValue="true">
+<!--        enabledBindingId="uspPirDetectionIndigoEnabled">-->
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="presenceSensor" method="list_device_state_menu_options"/>
+     </Field>
+    <Field id="space-uspPirDetection" type="label"
+           visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspPirDetection" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true"/>
 
     <!-- Presence -->
     <Field id="space-header-uspPresence" type="label"
@@ -1544,6 +1594,14 @@
     </Field>
     <Field id="space-hidePowerBroadcast" type="label"
            visibleBindingId="uspPower" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Pir Detection -->
+    <Field id="hidePirDetectionBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspPirDetection" visibleBindingValue="true">
+        <Description>Hide pir detection message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hidePirDetectionBroadcast" type="label"
+           visibleBindingId="uspPirDetection" visibleBindingValue="true"><Label/></Field>
 
     <!-- Presence -->
     <Field id="hidePresenceBroadcast" type="checkbox" defaultValue="false"
