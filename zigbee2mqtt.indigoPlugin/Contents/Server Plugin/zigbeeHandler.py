@@ -341,7 +341,7 @@ class ThreadZigbeeHandler(threading.Thread):
             # # TESTING Aqara E1 single gang switch (with neutral) - ... END
 
             # TESTING Tuya Dimmer Module - START ...
-            test_tuya_dimmer_module = True
+            test_tuya_dimmer_module = False
             if test_tuya_dimmer_module:
                 tuya_dimmer_module_ieee = "0x123456789"
                 zigbee_device_ieee = tuya_dimmer_module_ieee
@@ -1678,7 +1678,8 @@ class ThreadZigbeeHandler(threading.Thread):
                     else:
                         return
                     secondary_dev_id = zd_dev.pluginProps.get(secondary_device_id_property_key, 0)
-                    # TODO: Check for zero
+                    if secondary_dev_id == 0:
+                        return
                     secondary_dev = indigo.devices[secondary_dev_id]
                     if not secondary_dev.enabled:
                         return
