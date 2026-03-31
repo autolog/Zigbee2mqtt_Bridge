@@ -23,7 +23,16 @@ import sys
 import threading
 import traceback
 
+from config_validation import ConfigValidationMixin
 from constants import *
+from processor_helpers import ProcessorHelpersMixin
+from processors import (
+    SensorProcessorMixin,
+    StateProcessorMixin,
+    DimmerProcessorMixin,
+    ActionProcessorMixin,
+    SpecializedProcessorMixin,
+)
 
 
 def _no_image():
@@ -34,7 +43,14 @@ def _no_image():
 
 
 # noinspection PyPep8Naming
-class ThreadZigbeeHandler(threading.Thread):
+class ThreadZigbeeHandler(threading.Thread,
+                          ConfigValidationMixin,
+                          ProcessorHelpersMixin,
+                          SensorProcessorMixin,
+                          StateProcessorMixin,
+                          DimmerProcessorMixin,
+                          ActionProcessorMixin,
+                          SpecializedProcessorMixin):
 
     # This class handles Zigbee Coordinator processing
 
@@ -459,7 +475,7 @@ class ThreadZigbeeHandler(threading.Thread):
 
             try:
                 json_payload = json.loads(payload)
-            except:
+            except (ValueError, json.JSONDecodeError):
                 self.zigbeeLogger.error(f"handle_zigbee_group_topics. Invalid JSON: Topic: {topics}, payload: {payload}")
                 return
 
@@ -542,11 +558,11 @@ class ThreadZigbeeHandler(threading.Thread):
 
             try:
                 json_payload = json.loads(payload)
-            except:
+            except (ValueError, json.JSONDecodeError):
                 if payload == "":
                     self.zigbeeLogger.error(f"handle_zigbee_device_topics. Invalid JSON: Topic: {topics}, payload is missing")
                 else:
-                    self.zigbeeLogger.error(f"handle_zigbee_device_topics. JSON payload missing: Topic: {topics}")
+                    self.zigbeeLogger.error(f"handle_zigbee_device_topics. Invalid JSON: Topic: {topics}, payload: {payload}")
                 return
 
             if "device" not in json_payload or "ieeeAddr" not in json_payload["device"]:
@@ -610,6 +626,12 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_link_quality(zd_dev, json_payload)
                     self.process_property_voltage(zd_dev, json_payload)
 
+                case "waterLeakSensor":
+                    self.process_property_battery(zd_dev, json_payload)
+                    self.process_property_water_leak(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
+                    self.process_property_voltage(zd_dev, json_payload)
+
                 case "dimmer":
                     self.process_property_brightness(zd_dev, json_payload)
                     self.process_property_color_mode(zd_dev, json_payload)
@@ -626,8 +648,12 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_voltage(zd_dev, json_payload)
 
                 case "illuminanceSensor":
-                    # TODO: Work out how to handle illuminance when it is the primary device and not just an additional state
-                    pass
+                    self.process_property_battery(zd_dev, json_payload)
+                    self.process_property_humidity(zd_dev, json_payload)
+                    self.process_property_illuminance(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
+                    self.process_property_occupancy(zd_dev, json_payload)
+                    self.process_property_temperature(zd_dev, json_payload)
 
                 case "motionSensor":
                     self.process_property_battery(zd_dev, json_payload)
@@ -679,13 +705,19 @@ class ThreadZigbeeHandler(threading.Thread):
                     self.process_property_voltage(zd_dev, json_payload)
 
                 case "presenceSensor":
-                    pass
+                    # TODO: Implement process_property_presence for standalone presence sensors
+                    self.process_property_battery(zd_dev, json_payload)
+                    self.process_property_link_quality(zd_dev, json_payload)
 
                 case "radarSensor":
+                    self.process_property_battery(zd_dev, json_payload)
+                    self.process_property_humidity(zd_dev, json_payload)
                     self.process_property_illuminance(zd_dev, json_payload)
                     self.process_property_radar(zd_dev, json_payload)
                     self.process_property_link_quality(zd_dev, json_payload)
+                    self.process_property_target_distance(zd_dev, json_payload)
                     self.process_property_temperature(zd_dev, json_payload)
+                    self.process_property_voltage(zd_dev, json_payload)
 
                 case "remoteAudio":
                     # DEBUG self.zigbeeLogger.error(f"{zd_dev.name}: Message Count = {self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_MESSAGE_COUNT]}")
@@ -1566,12 +1598,12 @@ class ThreadZigbeeHandler(threading.Thread):
             # The "illuminance" (primary) or "sensorValue" (secondary) state will be updated on the 'zd_dev_to_process' device if valid and has a changed value
 
             try:
-                if "illuminance_lux" in json_payload:
-                    illuminance = float(json_payload["illuminance_lux"])
-                else:
-                    illuminance = float(json_payload["illuminance"])
+                raw_value = json_payload.get("illuminance_lux", json_payload.get("illuminance"))
+                if raw_value is None:
+                    return
+                illuminance = float(raw_value)
                 valid = True
-            except ValueError:
+            except (ValueError, TypeError):
                 self.zigbeeLogger.warning(f"received illuminance event with an invalid payload of \"{json_payload}\" for device \"{zd_dev_to_process.name}\". Event discarded and ignored.")
                 valid = False
 

@@ -66,6 +66,7 @@
     <Field id="zigbeePropertyStateSingle" type="checkbox" defaultValue="false" hidden="true" />
 
     <Field id="zigbeePropertyStrength" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyTargetDistance" type="checkbox" defaultValue="false" hidden="true" />
 
     <Field id="zigbeePropertySwitchAction" type="checkbox" defaultValue="false" hidden="true" />
 
@@ -74,6 +75,7 @@
     <Field id="zigbeePropertyValve" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyVibration" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyVoltage" type="checkbox" defaultValue="false" hidden="true" />
+    <Field id="zigbeePropertyWaterLeak" type="checkbox" defaultValue="false" hidden="true" />
     <Field id="zigbeePropertyRefresh" type="checkbox" defaultValue="false" hidden="true" />
 
 <!-- Indigo Properties   -->
@@ -792,11 +794,11 @@
            visibleBindingId="zigbeePropertyPresenceDetectionOptions" visibleBindingValue="true"><Label/></Field>
     <Field id="header-uspPresenceDetectionOptions" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
             visibleBindingId="zigbeePropertyPresenceDetectionOptions" visibleBindingValue="true">
-        <Label>Presence</Label>
+        <Label>Presence Detection Options</Label>
     </Field>
     <Field id="uspPresenceDetectionOptions" type="checkbox" defaultValue="false"
             visibleBindingId="zigbeePropertyPresenceDetectionOptions" visibleBindingValue="true">
-        <Label>Presence:</Label>
+        <Label>Presence Detection Options:</Label>
         <Description>Associated with Zigbee 'presence_detection_options' Property</Description>
     </Field>
 <!--    <Field id="uspPresenceDetectionOptionsIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
@@ -815,23 +817,58 @@
            visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true"><Label/></Field>
     <Field id="header-uspPirDetection" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
             visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true">
-        <Label>Presence</Label>
+        <Label>PIR Detection</Label>
     </Field>
     <Field id="uspPirDetection" type="checkbox" defaultValue="false"
             visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true">
-        <Label>Presence:</Label>
-        <Description>Associated with Zigbee 'presence' Property</Description>
+        <Label>PIR Detection:</Label>
+        <Description>Associated with Zigbee 'pir_detection' Property</Description>
     </Field>
 <!--    <Field id="uspPirDetectionIndigoEnabled" type="checkbox" defaultValue="true" hidden="true"/>-->
-    <Field id="uspPirDetectionIndigo" type="menu" defaultValue="0" visibleBindingId="uspPirDetection" visibleBindingValue="true">
+    <Field id="uspPirDetectionIndigo" type="menu" defaultValue="1" visibleBindingId="uspPirDetection" visibleBindingValue="true">
 <!--        enabledBindingId="uspPirDetectionIndigoEnabled">-->
         <Label>Indigo Device / State:</Label>
-        <List class="self" filter="presenceSensor" method="list_device_state_menu_options"/>
+        <List class="self" filter="pirDetection" method="list_device_state_menu_options"/>
      </Field>
     <Field id="space-uspPirDetection" type="label"
            visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true"><Label/></Field>
     <Field id="separator-uspPirDetection" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyPirDetection" visibleBindingValue="true"/>
+
+    <!-- Target Distance -->
+    <Field id="space-header-uspTargetDistance" type="label"
+           visibleBindingId="zigbeePropertyTargetDistance" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspTargetDistance" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyTargetDistance" visibleBindingValue="true">
+        <Label>Target Distance</Label>
+    </Field>
+    <Field id="uspTargetDistance" type="checkbox" defaultValue="false"
+           visibleBindingId="zigbeePropertyTargetDistance" visibleBindingValue="true">
+        <Label>Target Distance:</Label>
+        <Description>Associated with Zigbee 'target_distance' Property</Description>
+    </Field>
+    <Field id="uspTargetDistanceIndigo" type="menu" defaultValue="1" visibleBindingId="uspTargetDistance" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="targetDistance" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="uspTargetDistanceDecimalPlaces" type="menu" defaultValue="2"
+           visibleBindingId="uspTargetDistance" visibleBindingValue="true">
+        <Label>Target Distance Decimal Places:</Label>
+        <List>
+            <Option value="0">None [e.g. 1]</Option>
+            <Option value="1">One [e.g. 1.2]</Option>
+            <Option value="2">Two [e.g. 1.23]</Option>
+            <Option value="3">Three [e.g. 1.234]</Option>
+        </List>
+    </Field>
+    <Field id="uspTargetDistanceUnits" type="textfield" defaultValue="m"
+           visibleBindingId="uspTargetDistance" visibleBindingValue="true">
+        <Label>Target Distance Units:</Label>
+    </Field>
+    <Field id="space-uspTargetDistance" type="label"
+           visibleBindingId="zigbeePropertyTargetDistance" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspTargetDistance" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyTargetDistance" visibleBindingValue="true"/>
 
     <!-- Presence -->
     <Field id="space-header-uspPresence" type="label"
@@ -1409,6 +1446,27 @@
     <Field id="separator-uspVibration" type="separator" alwaysUseInDialogHeightCalc="true"
            visibleBindingId="zigbeePropertyVibration" visibleBindingValue="true"/>
 
+    <!-- Water Leak -->
+    <Field id="space-header-uspWaterLeak" type="label"
+           visibleBindingId="zigbeePropertyWaterLeak" visibleBindingValue="true"><Label/></Field>
+    <Field id="header-uspWaterLeak" type="label" alwaysUseInDialogHeightCalc="true" fontColor="orange"
+            visibleBindingId="zigbeePropertyWaterLeak" visibleBindingValue="true">
+        <Label>Water Leak</Label>
+    </Field>
+    <Field id="uspWaterLeak" type="checkbox" defaultValue="false"
+            visibleBindingId="zigbeePropertyWaterLeak" visibleBindingValue="true">
+        <Label>Water Leak:</Label>
+        <Description>Associated with Zigbee 'water_leak' Property</Description>
+    </Field>
+    <Field id="uspWaterLeakIndigo" type="menu" defaultValue="0" visibleBindingId="uspWaterLeak" visibleBindingValue="true">
+        <Label>Indigo Device / State:</Label>
+        <List class="self" filter="water_leak" method="list_device_state_menu_options"/>
+    </Field>
+    <Field id="space-uspWaterLeak" type="label"
+           visibleBindingId="zigbeePropertyWaterLeak" visibleBindingValue="true"><Label/></Field>
+    <Field id="separator-uspWaterLeak" type="separator" alwaysUseInDialogHeightCalc="true"
+           visibleBindingId="zigbeePropertyWaterLeak" visibleBindingValue="true"/>
+
     <!-- Voltage -->
     <Field id="space-header-uspVoltage" type="label"
            visibleBindingId="zigbeePropertyVoltage" visibleBindingValue="true"><Label/></Field>
@@ -1760,5 +1818,13 @@
     </Field>
     <Field id="space-hideVoltageBroadcast" type="label"
            visibleBindingId="uspVoltage" visibleBindingValue="true"><Label/></Field>
+
+    <!-- Water Leak -->
+    <Field id="hideWaterLeakBroadcast" type="checkbox" defaultValue="false"
+        visibleBindingId="uspWaterLeak" visibleBindingValue="true">
+        <Description>Hide water leak sensor message broadcasts in Event Log</Description>
+    </Field>
+    <Field id="space-hideWaterLeakBroadcast" type="label"
+           visibleBindingId="uspWaterLeak" visibleBindingValue="true"><Label/></Field>
 
 </Template>

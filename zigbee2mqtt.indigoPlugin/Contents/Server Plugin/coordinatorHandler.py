@@ -69,9 +69,6 @@ class ThreadCoordinatorHandler(threading.Thread):
 
             self.bad_disconnection = False
 
-            self.publish_to_zigbee2mqtt = None  # TODO: WHAT IS THIS???
-            self.subscribe_to_zigbee2mqtt = None  # TODO: WHAT IS THIS???
-
             self.mqtt_message_sequence = 0
             
         except Exception as exception_error:
@@ -146,9 +143,8 @@ class ThreadCoordinatorHandler(threading.Thread):
                 while not self.threadStop.is_set():
                     try:
                         time.sleep(2)
-                    except self.threadStop:
-                        pass  # Optionally catch the StopThread exception and do any needed cleanup.
-                        self.mqtt_client.loop_stop()
+                    except Exception:
+                        pass  # Ignore any sleep interruptions; loop condition handles shutdown
             else:
                 pass
                 # TODO: At this point, queue a recovery for n seconds time
@@ -171,9 +167,6 @@ class ThreadCoordinatorHandler(threading.Thread):
             subscription_topic = f"{self.globals[ZC][self.zc_dev_id][MQTT_ROOT_TOPIC]}/#"
             if self.globals[DEBUG]: self.mqttHandlerLogger.warning(f"ZIGBEE2MQTT: Subscription Topic={subscription_topic}")
             self.mqtt_client.subscribe(subscription_topic, qos=1)
-
-            self.globals[ZC][self.zc_dev_id][MQTT_SUBSCRIBE_TO_ZIGBEE2MQTT] = self.subscribe_to_zigbee2mqtt  # TODO: WHAT IS THIS??? True / false for subscribing?
-            self.globals[ZC][self.zc_dev_id][MQTT_PUBLISH_TO_ZIGBEE2MQTT] = self.publish_to_zigbee2mqtt  # TODO: WHAT IS THIS???
 
             self.globals[ZC][self.zc_dev_id][MQTT_CONNECTED] = True
             zc_dev = indigo.devices[self.zc_dev_id]

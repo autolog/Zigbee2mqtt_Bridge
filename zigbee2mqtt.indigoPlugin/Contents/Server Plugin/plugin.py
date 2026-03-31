@@ -14,7 +14,6 @@
 import base64
 from cryptography.fernet import Fernet  # noqa
 from cryptography.hazmat.primitives import hashes  # noqa
-from cryptography.hazmat.primitives import hashes  # noqa
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC  # noqa
 from datetime import datetime
 import json
@@ -39,6 +38,16 @@ from constants import *
 from coordinatorHandler import ThreadCoordinatorHandler
 from zigbeeHandler import ThreadZigbeeHandler
 
+# Mixin imports for refactored plugin modules
+from plugin_actions import ActionsMixin
+from plugin_color_control import ColorControlMixin
+from plugin_config_ui import ConfigUIMixin
+from plugin_device_lifecycle import DeviceLifecycleMixin
+from plugin_list_generators import ListGeneratorsMixin
+from plugin_mqtt import MQTTMixin
+from plugin_secondary_devices import SecondaryDevicesMixin
+from plugin_state_list import StateListMixin
+
 import_errors = []
 try:
     import paho.mqtt.client as mqtt
@@ -60,42 +69,19 @@ __build__     = "unused"
 __title__     = "Zigbee2mqtt Bridge Plugin for Indigo"
 __version__   = "unused"
 
-# https://stackoverflow.com/questions/2490334/simple-way-to-encode-a-string-according-to-a-password/66728699#66728699
-
-
-def encode(unencrypted_password):
-    # print(f"Python 3 Encode, Argument: Unencrypted Password = {unencrypted_password}")
-
-    internal_password = MQTT_ENCRYPTION_PASSWORD_PYTHON_3  # Byte string
-    # print(f"Python 3 Encode - Internal Password: {internal_password}")
-
-    salt = os.urandom(16)
-    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=390000)
-    key = base64.urlsafe_b64encode(kdf.derive(internal_password))
-    # print(f"Python 3 Encode - Key: {key}")
-
-    f = Fernet(key)
-
-    unencrypted_password = unencrypted_password.encode()  # str -> b
-    encrypted_password = f.encrypt(unencrypted_password)
-    # print(f"Python 3 Encode - Encrypted Password: {encrypted_password}")
-
-    return key, encrypted_password
-
-
-def decode(key, encrypted_password):
-    # print(f"Python 3 Decode, Arguments: Key='{key}', Encrypted Password='{encrypted_password}'")
-
-    f = Fernet(key)
-    unencrypted_password = f.decrypt(encrypted_password)
-
-    # print(f"Python 3 Decode: Unencrypted Password = {unencrypted_password}")
-    
-    return unencrypted_password
+from cryptography_support import decode, encode
 
 
 # noinspection PyPep8Naming
-class Plugin(indigo.PluginBase):
+class Plugin(indigo.PluginBase,
+             ActionsMixin,
+             ColorControlMixin,
+             ConfigUIMixin,
+             DeviceLifecycleMixin,
+             ListGeneratorsMixin,
+             MQTTMixin,
+             SecondaryDevicesMixin,
+             StateListMixin):
 
     def __init__(self, plugin_id, plugin_display_name, plugin_version, plugin_prefs):
         super(Plugin, self).__init__(plugin_id, plugin_display_name, plugin_version, plugin_prefs)
@@ -529,7 +515,7 @@ class Plugin(indigo.PluginBase):
                                 new_brightness = 100
                             brighten_by_ui = f"{brighten_by}%"
                             new_brightness_ui = f"{new_brightness}%"
-                            topic_payload = f'{{"position": {new_brightness_ui}}}'
+                            topic_payload = f'{{"position": {new_brightness}}}'
                             self.publish_zigbee_topic(zigbee_coordinator_ieee, friendly_name, topic, topic_payload)
                             self.logger.info(f"sending open by {brighten_by_ui} to {new_brightness_ui}\" to \"{dev.name}\"")
                         else:
@@ -843,6 +829,8 @@ class Plugin(indigo.PluginBase):
                     pass
                 case "remoteDimmer":
                     pass
+                case "sceneRotary":
+                    pass
                 case "switch":
                     pass
                 case "temperatureSensor":
@@ -850,6 +838,8 @@ class Plugin(indigo.PluginBase):
                 case "thermostat":
                     pass
                 case "vibrationSensor":
+                    pass
+                case "waterLeakSensor":
                     pass
                 case "accelerationSensorSecondary":
                     pass
@@ -1123,7 +1113,7 @@ class Plugin(indigo.PluginBase):
                                     del json_notes[json_key]
                             for key, value in json_notes.items():
                                 updated_notes = updated_notes + f"{key}: {value}\n"
-                        except:
+                        except (ValueError, json.JSONDecodeError, KeyError, TypeError):
                             updated_notes = zigbee_notes
                         update_notes = True
 
@@ -1392,6 +1382,7 @@ class Plugin(indigo.PluginBase):
                     plugin_props["zigbeePropertyValve"] = False
                     plugin_props["zigbeePropertyVibration"] = False
                     plugin_props["zigbeePropertyVoltage"] = False
+                    plugin_props["zigbeePropertyWaterLeak"] = False
 
                     plugin_props["uspAcceleration"] = False
                     plugin_props["uspBattery"] = False
@@ -1920,6 +1911,10 @@ class Plugin(indigo.PluginBase):
                     usp_primary_device_main_ui_state = "uspVibrationIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
+                case "waterLeakSensor":
+                    usp_primary_device_main_ui_state = "uspWaterLeakIndigo"
+                    usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
+                    values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
 
             if type_id == "multiSocket" or type_id == "multiSwitch" or type_id == "multiDimmer" or type_id == "switch":
                 pass
@@ -1933,7 +1928,7 @@ class Plugin(indigo.PluginBase):
                                      "uspPresenceDetectionOptionsIndigo", "uspPirDetectionIndigo", "uspPresenceIndigo", "uspPresenceEventIndigo", "uspPressureIndigo",
                                      "uspRadarIndigo", "uspRemoteAudioIndigo", "uspRemoteADimmerIndigo", "uspRotationsIndigo",
                                      "uspStateIndigo", "uspStateL2Indigo", "uspStateL3Indigo", "uspStateL4Indigo", "uspStateL5Indigo", "uspStateRightIndigo", "uspStateSingleIndigo",
-                                     "uspStrengthIndigo", "uspTamperIndigo", "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo"):
+                                     "uspStrengthIndigo", "uspTamperIndigo", "uspTemperatureIndigo", "uspSetpointIndigo", "uspValveIndigo", "uspVibrationIndigo", "uspVoltageIndigo", "uspWaterLeakIndigo"):
                     if usp_field_id not in usp_primary_device_main_ui_states:
                         if usp_field_id not in values_dict or values_dict[usp_field_id] not in [INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE, INDIGO_SECONDARY_DEVICE]:
                             values_dict[usp_field_id] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE  # Default
@@ -1960,14 +1955,8 @@ class Plugin(indigo.PluginBase):
             else:
                 values_dict["show_update_notes_json"] = False
 
-            debug_values_dict = dict(values_dict)  # so that values_dict can be interrogated in Pycharm debug
-            debug_breakpoint = 1  # so that Pycharm breakpoint can be set
-
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
-
-        debug_values_dict = dict(values_dict)
-        debug_errors_dict = dict(errors_dict)
 
         return values_dict, errors_dict
 
@@ -2400,9 +2389,9 @@ class Plugin(indigo.PluginBase):
                 case "multiSwitch":
                     # Multi-Switch validation and option settings
                     if not values_dict.get("uspMultiSwitchAction", False):
-                        if values_dict["zigbee_vendor"].lower() == "tuya" and values_dict["zigbee_vendor"].lower() == "ts0012":
+                        if values_dict["zigbee_vendor"].lower() == "tuya" and values_dict["zigbee_model"].lower() == "ts0012":
                             pass
-                        elif values_dict["zigbee_vendor"].lower() != "Moes":
+                        elif values_dict["zigbee_vendor"].lower() != "moes":
                             pass
                         else:
                             error_message = "An Indigo Multi-Switch device requires an association to the Zigbee 'action' property"
@@ -2456,8 +2445,15 @@ class Plugin(indigo.PluginBase):
                 case "remoteDimmer":
                     # Scene (Action) validation and option settings
                     if not values_dict.get("uspRemoteDimmer", False):
-                        error_message = "An Indigo remote [Audio] device requires an association to the Zigbee 'action' property"
+                        error_message = "An Indigo remote [Dimmer] device requires an association to the Zigbee 'action' property"
                         error_dict['uspAction'] = error_message
+                        error_dict["showAlertText"] = error_message
+
+                case "sceneRotary":
+                    # Scene Rotary validation and option settings
+                    if not values_dict.get("uspSceneRotary", False):
+                        error_message = "An Indigo Scene Rotary device requires an association to the Zigbee 'action' property"
+                        error_dict['uspSceneRotary'] = error_message
                         error_dict["showAlertText"] = error_message
 
                 case "switch":
@@ -2522,6 +2518,16 @@ class Plugin(indigo.PluginBase):
                         values_dict["SupportsOnState"] = True
                         values_dict["allowOnStateChange"] = False
 
+                case "waterLeakSensor":
+                    # Water Leak Sensor validation and option settings
+                    if not values_dict.get("uspWaterLeak", False):
+                        error_message = "An Indigo Water Leak Sensor device requires an association to the Zigbee 'water_leak' property"
+                        error_dict['uspWaterLeak'] = error_message
+                        error_dict["showAlertText"] = error_message
+                    else:
+                        values_dict["SupportsOnState"] = True
+                        values_dict["allowOnStateChange"] = False
+
             return values_dict, error_dict
 
         except Exception as exception_error:
@@ -2565,7 +2571,7 @@ class Plugin(indigo.PluginBase):
             # do whatever you need to here
             #   type_id is the device type specified in the Devices.xml
             #   devId is the device ID - 0 if it's a new device
-            self.logger.error(f"Rotation Variable Selected: {values_dict['uspRotationPercentPositiveVariableId']}")
+            self.logger.debug(f"Rotation Variable Selected: {values_dict['uspRotationPercentPositiveVariableId']}")
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -2583,12 +2589,9 @@ class Plugin(indigo.PluginBase):
 
             # dev = indigo.devices[target_id]
 
-            aa = filter
-            if filter == "switch":
-                bb = filter
-
             if ((filter == "button" and type_id == "button") or
                     (filter == "contact" and type_id == "contactSensor") or
+                    (filter == "water_leak" and type_id == "waterLeakSensor") or
                     (filter == "SceneRotary" and type_id == "sceneRotary") or  # TODO: Sort out for SceneRotary device
                     (filter == "blind" and type_id == "blind") or
                     (filter == "brightness" and type_id == "dimmer") or
@@ -2623,6 +2626,7 @@ class Plugin(indigo.PluginBase):
                   (filter == "colorTemperature" and type_id == "dimmer") or
                   (filter == "onoff" and type_id == "dimmer") or
                   (filter == "rotations" and type_id == "sceneRotary") or
+                  (filter == "targetDistance" and type_id == "radarSensor") or
                   (filter == "powerLeft")):
                 menu_list = [("1", "Primary Device - Additional State")]
             elif ((filter == "stateL2-5") or
@@ -2634,7 +2638,6 @@ class Plugin(indigo.PluginBase):
                 menu_list = [("3", "Secondary Device - Additional State")]
             else:
                 menu_list = [("1", "Primary Device - Additional State"), ("2", "Secondary Device")]
-            debug_point = menu_list
             return menu_list
 
         except Exception as exception_error:
@@ -2667,7 +2670,7 @@ class Plugin(indigo.PluginBase):
             # do whatever you need to here
             #   type_id is the device type specified in the Devices.xml
             #   devId is the device ID - 0 if it's a new device
-            self.logger.error(f"Zigbee Coordinator Selected: {values_dict['zigbee_coordinator_ieee']}")
+            self.logger.debug(f"Zigbee Coordinator Selected: {values_dict['zigbee_coordinator_ieee']}")
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
@@ -3280,7 +3283,7 @@ class Plugin(indigo.PluginBase):
 
                     case "illuminance" | "illuminance_lux":
                         # zigbee_device_property = "illuminance"
-                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get(zigbee_device_property, ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get("illuminance", [])):
                             values_dict["zigbeePropertyIlluminance"] = True
                         else:
                             values_dict["zigbeePropertyIlluminance"] = False
@@ -3407,6 +3410,9 @@ class Plugin(indigo.PluginBase):
                         # zigbee_device_property = "presence"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPresence"] = True
+                            if type_id == "radarSensor":
+                                values_dict["uspPresence"] = True
+                                values_dict["uspPresenceIndigo"] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
                         else:
                             values_dict["zigbeePropertyPresence"] = False
 
@@ -3434,9 +3440,15 @@ class Plugin(indigo.PluginBase):
                         else:
                             values_dict["zigbeePropertyTamper"] = False
 
+                    case "target_distance":
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get("target_distance", []):
+                            values_dict["zigbeePropertyTargetDistance"] = True
+                        else:
+                            values_dict["zigbeePropertyTargetDistance"] = False
+
                     case "temperature" | "device_temperature":
                         # zigbee_device_property = "temperature"
-                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get(zigbee_device_property, ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get("temperature", [])):
                             values_dict["zigbeePropertyTemperature"] = True
                         else:
                             values_dict["zigbeePropertyTemperature"] = False
@@ -3459,6 +3471,12 @@ class Plugin(indigo.PluginBase):
                             values_dict["zigbeePropertyVoltage"] = True
                         else:
                             values_dict["zigbeePropertyVoltage"] = False
+
+                    case "water_leak":
+                        if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                            values_dict["zigbeePropertyWaterLeak"] = True
+                        else:
+                            values_dict["zigbeePropertyWaterLeak"] = False
 
                     case "mode":
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
@@ -3571,7 +3589,7 @@ class Plugin(indigo.PluginBase):
                 if dev.subType != indigo.kSensorDeviceSubType.Humidity:
                     dev.subType = indigo.kSensorDeviceSubType.Humidity
                     dev.replaceOnServer()
-            elif dev.deviceTypeId == "illuminanceSensor" or dev.deviceTypeId == "illumianceSensorSecondary":
+            elif dev.deviceTypeId == "illuminanceSensor" or dev.deviceTypeId == "illuminanceSensorSecondary":
                 if dev.subType != indigo.kSensorDeviceSubType.Illuminance:
                     dev.subType = indigo.kSensorDeviceSubType.Illuminance
                     dev.replaceOnServer()
@@ -3614,7 +3632,7 @@ class Plugin(indigo.PluginBase):
                 if dev.subType != indigo.kRelayDeviceSubType.Outlet:
                     dev.subType = indigo.kRelayDeviceSubType.Outlet
                     dev.replaceOnServer()
-            elif dev.deviceTypeId == "presenceSensor" or dev.deviceTypeId == "radar":
+            elif dev.deviceTypeId == "presenceSensor" or dev.deviceTypeId == "radarSensor":
                 if dev.subType != indigo.kSensorDeviceSubType.Presence:
                     dev.subType = indigo.kSensorDeviceSubType.Presence
                     dev.replaceOnServer()
@@ -3638,7 +3656,7 @@ class Plugin(indigo.PluginBase):
                 if dev.subType != indigo.kDeviceSubType.Other:
                     dev.subType = indigo.kDeviceSubType.Other + ",ui=Scene"
                     dev.replaceOnServer()
-            elif dev.deviceTypeId == "multiSwitchSecondarySingle":
+            elif dev.deviceTypeId == "switchSecondarySingle":
                 if dev.subType != indigo.kRelayDeviceSubType.Switch:
                     dev.subType = indigo.kRelayDeviceSubType.Switch + ",ui=Switch"
                     dev.replaceOnServer()

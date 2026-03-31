@@ -188,7 +188,7 @@
     </Device>
 
     <!-- Remote [Dimmer] -->
-    <Device id="remoteDimmer"  type="custom" subType="indigo.kDeviceSubType.Remote">>
+    <Device id="remoteDimmer"  type="custom" subType="indigo.kDeviceSubType.Remote">
         <Name>Remote [Dimmer]</Name>
         <ConfigUI>
             <Template file="Templates/template_zigbee.xml" />
@@ -246,6 +246,15 @@
 <!--            <Template file="Templates/template_zigbee_device_properties.xml" />-->
 <!--		</ConfigUI>-->
 <!--	</Device>-->
+
+    <!-- Water Leak Sensor -->
+    <Device id="waterLeakSensor" type="sensor">
+        <Name>Water Leak Sensor</Name>
+        <ConfigUI>
+            <Template file="Templates/template_zigbee.xml" />
+            <Template file="Templates/template_zigbee_device_properties.xml" />
+		</ConfigUI>
+	</Device>
 
     <!-- Vibration-Sensor -->
     <Device id="vibrationSensor"  type="sensor" subType="indigo.kSensorDeviceSubType.Vibration">
