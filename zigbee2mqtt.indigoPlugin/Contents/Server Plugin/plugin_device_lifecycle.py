@@ -165,6 +165,17 @@ class DeviceLifecycleMixin:
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
+    # def didDeviceCommPropertyChange(self, origDev, newDev):
+    #     # self.logger.warning(f"didDeviceCommPropertyChange: {newDev.name}")
+    #
+    #     # match newDev.deviceTYpeId:
+    #     #     case "zigbeeCoordinator":
+    #     #         return True
+    #     #     case "zigbeeGroupDimmer" |
+    #     if "address" in origDev.pluginProps and origDev.pluginProps['address'] != newDev.pluginProps['address']:
+    #         return True
+    #     return False
+
     def device_start_comm_zigbee_device(self, zd_dev):
         try:
             if "[UNGROUPED @" in zd_dev.name:
@@ -259,22 +270,34 @@ class DeviceLifecycleMixin:
 
                 self.globals[ZD_TO_INDIGO_ID][zd_dev.address] = zd_dev.id  # Zigbee device ieee to primary Indigo device
 
+                # zigbee_coordinator_ieee = zd_dev_props.get("zigbee_coordinator_ieee", "")  # Only present in a primary device
+                # if zigbee_coordinator_ieee != "":
+                #     friendly_name = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME]
+                #     if friendly_name != zd_dev.states["topicFriendlyName"]:
+                #         zd_dev.updateStateOnServer("topicFriendlyName", friendly_name)
+                #
+                #
+
             if "zigbeePropertiesInitialised" not in zd_dev_props or not zd_dev_props["zigbeePropertiesInitialised"]:
                 self.logger.warning(f"Zigbee Device {zd_dev.name} has not been initialised - Edit and Save device Settings for device.")
                 return
 
             # Now process any existing or required secondary devices
 
+
             self.process_secondary_devices(zd_dev, zigbee_coordinator_ieee, update_device_name)
 
             # Check if secondary device(s) required to be created and create as necessary
 
-            if zigbee_coordinator_ieee not in self.globals[ZD]:
-                self.logger.warning(f"'" + zd_dev.name + "'zigbee_coordinator_ieee not in self.globals[ZD]: '" + zigbee_coordinator_ieee + "'")
-                self.globals[ZD][zigbee_coordinator_ieee] = dict()  # Zigbee Coordinator
-            if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
-                self.logger.warning(f"'" + zd_dev.name + "'zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]: '" + zigbee_device_ieee + "'")
-                self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()  # Zigbee device
+            # Only primaries carry their own zigbee_device_ieee; secondaries are linked via the primary
+            # and must not be registered directly into the ZD dict.
+            if zigbee_device_ieee != "":
+                if zigbee_coordinator_ieee not in self.globals[ZD]:
+                    self.logger.warning(f"'{zd_dev.name}' zigbee_coordinator_ieee not in self.globals[ZD]: '{zigbee_coordinator_ieee}'")
+                    self.globals[ZD][zigbee_coordinator_ieee] = dict()  # Zigbee Coordinator
+                if zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]:
+                    self.logger.warning(f"'{zd_dev.name}' zigbee_device_ieee not in self.globals[ZD][zigbee_coordinator_ieee]: '{zigbee_device_ieee}'")
+                    self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee] = dict()  # Zigbee device
 
             # TODO: Consider setting image for UI depending on deviceTypeId?
 
@@ -304,6 +327,7 @@ class DeviceLifecycleMixin:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
         super().deviceDeleted(dev)
+
 
     def device_stop_comm(self, dev):
         try:
@@ -338,3 +362,4 @@ class DeviceLifecycleMixin:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
         super().deviceUpdated(origDev, newDev)
+

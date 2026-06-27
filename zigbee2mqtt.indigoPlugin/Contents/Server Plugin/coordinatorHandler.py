@@ -24,6 +24,7 @@ except ImportError:
 
 try:
     import paho.mqtt.client as mqtt
+    from paho.mqtt.enums import CallbackAPIVersion
 except ImportError:
     pass
 
@@ -63,7 +64,7 @@ class ThreadCoordinatorHandler(threading.Thread):
 
             self.zc_dev_id = zc_dev_id
 
-            self.mqttHandlerLogger = logging.getLogger("Plugin.MQTT")
+            self.mqttHandlerLogger = logging.getLogger("Plugin.Zigbee2mqtt.MQTT")
 
             self.threadStop = event
 
@@ -94,7 +95,8 @@ class ThreadCoordinatorHandler(threading.Thread):
 
             if self.globals[DEBUG]: self.mqttHandlerLogger.info(f"Client ID: {self.globals[ZC][self.zc_dev_id][MQTT_CLIENT_ID]}")
 
-            self.mqtt_client = mqtt.Client(client_id=self.globals[ZC][self.zc_dev_id][MQTT_CLIENT_ID],
+            self.mqtt_client = mqtt.Client(CallbackAPIVersion.VERSION2,
+                                           client_id=self.globals[ZC][self.zc_dev_id][MQTT_CLIENT_ID],
                                            clean_session=True,
                                            userdata=None,
                                            protocol=self.globals[ZC][self.zc_dev_id][MQTT_PROTOCOL])
@@ -104,6 +106,8 @@ class ThreadCoordinatorHandler(threading.Thread):
             self.mqtt_client.on_connect = self.on_connect
             self.mqtt_client.on_disconnect = self.on_disconnect
             self.mqtt_client.on_subscribe = self.on_subscribe
+
+            self.mqtt_client.reconnect_delay_set(min_delay=1, max_delay=60)
 
             # self.globals[ZC][self.zc_dev_id][MQTT_ROOT_TOPIC] = MQTT_ROOT_TOPIC_VALUE  # TODO: Get from Device Config - already setup by close device configui?
             mqtt_subscription = f"{self.globals[ZC][self.zc_dev_id][MQTT_ROOT_TOPIC]}/#"
@@ -141,10 +145,23 @@ class ThreadCoordinatorHandler(threading.Thread):
                 self.mqtt_client.loop_start()
 
                 while not self.threadStop.is_set():
+                    # Interruptible wait so shutdown is immediate; interval long enough
+                    # for paho's internal reconnect to run, short enough to catch a wedge.
+                    if self.threadStop.wait(10):
+                        break
                     try:
-                        time.sleep(2)
-                    except Exception:
-                        pass  # Ignore any sleep interruptions; loop condition handles shutdown
+                        if not self.mqtt_client.is_connected():
+                            self.mqttHandlerLogger.warning(
+                                f"MQTT supervisor: broker appears disconnected — forcing reconnect to "
+                                f"{self.globals[ZC][self.zc_dev_id][MQTT_IP]}:{self.globals[ZC][self.zc_dev_id][MQTT_PORT]}")
+                            try:
+                                self.mqtt_client.reconnect()
+                            except Exception as supervisor_error:
+                                self.mqttHandlerLogger.warning(
+                                    f"MQTT supervisor: reconnect attempt failed: {supervisor_error} — will retry")
+                    except Exception as supervisor_error:
+                        self.mqttHandlerLogger.warning(
+                            f"MQTT supervisor: health-check error: {supervisor_error} — will retry")
             else:
                 pass
                 # TODO: At this point, queue a recovery for n seconds time
@@ -161,7 +178,7 @@ class ThreadCoordinatorHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def on_connect(self, client, userdata, flags, rc):  # noqa [Unused parameter values]
+    def on_connect(self, client, userdata, connect_flags, reason_code, properties):  # noqa [Unused parameter values]
         try:
 
             subscription_topic = f"{self.globals[ZC][self.zc_dev_id][MQTT_ROOT_TOPIC]}/#"
@@ -187,13 +204,14 @@ class ThreadCoordinatorHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def on_disconnect(self, client, userdata, rc):  # noqa [Unused parameter values]
+    def on_disconnect(self, client, userdata, disconnect_flags, reason_code, properties):  # noqa [Unused parameter values]
         try:
             self.globals[ZC][self.zc_dev_id][MQTT_CONNECTED] = False
-            if rc != 0:
-                # TODO - Interpret RC code
+            if reason_code.is_failure:
                 self.mqttHandlerLogger.warning(
-                    f"Plugin encountered an unexpected disconnection from Zigbee2mqtt MQTT Broker at {self.globals[ZC][self.zc_dev_id][MQTT_IP]}:{self.globals[ZC][self.zc_dev_id][MQTT_PORT]}. MQTT Broker [Code {rc}]. Retrying connection ...")
+                    f"Unexpected disconnection from Zigbee2mqtt MQTT Broker at "
+                    f"{self.globals[ZC][self.zc_dev_id][MQTT_IP]}:{self.globals[ZC][self.zc_dev_id][MQTT_PORT]} "
+                    f"[Code {reason_code.value} - {reason_code}]. Supervisor will attempt to reconnect.")
                 self.bad_disconnection = True
             else:
                 self.mqttHandlerLogger.info(f"Disconnected from Zigbee2mqtt MQTT Broker at {self.globals[ZC][self.zc_dev_id][MQTT_IP]}:{self.globals[ZC][self.zc_dev_id][MQTT_PORT]}")
@@ -214,7 +232,7 @@ class ThreadCoordinatorHandler(threading.Thread):
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def on_subscribe(self, client, userdata, mid, granted_qos):  # noqa [Unused parameter values]
+    def on_subscribe(self, client, userdata, mid, reason_code_list, properties):  # noqa [Unused parameter values]
         try:
             pass
         except Exception as exception_error:

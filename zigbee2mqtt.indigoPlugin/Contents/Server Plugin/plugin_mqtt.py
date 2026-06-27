@@ -11,8 +11,14 @@ try:
 except ImportError:
     pass
 
+try:
+    import paho.mqtt.client as mqtt
+except ImportError:
+    mqtt = None
+
 from constants import (
     MQTT_CLIENT,
+    MQTT_CONNECTED,
     MQTT_FILTERS,
     ZC,
     ZD,
@@ -49,21 +55,32 @@ class MQTTMixin:
 
     def publish_zigbee_topic(self, zigbee_coordinator_ieee, friendly_name, topic, payload):
         try:
-            # TODO: Check if self.globals[ZC][MQTT_CONNECTED]
-
             published = False
+            published_zc_dev = None
             for zc_dev_id, zc_dev_details in self.globals[ZC].items():
-                # self.globals[ZC][coordinator_dev.id][ZC_IEEE]
                 zc_dev = indigo.devices[zc_dev_id]
-                if zc_dev.address == zigbee_coordinator_ieee:
-                    # if self.globals[ZC][mqtt_broker_device_id][MQTT_PUBLISH_TO_HOMIE]:
-                    # topic = "zigbee2mqtt/Outlet 1/set"
-                    self.globals[ZC][zc_dev_id][MQTT_CLIENT].publish(topic, payload)
-                    published = True
-                    # if self.globals[DEBUG]:
+                if zc_dev.address != zigbee_coordinator_ieee:
+                    continue
+
+                if not self.globals[ZC][zc_dev_id].get(MQTT_CONNECTED, False):
+                    self.logger.warning(
+                        f"Cannot publish to '{zc_dev.name}': MQTT broker not connected. "
+                        f"Topic='{topic}', Payload='{payload}' — command dropped.")
+                    continue
+
+                client = self.globals[ZC][zc_dev_id][MQTT_CLIENT]
+                result = client.publish(topic, payload)
+                rc = getattr(result, "rc", None)
+                if rc != mqtt.MQTT_ERR_SUCCESS:
+                    self.logger.warning(
+                        f"Publish to '{zc_dev.name}' failed with rc={rc}. "
+                        f"Topic='{topic}', Payload='{payload}'")
+                    continue
+                published = True
+                published_zc_dev = zc_dev
 
             if published:
-                self.mqtt_filter_log_processing(zc_dev.name, zigbee_coordinator_ieee, friendly_name, topic, payload)  # noqa
+                self.mqtt_filter_log_processing(published_zc_dev.name, zigbee_coordinator_ieee, friendly_name, topic, payload)
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement

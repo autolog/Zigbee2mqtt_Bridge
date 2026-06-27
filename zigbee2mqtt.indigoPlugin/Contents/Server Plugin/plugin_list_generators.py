@@ -44,10 +44,13 @@ class ListGeneratorsMixin:
 
     def available_indigo_devices_selected(self, values_dict, type_id, devId):
         # To force Dynamic Reload of devices
+
+        # print(values_dict)
         pass
         return values_dict
 
     def list_notes_json_keys(self, filter="", values_dict=None, type_id="", target_id=0):  # noqa [parameter value is not used]
+
         try:
             zigbee_notes = values_dict.get("zigbee_description_user", "")
             json_list = list()
@@ -191,15 +194,18 @@ class ListGeneratorsMixin:
 
             zigbee_devices_list.append(("-SELECT-", "-- Select Zigbee Device --"))
             for zigbee_device_ieee, zigbee_device_info in self.globals[ZD][zigbee_coordinator_ieee].items():
+                # self.logger.warning(f"list_zigbee_coordinator_devices: {zigbee_device_ieee}")  # Debug 2024-12-28
                 if ZD_INDIGO_DEVICE_ID not in zigbee_device_info:
                     continue
-                indigo_zd_id = zigbee_device_info[ZD_INDIGO_DEVICE_ID]
+                # indigo_zd_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
+                indigo_zd_id = zigbee_device_info[ZD_INDIGO_DEVICE_ID]  # TODO: MAKE SURE THIS IS CORRECT
                 if zigbee_device_filter == "AVAILABLE" and indigo_zd_id != 0:
                     continue  # As filtering on Zigbee devices available to be allocated and this device is already allocated to an Indigo device
                 elif zigbee_device_filter == "ALLOCATED" and indigo_zd_id == 0:
                     continue  # As filtering on Zigbee devices already allocated to Indigo and this device isn't yet allocated to an Indigo device
                 # Assume Filter set to "ALL" - so show all zigbee devices
 
+                # self.logger.info(f"Zigbee Device List Entry: {zigbee_device_info[ZD_FRIENDLY_NAME]} [{zigbee_device_ieee}]")
                 zigbee_devices_list.append((zigbee_device_ieee, zigbee_device_info[ZD_FRIENDLY_NAME]))
 
             if len(zigbee_devices_list) > 1:
@@ -237,14 +243,15 @@ class ListGeneratorsMixin:
             def escape(string):
                 escaped_string = string.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "&apos;").replace('"', '&quot;')
                 return escaped_string
-
+                
             xml_unique = 0
             xml_insert = ""
 
             for zigbee_device_ieee, zigbee_device in self.globals[ZD][zigbee_coordinator_ieee].items():
+                # device_name = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME].upper()
                 xml_zigebee_properties = f'''
     <Field id="properties_{zigbee_device_ieee}_hidden" type="checkbox" defaultValue="false" hidden="true" visibleBindingId="section" visibleBindingValue="ZIGBEE"/>
-
+    
 '''
                 xml_insert = f"{xml_insert}{xml_zigebee_properties}"
                 if ZD_EXPOSES not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
@@ -252,6 +259,8 @@ class ListGeneratorsMixin:
                 special_properties = ["device_temperature", "illuminance_lux"]  # List of handled properties with special processing
                 for zigbee_device_property in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_EXPOSES]:
                     if "features" in zigbee_device_property:
+                        # endpoint = zigbee_device_property.get("endpoint", "")
+                        # endpoint = f" [{endpoint}]" if endpoint != "" else "xyz"
                         for zigbee_device_features_property in zigbee_device_property["features"]:
                             if "property" in zigbee_device_features_property:
                                 property_to_display = f"{zigbee_device_features_property['property']}"
@@ -309,6 +318,13 @@ class ListGeneratorsMixin:
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
+            # Never return raw XML with the $PROPERTY$ placeholder — Indigo rejects it
+            # with "Fields must contain a 'type' attribute". Fall back to a stripped dialog.
+            try:
+                raw = self.devicesTypeDict[type_id]["ConfigUIRawXml"]
+                return raw.replace("<Field>$PROPERTY$</Field>", "")
+            except Exception:
+                return ""
 
     def menu_zigbee_coordinator_option_selected(self, values_dict, type_id, dev_id):
         try:
@@ -353,6 +369,7 @@ class ListGeneratorsMixin:
                     zigbee_model = zigbee_definition.get(ZD_MODEL, "")
                     zigbee_vendor = zigbee_definition.get(ZD_VENDOR, "")
 
+                    # if self.globals[DEBUG]:
                     self.logger.warning(f"ZD_DEFINITION: Description='{zigbee_hw}', Vendor='{zigbee_vendor}', Model='{zigbee_model}'")
 
             values_dict["zigbee_hw"] = zigbee_hw
@@ -367,11 +384,13 @@ class ListGeneratorsMixin:
 
     def list_zigbee_groups(self, filter="", values_dict=None, type_id="", target_id=0):  # noqa [parameter value is not used]
         try:
+            # self.logger.warning(f"list_zigbee_groups. Type: {type(values_dict)}")
             zigbee_coordinator_ieee = values_dict.get('zigbee_coordinator_ieee', "")
 
             zigbee_groups_list = list()
 
             if zigbee_coordinator_ieee not in self.globals[ZD]:
+                # TODO: Change Message if selecting within a new Zigbee device
                 select_message = "No Zigbee Groups Defined"
                 zigbee_groups_list.append(("-SELECT-", select_message))
                 return zigbee_groups_list
@@ -406,6 +425,7 @@ class ListGeneratorsMixin:
             zigbee_group_devices_list = list()
 
             if values_dict["zigbee_group_friendly_name"] == "-SELECT-":
+                # TODO: Change Message if selecting within a new Zigbee device
                 select_message = "Select Zigbee Group first"
                 zigbee_group_devices_list.append(("-SELECT-", select_message))
                 return zigbee_group_devices_list
@@ -413,6 +433,7 @@ class ListGeneratorsMixin:
             zigbee_group_devices_list.append(("-SELECT-", "-- Select Zigbee Device --"))
             zigbee_group_friendly_name = values_dict["zigbee_group_friendly_name"]
             for zigbee_group_member in self.globals[ZG][zigbee_coordinator_ieee][zigbee_group_friendly_name][ZG_MEMBERS]:
+                # self.logger.warning(f"list_zigbee_group_devices. zigbee_group_member Type: {type(zigbee_group_member)}")
                 zigbee_device_ieee = zigbee_group_member["ieee_address"]  # noqa
                 zigbee_device_friendly_name = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_FRIENDLY_NAME]
                 zigbee_group_devices_list.append((zigbee_device_ieee, zigbee_device_friendly_name))
@@ -431,6 +452,7 @@ class ListGeneratorsMixin:
 
     def zigbee_group_device_selected_from_list(self, values_dict=None, type_id="", target_id=0):  # noqa [parameter value is not used]
         try:
+
             pass
 
         except Exception as exception_error:
@@ -480,6 +502,7 @@ class ListGeneratorsMixin:
             zigbee_coordinator_ieee = values_dict.get("zigbee_coordinator_ieee", "")
 
             if zigbee_coordinator_ieee not in self.globals[ZD]:
+                # TODO: Change Message if selecting within a new Zigbee device
                 select_message = "Zigbee Coordinator yet to initialise"
                 zigbee_devices_list.append(("-SELECT-", select_message))
                 return zigbee_devices_list
@@ -493,6 +516,9 @@ class ListGeneratorsMixin:
                     if zigbee_device != "":
                         if zigbee_device not in allocated_devices:
                             allocated_devices[zigbee_device] = dev.id
+            # self.logger.warning(f"List of allocated Devices: {allocated_devices}")  # Debug
+
+            # zigbee_dev = indigo.devices[target_id]
 
             zigbee_device_filter = "ALL"
 
@@ -503,7 +529,7 @@ class ListGeneratorsMixin:
                         self.logger.warning(f"No Indigo Device ID for IEEE Address: '" + zigbee_device_ieee + "'" + ", Length of 'zigbee_device_info': " +  str(len(zigbee_device_info)) + ", Length of 'self.globals[ZD][zigbee_coordinator_ieee]': " + str(len(self.globals[ZD][zigbee_coordinator_ieee])))
                         continue
                     if ZD_FRIENDLY_NAME not in zigbee_device_info:  # Fix for https://forums.indigodomo.com/viewtopic.php?t=28682
-                        self.logger.warning(f"No Friendly Name ID for IEEE Address: " + zigbee_device_ieee + ", Indigo Device Id: " + zigbee_device_info[ZD_INDIGO_DEVICE_ID])
+                        self.logger.warning(f"No Friendly Name ID for IEEE Address: {zigbee_device_ieee}, Indigo Device Id: {zigbee_device_info[ZD_INDIGO_DEVICE_ID]}")
                         continue
                     indigo_dev_id = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_INDIGO_DEVICE_ID]
                     zigbee_device_filter = values_dict.get("zigbee_device_filter", "AVAILABLE")
@@ -513,7 +539,9 @@ class ListGeneratorsMixin:
                         continue  # As filtering on Zigbee devices already allocated to Indigo and this device isn't yet allocated to an Indigo device
                     # Assume Filter set to "ALL" - so show all zigbee devices
 
+                    # self.logger.info(f"Zigbee Device List Entry: {zigbee_device_info[ZD_FRIENDLY_NAME]} [{zigbee_device_ieee}]")
                     zigbee_devices_list.append((zigbee_device_ieee, zigbee_device_info[ZD_FRIENDLY_NAME]))
+                    # already_allocated = False
 
             if len(zigbee_devices_list) > 1:
                 return sorted(zigbee_devices_list, key=lambda name: name[1].lower())  # sort by Zigbee device name
@@ -550,6 +578,7 @@ class ListGeneratorsMixin:
                 values_dict["zigbee_model"] = ""
                 values_dict["zigbee_vendor"] = ""
             else:
+                # zigbee_device = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]
                 zigbee_description_user = self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee].get(ZD_DESCRIPTION_USER, "-")
                 if ZD_DEFINITION not in self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee]:
                     self.globals[ZD][zigbee_coordinator_ieee][zigbee_device_ieee][ZD_DEFINITION] = dict()
@@ -571,6 +600,8 @@ class ListGeneratorsMixin:
                     values_dict["name_exists"] = True
 
                 values_dict[f"properties_{zigbee_device_ieee}_hidden"] = True
+
+                # self.logger.warning(f"ZD_DEFINITION: FN='{zigbee_friendly_name}', HW='{zigbee_hw}', Vendor='{zigbee_vendor}', Model='{zigbee_model}', Description='{zigbee_description_user}'")
 
             if zigbee_device_ieee == "-SELECT-" or zigbee_device_ieee == "-NONE-":
                 return
@@ -653,6 +684,11 @@ class ListGeneratorsMixin:
                                 values_dict["zigbeePropertySwitchAction"] = True
                             else:
                                 values_dict["zigbeePropertySwitchAction"] = False
+                        # elif dev.deviceTypeId == "vibrationSensor":
+                        #     if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
+                        #         values_dict["zigbeePropertyVibrationAction"] = True
+                        #     else:
+                        #         values_dict["zigbeePropertyVibrationAction"] = False
 
                     case "angle" | "angle_x" | "angle_x_absolute" | "angle_y" | "angle_y_absolute" | "angle_z":
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES["rotations"]:
@@ -705,18 +741,21 @@ class ListGeneratorsMixin:
                             values_dict["zigbeePropertyContact"] = False
 
                     case "energy":
+                        # zigbee_device_property = "energy"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyEnergy"] = True
                         else:
                             values_dict["zigbeePropertyEnergy"] = False
 
                     case "humidity":
+                        # zigbee_device_property = "humidity"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyHumidity"] = True
                         else:
                             values_dict["zigbeePropertyHumidity"] = False
 
                     case "illuminance" | "illuminance_lux":
+                        # zigbee_device_property = "illuminance"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get(zigbee_device_property, ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get("illuminance", [])):
                             values_dict["zigbeePropertyIlluminance"] = True
                         else:
@@ -743,7 +782,7 @@ class ListGeneratorsMixin:
                                         values_dict["zigbeePropertyOnOff"] = True
                                     else:
                                         values_dict["zigbeePropertyOnOff"] = False
-                            case "outlet":
+                            case "outlet":  # and dev.subType == indigo.kDimmerDeviceSubType.Outlet:
                                 # OUTLET
                                 if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                                     values_dict["zigbeePropertyOnOff"] = True
@@ -806,36 +845,42 @@ class ListGeneratorsMixin:
                                 values_dict["zigbeePropertyStateRight"] = False
 
                     case "power":
+                        # zigbee_device_property = "power"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPower"] = True
                         else:
                             values_dict["zigbeePropertyPower"] = False
 
                     case "power_left":
+                        # zigbee_device_property = "power_left"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPowerLeft"] = True
                         else:
                             values_dict["zigbeePropertyPowerLeft"] = False
 
                     case "power_right":
+                        # zigbee_device_property = "power_right"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPowerRight"] = True
                         else:
                             values_dict["zigbeePropertyPowerRight"] = False
 
                     case "presence_detection_options":
+                        # zigbee_device_property = "presenceDetectionOptions"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPresenceDetectionOptions"] = True
                         else:
                             values_dict["zigbeePropertyPresenceDetectionOptions"] = False
 
                     case "pir_detection":
+                        # zigbee_device_property = "pirDetection"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPirDetection"] = True
                         else:
                             values_dict["zigbeePropertyPirDetection"] = False
 
                     case "presence":
+                        # zigbee_device_property = "presence"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyPresence"] = True
                             if type_id == "radarSensor":
@@ -875,6 +920,7 @@ class ListGeneratorsMixin:
                             values_dict["zigbeePropertyTargetDistance"] = False
 
                     case "temperature" | "device_temperature":
+                        # zigbee_device_property = "temperature"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get(zigbee_device_property, ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES.get("temperature", [])):
                             values_dict["zigbeePropertyTemperature"] = True
                         else:
@@ -893,6 +939,7 @@ class ListGeneratorsMixin:
                                 values_dict["zigbeePropertyVibration"] = False
 
                     case "voltage":
+                        # zigbee_device_property = "voltage"
                         if type_id in ZD_PROPERTIES_SUPPORTED_BY_DEVICE_TYPES[zigbee_device_property]:
                             values_dict["zigbeePropertyVoltage"] = True
                         else:
@@ -950,12 +997,18 @@ class ListGeneratorsMixin:
                         pass  # Property not supported
                         if self.globals[DEBUG]: self.logger.warning(f"Zigbee Device '{zigbee_device_ieee}' has unsupported property '{zigbee_device_property}'")
 
+            # # Consistency checking for dimmer (color / white) - only allow color and/or white if dim is true
+            # if not values_dict.get("ZigbeePropertyDim", False):
+            #     values_dict["zigbeePropertyColor"] = False
+            #     values_dict["zigbeePropertyColorTemperature"] = False
+
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
         return values_dict
 
     def list_zigbee_device_properties(self, filter="", values_dict=None, type_id="", target_id=0):  # noqa [parameter value is not used]
+
         try:
             zigbee_coordinator_ieee = indigo.devices[target_id].address
             if zigbee_coordinator_ieee not in self.globals[ZD]:

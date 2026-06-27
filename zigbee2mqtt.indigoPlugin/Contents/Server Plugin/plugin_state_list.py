@@ -37,6 +37,12 @@ class StateListMixin:
                 if last_seen_state not in state_list:
                     state_list.append(last_seen_state)
 
+                # TODO: Remove - SQL Logger Test
+                # id_state = self.getDeviceStateDictForStringType("id", "Id Changed", "Id")
+                # if id_state not in state_list:
+                #     state_list.append(id_state)
+
+
             # Acceleration State
             if (bool(dev_plugin_props.get("uspAcceleration", False)) and
                     dev_plugin_props.get("uspAccelerationIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE):
@@ -251,13 +257,6 @@ class StateListMixin:
                 if strength_state not in state_list:
                     state_list.append(strength_state)
 
-            # Target Distance State
-            if (bool(dev_plugin_props.get("uspTargetDistance", False)) and
-                    dev_plugin_props.get("uspTargetDistanceIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE):
-                target_distance_state = self.getDeviceStateDictForNumberType("targetDistance", "Target Distance Changed", "Target Distance")
-                if target_distance_state not in state_list:
-                    state_list.append(target_distance_state)
-
             # Temperature State
             if (bool(dev_plugin_props.get("uspTemperature", False)) and
                     dev_plugin_props.get("uspTemperatureIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE):
@@ -314,7 +313,7 @@ class StateListMixin:
                 if valve_state not in state_list:
                     state_list.append(valve_state)
 
-            # Voltage State (duplicate check - keeping for compatibility)
+            # Voltage State
             if (bool(dev_plugin_props.get("uspVoltage", False)) and
                     dev_plugin_props.get("uspVoltageIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE):
                 voltage_state = self.getDeviceStateDictForNumberType("voltage", "Voltage Changed", "Voltage")

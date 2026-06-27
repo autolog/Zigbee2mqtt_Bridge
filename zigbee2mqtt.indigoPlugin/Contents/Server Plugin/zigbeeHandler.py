@@ -68,7 +68,7 @@ class ThreadZigbeeHandler(threading.Thread,
 
             self.zigbee_devices_offline = dict()
 
-            self.zigbeeLogger = logging.getLogger("Plugin.Zigbee")
+            self.zigbeeLogger = logging.getLogger("Plugin.Zigbee2mqtt.Zigbee")
 
             self.properties_set = {"battery", "linkquality"}  # Starter for 10 for compiling a list of properties for documenting all discovered properties
 
@@ -1304,7 +1304,7 @@ class ThreadZigbeeHandler(threading.Thread,
                         brightness_100 = 100
                     brightness_100_ui = f"{brightness_100}"
                     valid = True
-                except ValueError:
+                except (ValueError, TypeError):
                     self.zigbeeLogger.info(f"received brightness event with an invalid payload of \"{json_payload['brightness']}\" for device \"{zd_dev.name}\". Event discarded and ignored.")
                 if valid:
                     if "brightnessLevel" in zd_dev.states:
@@ -1357,7 +1357,7 @@ class ThreadZigbeeHandler(threading.Thread,
                     else:
                         payload = json.dumps(json_payload)
                         self.zigbeeLogger.info(f"received color event with an unknown payload of \"{payload}\" for device \"{zd_dev.name}\". Event discarded and ignored.")
-                except ValueError:
+                except (ValueError, TypeError):
                     payload = json.dumps(json_payload)
                     self.zigbeeLogger.info(f"received color event with an invalid payload of \"{payload}\" for device \"{zd_dev.name}\". Event discarded and ignored.")
                 if valid:
@@ -1459,7 +1459,7 @@ class ThreadZigbeeHandler(threading.Thread,
                     white_temperature = int(1000000 / color_temp_mired)  # noqa: reference before assignment
                     white_temperature_ui = f"{white_temperature}°K"  # noqa: reference before assignment
                     valid = True
-                except ValueError:
+                except (ValueError, TypeError):
                     self.zigbeeLogger.info(f"received color event with an invalid payload of \"{json_payload['brightness']}\" for device \"{zd_dev.name}\". Event discarded and ignored.")
                 if valid:
                     if zd_dev.states["whiteTemperature"] != white_temperature:  # noqa: reference before assignment
@@ -1498,7 +1498,7 @@ class ThreadZigbeeHandler(threading.Thread,
                     energy_units_ui = f" {zd_dev.pluginProps.get('uspEnergyUnits', '')}"
                     try:
                         energy = float(json_payload["energy"])
-                    except ValueError:
+                    except (ValueError, TypeError):
                         return
                     if "accumEnergyTotal" in zd_dev.states:
                         decimal_places = int(zd_dev.pluginProps.get("uspEnergyDecimalPlaces", 0))
@@ -1540,7 +1540,7 @@ class ThreadZigbeeHandler(threading.Thread,
             try:
                 humidity = float(json_payload["humidity"])
                 valid = True
-            except ValueError:
+            except (ValueError, TypeError):
                 self.zigbeeLogger.warning(f"received humidity event with an invalid payload of \"{json_payload['humidity']}\" for device \"{zd_dev_to_process.name}\". Event discarded and ignored.")
                 valid = False
 
@@ -1845,7 +1845,7 @@ class ThreadZigbeeHandler(threading.Thread,
                 try:
                     position = int(json_payload["position"])
                     valid = True
-                except ValueError:
+                except (ValueError, TypeError):
                     self.zigbeeLogger.info(f"received position event with an invalid payload of \"{json_payload['position']}\" for device \"{zd_dev.name}\". Event discarded and ignored.")
                 if valid:
                     if "brightnessLevel" in zd_dev.states:
@@ -1886,7 +1886,7 @@ class ThreadZigbeeHandler(threading.Thread,
                     power_units_ui = f" {zd_dev.pluginProps.get('uspPowerUnits', '')}"
                     try:
                         power = float(json_payload["power"])
-                    except ValueError:
+                    except (ValueError, TypeError):
                         return
                     minimumPowerLevel = float(zd_dev.pluginProps.get("uspPowerMinimumReportingLevel", 0.0))
                     reportingPowerHysteresis = float(zd_dev.pluginProps.get("uspPowerReportingHysteresis", 6.0))
@@ -1942,7 +1942,7 @@ class ThreadZigbeeHandler(threading.Thread,
                     power_units_ui = f" {zd_dev.pluginProps.get(usp_power_units, '')}"
                     try:
                         power = float(json_payload[json_payload_power_state])
-                    except ValueError:
+                    except (ValueError, TypeError):
                         return
                     minimumPowerLevel = float(zd_dev.pluginProps.get(f"uspPower{side}MinimumReportingLevel", 0.0))
                     reportingPowerHysteresis = float(zd_dev.pluginProps.get(f"uspPower{side}ReportingHysteresis", 6.0))
@@ -2005,7 +2005,7 @@ class ThreadZigbeeHandler(threading.Thread,
             try:
                 pressure = float(json_payload["pressure"])
                 valid = True
-            except ValueError:
+            except (ValueError, TypeError):
                 self.zigbeeLogger.warning(f"received pressure event with an invalid payload of \"{json_payload['pressure']}\" for device \"{zd_dev_to_process.name}\". Event discarded and ignored.")
                 valid = False
 
@@ -2191,7 +2191,7 @@ class ThreadZigbeeHandler(threading.Thread,
                 elif temperatureUnitsConversion == "F>C":
                     temperature = float(((float(temperature) - 32.0) * 5) / 9)
                 valid = True
-            except ValueError:
+            except (ValueError, TypeError):
                 valid = False
 
             if not valid:

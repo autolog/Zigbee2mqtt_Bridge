@@ -246,12 +246,17 @@ class ConfigUIMixin:
                 if "mqtt_password" not in plugin_props:
                     plugin_props["mqtt_password"] = ""
 
+                # print(f"getPrefsConfigUiValues | mqtt_password [1]: {plugin_props[u'mqtt_password']}")
+
                 if "mqtt_password_is_encoded" not in plugin_props:
                     plugin_props["mqtt_password_is_encoded"] = False
                 if "mqtt_password" in plugin_props and plugin_props["mqtt_password_is_encoded"]:
                     plugin_props["mqtt_password_is_encoded"] = False
                     mqtt_password_encryption_key = plugin_props.get("mqtt_password_encryption_key", "")
                     plugin_props["mqtt_password"] = decode(mqtt_password_encryption_key.encode('utf-8'), plugin_props["mqtt_password"].encode('utf-8'))
+                # aa = 1 + 2
+                # bb = aa + 1
+                # print(f"getPrefsConfigUiValues | mqtt_password [2]: {plugin_props[u'mqtt_password']}")  # TODO: DEBUG ONLY
 
                 if "mqttClientPrefix" not in plugin_props:
                     plugin_props["mqttClientPrefix"] = ""
@@ -275,6 +280,9 @@ class ConfigUIMixin:
                 if plugin_props["zigbee_coordinator_ieee"] != "-SELECT-" and plugin_props["zigbee_coordinator_ieee"] != "-NONE-":
                     if plugin_props["zigbee_coordinator_ieee"] not in self.globals[ZD]:
                         plugin_props["zigbee_coordinator_ieee"] = "-NONE-"
+
+                # if "zigbeePropertiesInitialised" not in plugin_props or not plugin_props["zigbeePropertiesInitialised"]:
+                #     plugin_props["zigbeePropertyAcceleration"] = False
 
             elif type_id in ZD_PRIMARY_INDIGO_DEVICE_TYPES_AND_ZIGBEE_PROPERTIES:
 
@@ -438,6 +446,14 @@ class ConfigUIMixin:
 
         return prefs_config_ui_values
 
+    def refreshUiCallback(self, values_dict, type_id="", dev_id=None):  # noqa [parameter value is not used]
+        # Back-compat shim: devices saved before the rename from "refreshUiCallback" to
+        # "refresh_ui_callback_device" / "refresh_ui_callback_group" may still have the old
+        # name cached in pluginProps. Dispatch by type until those props get re-saved.
+        if type_id in ("zigbeeGroupDimmer", "zigbeeGroupRelay"):
+            return self.refresh_ui_callback_group(values_dict, type_id, dev_id)
+        return self.refresh_ui_callback_device(values_dict, type_id, dev_id)
+
     def refresh_ui_callback_device(self, values_dict, type_id="", dev_id=None):  # noqa [parameter value is not used]
         errors_dict = indigo.Dict()
         try:
@@ -516,6 +532,7 @@ class ConfigUIMixin:
                     values_dict["uspPowerRightIndigo"] = INDIGO_SECONDARY_DEVICE_ADDITIONAL_STATE
                     values_dict["uspLinkQualityIndigo"] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE
                 case "multiSwitch":
+                    # usp_primary_device_main_ui_state = "uspMultiSwitchActionIndigo"
                     usp_primary_device_main_ui_state = "uspActionIndigo"
                     usp_primary_device_main_ui_states.append(usp_primary_device_main_ui_state)
                     values_dict[usp_primary_device_main_ui_state] = INDIGO_PRIMARY_DEVICE_MAIN_UI_STATE
@@ -596,6 +613,8 @@ class ConfigUIMixin:
                         if usp_field_id not in values_dict or values_dict[usp_field_id] not in [INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE, INDIGO_SECONDARY_DEVICE]:
                             values_dict[usp_field_id] = INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE  # Default
 
+            # values_dict["zigbee_vendor"] = f"Random {random.randrange(100)}, USP FIELD ID: {values_dict['uspPositionIndigo']}"  # DEBUG TEST
+
             zd_dev = indigo.devices[dev_id]
             if zd_dev.name[0:11] == "new device ":
                 values_dict["UpdateDeviceName"] = True  # Default to update name if name is Indigo default
@@ -608,6 +627,9 @@ class ConfigUIMixin:
                     try:
                         json.loads(zigbee_notes)  # Test whether json
                         values_dict["show_update_notes_json"] = True
+
+                        # for key, value in json_notes.items():
+                        #     updated_notes = updated_notes + f"{key}: {value}\n"
                     except:
                         values_dict["show_update_notes_json"] = False
             else:
@@ -828,6 +850,8 @@ class ConfigUIMixin:
 
             values_dict["address"] = values_dict["zigbee_device_ieee"]
 
+            # TODO: Consider using $nodes to check if device address is still valid - old nodes can be left behind in MQTT?
+
             match type_id:
                 case "button":
                     # Scene (Action) validation and option settings
@@ -842,6 +866,10 @@ class ConfigUIMixin:
                         error_message = "An Indigo Blind device requires an association to the Zigbee 'position' property"
                         error_dict['uspPosition'] = error_message
                         error_dict["showAlertText"] = error_message
+                    # elif not values_dict.get("uspOnOff", False):
+                    #     error_message = "An Indigo Dimmer device requires an association to the Zigbee 'onoff' property"
+                    #     error_dict['uspOnOff'] = error_message
+                    #     error_dict["showAlertText"] = error_message
 
                 case "contactSensor":
                     # Contact Sensor validation and option settings
@@ -938,6 +966,7 @@ class ConfigUIMixin:
                         if bool(values_dict.get("uspEnergy", False)):
                             values_dict["SupportsEnergyMeter"] = True
                             values_dict["SupportsAccumEnergyTotal"] = True
+                        # if bool(values_dict.get("zigbeePropertyRefresh", False)):
                         values_dict["SupportsStatusRequest"] = True
 
                 case "multiSensor":
@@ -989,6 +1018,7 @@ class ConfigUIMixin:
                         if bool(values_dict.get("uspEnergy", False)):
                             values_dict["SupportsEnergyMeter"] = True
                             values_dict["SupportsAccumEnergyTotal"] = True
+                        # if bool(values_dict.get("zigbeePropertyRefresh", False)):
                         values_dict["SupportsStatusRequest"] = True
 
                 case "presenceSensor":
@@ -1041,6 +1071,30 @@ class ConfigUIMixin:
 
                 case "thermostat":
                     pass
+                    # Thermostat validation and option settings
+                    # if not values_dict.get("uspTemperature", False):
+                    #     error_message = "An Indigo Thermostat device requires an association to the Zigbee 'temperature' property"
+                    #     error_dict['uspTemperature'] = error_message
+                    #     error_dict["showAlertText"] = error_message
+                    # elif not values_dict.get("uspSetpoint", False):
+                    #     error_message = "An Indigo Thermostat device requires an association to the Zigbee 'setpoint' property"
+                    #     error_dict['uspSetpoint'] = error_message
+                    #     error_dict["showAlertText"] = error_message
+                    # elif not values_dict.get("uspOnOff", False):
+                    #     error_message = "An Indigo Thermostat device requires an association to the Zigbee 'onoff' property"
+                    #     error_dict['uspOnOff'] = error_message
+                    #     error_dict["showAlertText"] = error_message
+                    # else:
+                    #     values_dict["SupportsHeatSetpoint"] = True
+                    #     values_dict["NumTemperatureInputs"] = 1
+                    #     values_dict["supportsTemperatureReporting"] = True
+                    #     if values_dict.get("uspHvacMode", False):
+                    #         values_dict["SupportsHvacOperationMode"] = True
+                    #     if (bool(values_dict.get("uspValve", False)) and
+                    #             values_dict.get("uspValveIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE) == INDIGO_SECONDARY_DEVICE):
+                    #         values_dict["supportsValve"] = True
+                    #     if bool(values_dict.get("zigbeePropertyRefresh", False)):
+                    #         values_dict["SupportsStatusRequest"] = True
 
                 case "temperatureSensor":
                     # Temperature Sensor validation and option settings
@@ -1052,6 +1106,8 @@ class ConfigUIMixin:
                         values_dict["supportsTemperatureReporting"] = True
                         values_dict["NumTemperatureInputs"] = 1
                         values_dict["SupportsSensorValue"] = True
+
+                        # TODO: Is this code needed now that humidity isn't being treated specially ???
 
                         if values_dict.get("uspHumidity", False):
                             uspHumidityIndigo = values_dict.get("uspHumidityIndigo", INDIGO_PRIMARY_DEVICE_ADDITIONAL_STATE)
@@ -1083,9 +1139,16 @@ class ConfigUIMixin:
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
 
-    def validate_prefs_config_ui(self, values_dict):  # noqa [Method is not declared static]
+    def validate_prefs_config_ui(self, values_dict): # noqa [Method is not declared static] 
         try:
             return True, values_dict
 
         except Exception as exception_error:
             self.exception_handler(exception_error, True)  # Log error and display failing statement
+
+    #################################
+    #
+    # Start of bespoke plugin methods
+    #
+    #################################
+

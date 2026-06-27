@@ -253,8 +253,8 @@ INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["multiSwitch"] = ["multiSwitchSecondaryLeft
 
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["outlet"] = ["voltageSensorSecondary", "temperatureSensorSecondary"]
 
-INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["presenceSensor"] = []
-INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["radarSensor"] = ["humiditySensorSecondary", "temperatureSensorSecondary", "voltageSensorSecondary"]
+INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["presenceSensor"] = ["illuminanceSensorSecondary"]
+INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["radarSensor"] = ["humiditySensorSecondary", "illuminanceSensorSecondary", "temperatureSensorSecondary", "voltageSensorSecondary"]
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["switch"] = ["switchSecondarySingle", "temperatureSensorSecondary"]
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["temperatureSensor"] = ["humiditySensorSecondary", "illuminanceSensorSecondary", "motionSensorSecondary", "pressureSensorSecondary", "voltageSensorSecondary"]
 INDIGO_SUPPORTED_SUB_TYPES_BY_DEVICE["thermostat"] = ["valveSecondary"]
